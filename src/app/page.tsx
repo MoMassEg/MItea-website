@@ -112,10 +112,7 @@ export default function HomePage() {
 
       {/* 4. Main Body */}
       <main className="flex-grow">
-        {/* Hero Section */}
-        <Hero />
-
-        {/* Sticky Horizontal Category Nav */}
+        {/* Sticky Horizontal Category Nav (Menu is First) */}
         <CategoryNav />
 
         {/* Menu Grid Content */}
@@ -188,6 +185,9 @@ export default function HomePage() {
             </div>
           )}
         </div>
+
+        {/* Brand Editorial & Craft Feature (Centered After Menu) */}
+        <Hero />
 
         {/* Press Quotes Editorial Section */}
         <PressQuotes />
