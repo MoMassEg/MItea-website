@@ -60,8 +60,8 @@ export default function HomePage() {
     }
 
     if (activeCategory === "all") {
-      const sections = MENU_DATA.categories
-        .filter((cat) => cat.id !== "all")
+      const normalSections = MENU_DATA.categories
+        .filter((cat) => cat.id !== "all" && cat.id !== "catering")
         .map((cat) => ({
           id: cat.id,
           name: cat.name,
@@ -70,7 +70,22 @@ export default function HomePage() {
         }))
         .filter((sec) => sec.items.length > 0);
 
-      const popularItems = items.filter((item) => item.popular);
+      const popularItems = items.filter((item) => item.popular && item.category !== "catering");
+
+      const cateringCat = MENU_DATA.categories.find((cat) => cat.id === "catering");
+      const cateringItems = items.filter((item) => item.category === "catering");
+      const cateringSection =
+        cateringCat && cateringItems.length > 0
+          ? [
+              {
+                id: "catering",
+                name: cateringCat.name,
+                description: getCategoryDescription("catering"),
+                items: cateringItems
+              }
+            ]
+          : [];
+
       return [
         {
           id: "most-popular",
@@ -78,7 +93,8 @@ export default function HomePage() {
           description: "Our customer-favorite handcrafted milk teas, fruit blends, and mochi",
           items: popularItems
         },
-        ...sections
+        ...normalSections,
+        ...cateringSection
       ];
     } else {
       const targetCategory = MENU_DATA.categories.find((c) => c.id === activeCategory);
