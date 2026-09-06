@@ -1,0 +1,336 @@
+/* ==========================================================================
+   MiTea Design System & Custom Animations
+   Brand Colors: Forest Green (#2D5A3D), Warm Cream (#FAF7F2), Warm Caramel (#D4A574)
+   ========================================================================== */
+
+:root {
+  --color-primary: #2D5A3D;
+  --color-primary-dark: #1F3F2B;
+  --color-primary-light: #4A7C5C;
+  --color-primary-soft: #EBF3EE;
+  --color-secondary: #D4A574;
+  --color-secondary-soft: #F9F3EA;
+  --color-accent: #E8B4B8;
+  --color-bg: #FAF7F2;
+  --color-surface: #FFFFFF;
+  --color-surface-soft: #F5F0E8;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #6B6B6B;
+  --color-text-muted: #9E9E9E;
+  --color-border: #E8E2D9;
+  --color-border-light: #F0EAE1;
+  --color-error: #D9534F;
+  --color-success: #2E7D32;
+}
+
+/* Base resets & typography */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glassmorphism surfaces */
+.glass-nav {
+  background-color: rgba(250, 247, 242, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-modal {
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-dark {
+  background-color: rgba(26, 26, 26, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Smooth transitions */
+.transition-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.transition-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px -10px rgba(45, 90, 61, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* Image zoom effect inside cards */
+.img-zoom-container {
+  overflow: hidden;
+}
+
+.img-zoom-container img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-card:hover .img-zoom-container img {
+  transform: scale(1.06);
+}
+
+/* Active category pill underline / highlight */
+.category-pill {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.category-pill.active {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(45, 90, 61, 0.2);
+}
+
+.category-pill:not(.active):hover {
+  background-color: var(--color-border-light);
+  color: var(--color-text-primary);
+}
+
+/* Modal animations */
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modalBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-modal {
+  animation: modalEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-backdrop {
+  animation: modalBackdrop 0.2s ease-out forwards;
+}
+
+/* Drawer slide-in animation */
+@keyframes drawerSlide {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-drawer {
+  animation: drawerSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Toast notification */
+@keyframes toastSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}
+
+.animate-toast {
+  animation: toastSlide 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Skeleton Loading Shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #F0EAE1 25%, #FAF7F2 50%, #F0EAE1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.75rem;
+}
+
+/* Pulsing badge animation */
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.6;
+  }
+}
+
+.pulse-dot {
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+/* Custom interactive pill selectors (Sugar, Ice, Size) */
+.option-pill input[type="radio"] {
+  display: none;
+}
+
+.option-pill span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.option-pill:hover span {
+  border-color: var(--color-primary-light);
+  background-color: var(--color-primary-soft);
+}
+
+.option-pill input[type="radio"]:checked + span {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(45, 90, 61, 0.25);
+}
+
+/* Custom checkbox pills (Toppings) */
+.topping-pill input[type="checkbox"] {
+  display: none;
+}
+
+.topping-pill .topping-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 0.875rem;
+  border: 1.5px solid var(--color-border);
+  background-color: var(--color-surface);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.topping-pill:hover .topping-card {
+  border-color: var(--color-primary-light);
+  background-color: var(--color-surface-soft);
+}
+
+.topping-pill input[type="checkbox"]:checked + .topping-card {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+}
+
+.topping-pill input[type="checkbox"]:checked + .topping-card .topping-check {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+.topping-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1.5px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+  font-size: 14px;
+}
+
+/* Button active push state */
+.btn-press {
+  transition: transform 0.12s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* Progress Tracker Styling */
+.step-line-active {
+  background-color: var(--color-primary);
+}
+
+.step-line-inactive {
+  background-color: var(--color-border);
+}
+
+/* Focus styles for accessibility */
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Custom badges */
+.badge-popular {
+  background-color: #FDF2E9;
+  color: #C05621;
+  border: 1px solid #FBD38D;
+}
+
+.badge-bestseller {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FCD34D;
+}
+
+.badge-signature {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.badge-vegan {
+  background-color: #F0FDF4;
+  color: #166534;
+  border: 1px solid #BBF7D0;
+}
+
+.badge-caffeine-free {
+  background-color: #EFF6FF;
+  color: #1E40AF;
+  border: 1px solid #BFDBFE;
+}

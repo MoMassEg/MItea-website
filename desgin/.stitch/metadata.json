@@ -1,0 +1,23 @@
+{
+  "name": "projects/10047226259038249092",
+  "projectId": "10047226259038249092",
+  "title": "MiTea - Premium Bubble Tea Ordering",
+  "visibility": "PRIVATE",
+  "projectType": "PROJECT_DESIGN",
+  "origin": "STITCH",
+  "deviceType": "DESKTOP",
+  "designSystem": {
+    "id": "assets/9787240274556643699",
+    "displayName": "MiTea Design System",
+    "colorMode": "LIGHT",
+    "headlineFont": "PLUS_JAKARTA_SANS",
+    "bodyFont": "DM_SANS",
+    "roundness": "ROUND_TWELVE",
+    "customColor": "#2D5A3D",
+    "colorVariant": "TONAL_SPOT",
+    "overrideSecondaryColor": "#D4A574",
+    "overrideTertiaryColor": "#E8B4B8",
+    "overrideNeutralColor": "#F5F0E8"
+  },
+  "screens": {}
+}

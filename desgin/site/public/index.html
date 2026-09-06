@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en" class="light scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiTea — Premium Bubble Tea & Asian Desserts | Golden Valley, MN</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind Configuration matching the Stitch Design System -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#F4F8F5',
+              100: '#EBF3EE',
+              200: '#D2E4D8',
+              500: '#3B684A',
+              600: '#2D5A3D', // Deep Forest Green Primary
+              700: '#244931',
+              800: '#1F3F2B',
+              900: '#152C1E'
+            },
+            warm: {
+              50: '#FDFBF9',
+              100: '#FAF7F2', // Warm Cream Background
+              200: '#F5F0E8', // Soft Beige Surface
+              300: '#E8E2D9', // Taupe Border
+              400: '#D4A574', // Warm Caramel
+              500: '#C08D58',
+              600: '#8A5D3B'
+            },
+            accent: {
+              pink: '#E8B4B8',
+              rose: '#FDC7CB'
+            }
+          },
+          fontFamily: {
+            heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+            body: ['"DM Sans"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body class="bg-[#FAF7F2] text-[#1A1A1A] font-body min-h-screen flex flex-col antialiased">
+
+  <!-- =========================================================================
+       1. Top Interactive Demo Banner
+       ========================================================================= -->
+  <div class="bg-gray-900 text-white text-xs py-2 px-4 border-b border-gray-800">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1 bg-brand-600 text-white font-bold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider">
+          MiTea Flagship
+        </span>
+        <span class="text-gray-300 font-medium hidden sm:inline">7724 Olson Mem Hwy, Golden Valley, MN 55427 • Live Online Ordering</span>
+      </div>
+
+      <div class="flex items-center flex-wrap gap-2 text-[11px]">
+        <button onclick="window.app.toggleStoreStatus()" class="bg-gray-800 hover:bg-gray-700 text-gray-200 px-2.5 py-1 rounded-lg border border-gray-700 flex items-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-xs text-amber-400">toggle_on</span> Toggle Store Open/Closed
+        </button>
+        <button onclick="window.app.toggleSkeletonLoaderDemo()" class="bg-gray-800 hover:bg-gray-700 text-gray-200 px-2.5 py-1 rounded-lg border border-gray-700 flex items-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-xs text-blue-400">view_timeline</span> Skeletons
+        </button>
+        <button onclick="window.app.openLocationModal('delivery')" class="bg-gray-800 hover:bg-gray-700 text-gray-200 px-2.5 py-1 rounded-lg border border-gray-700 flex items-center gap-1 transition-colors">
+          <span class="material-symbols-outlined text-xs text-green-400">moped</span> Test Delivery Flow
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. Sticky Navigation Header
+       ========================================================================= -->
+  <header class="sticky top-0 z-40 glass-nav border-b border-warm-300/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group shrink-0">
+        <div class="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white shadow-md shadow-brand-600/20 group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-2xl">eco</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-heading font-extrabold text-2xl tracking-tight text-brand-600 group-hover:text-brand-700 transition-colors">MiTea</span>
+          <span class="text-[10px] font-semibold tracking-widest uppercase text-warm-400 -mt-1">Tea Craft & Mochi</span>
+        </div>
+      </a>
+
+      <!-- Center Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+        <a href="#most-popular" class="text-brand-600 border-b-2 border-brand-600 pb-1">Menu</a>
+        <a href="#locations" onclick="window.app.openLocationModal(); return false;" class="text-gray-600 hover:text-brand-600 transition-colors">Locations</a>
+        <a href="#our-story" class="text-gray-600 hover:text-brand-600 transition-colors">Our Story</a>
+        <a href="#rewards" onclick="showToast('MiTea Rewards: Earn 10 points for every $1 spent! 🎁'); return false;" class="text-gray-600 hover:text-brand-600 transition-colors flex items-center gap-1">
+          Rewards <span class="bg-accent-pink text-gray-900 text-[10px] font-bold px-1.5 py-0.2 rounded-full">New</span>
+        </a>
+      </nav>
+
+      <!-- Right Actions: Search, Cart, Order Button -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- Search Toggle Button -->
+        <button 
+          onclick="window.app.toggleSearchBar()" 
+          class="w-10 h-10 rounded-full hover:bg-warm-200 flex items-center justify-center text-gray-700 hover:text-brand-600 transition-colors"
+          aria-label="Toggle search"
+        >
+          <span class="material-symbols-outlined text-2xl">search</span>
+        </button>
+
+        <!-- Cart Drawer Trigger Button -->
+        <button 
+          onclick="window.app.openCartDrawer()" 
+          class="w-10 h-10 rounded-full hover:bg-warm-200 flex items-center justify-center text-gray-700 hover:text-brand-600 relative transition-colors"
+          aria-label="Open cart drawer"
+        >
+          <span class="material-symbols-outlined text-2xl">shopping_bag</span>
+          <!-- Dynamic Cart Badge -->
+          <span class="cart-badge absolute -top-1 -right-1 bg-brand-600 text-white font-bold text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
+            2
+          </span>
+        </button>
+
+        <!-- Primary CTA "Order Online" -->
+        <button 
+          onclick="window.app.openLocationModal()" 
+          class="hidden sm:inline-flex items-center justify-center bg-brand-600 hover:bg-brand-800 text-white font-heading font-bold text-sm px-6 py-2.5 rounded-full shadow-md shadow-brand-600/20 btn-press transition-all"
+        >
+          Order Online
+        </button>
+      </div>
+    </div>
+
+    <!-- Expandable Search Bar Sub-Header -->
+    <div id="header-search-bar" class="hidden border-t border-warm-300 bg-white/95 px-4 sm:px-6 py-3 shadow-inner">
+      <div class="max-w-3xl mx-auto flex items-center gap-3">
+        <span class="material-symbols-outlined text-brand-600">search</span>
+        <input 
+          id="search-bar-input"
+          type="text" 
+          placeholder="Search drinks, matcha, boba, taro, fruit teas, mochi donuts..." 
+          class="w-full bg-transparent border-0 text-sm focus:ring-0 text-[#1A1A1A] placeholder-gray-400 font-medium"
+          oninput="window.app.handleSearchInput(this.value)"
+        />
+        <button 
+          onclick="window.app.clearSearch()" 
+          class="text-gray-400 hover:text-gray-600 text-xs font-bold px-2 py-1"
+        >
+          Clear
+        </button>
+        <button 
+          onclick="window.app.toggleSearchBar()" 
+          class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 text-sm"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       3. Store & Ordering Context Status Bar
+       ========================================================================= -->
+  <div id="order-status-bar" class="bg-[#F5F0E8] border-b border-[#E8E2D9]">
+    <!-- Populated dynamically by app.js -->
+  </div>
+
+  <!-- =========================================================================
+       4. Main Content Area
+       ========================================================================= -->
+  <main class="flex-grow">
+    
+    <!-- Hero / Promotional Welcome Strip -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-4">
+      <div class="relative bg-gradient-to-r from-brand-600 to-brand-800 rounded-3xl p-6 sm:p-10 text-white overflow-hidden shadow-lg">
+        <!-- Decorative Asian Tea Leaf Motif -->
+        <div class="absolute -right-8 -bottom-8 opacity-10 text-white select-none pointer-events-none">
+          <span class="material-symbols-outlined text-[200px]">spa</span>
+        </div>
+
+        <div class="relative z-10 max-w-xl">
+          <span class="inline-flex items-center gap-1.5 bg-warm-400/30 text-warm-100 border border-warm-300/30 text-xs font-bold px-3 py-1 rounded-full mb-3 backdrop-blur-sm">
+            <span class="material-symbols-outlined text-sm">auto_awesome</span> Freshly Steeped Loose Leaf Teas
+          </span>
+          <h1 class="font-heading font-extrabold text-3xl sm:text-4xl text-white tracking-tight leading-tight">
+            Artisanal Boba & Japanese Mochi Desserts
+          </h1>
+          <p class="text-warm-100/90 text-sm sm:text-base mt-2 font-normal leading-relaxed">
+            Crafted with organic dairy, ceremonial grade Uji matcha, and hand-simmered brown sugar pearls. Order now for pickup in Golden Valley or fast delivery.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 mt-6">
+            <button onclick="window.app.selectCategory('all')" class="bg-white text-brand-600 font-heading font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full hover:bg-warm-100 shadow-md transition-colors">
+              Explore Full Menu
+            </button>
+            <span class="text-xs text-warm-200 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm text-green-400">verified</span>
+              100% Whole Leaf Tea Guarantee
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Horizontal Category Navigation -->
+    <div class="sticky top-20 z-30 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#E8E2D9] py-3.5 transition-all">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div id="category-nav-container" class="flex overflow-x-auto no-scrollbar gap-2.5 pb-1">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Items Grid Sections -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div id="menu-sections-container">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+
+    <!-- Brand Story & Quality Highlights -->
+    <section id="our-story" class="bg-warm-200 border-t border-warm-300 py-16 mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-bold tracking-widest uppercase text-warm-600">The MiTea Difference</span>
+          <h2 class="text-3xl font-heading font-bold text-[#1A1A1A] mt-1">Brewed with Intention, Served with Warmth</h2>
+          <p class="text-sm text-gray-600 mt-2">We believe bubble tea should celebrate the tea itself. That's why we source single-origin teas from heritage Taiwanese and Japanese tea gardens.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white p-6 rounded-2xl border border-warm-300 shadow-sm text-center">
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">spa</span>
+            </div>
+            <h3 class="font-heading font-bold text-lg text-[#1A1A1A]">Whole Loose Leaf Tea</h3>
+            <p class="text-xs text-gray-600 mt-2 leading-relaxed">No powdered concentrates. We brew small batches every 4 hours using whole leaf Assam, Alishan Oolong, and Jasmine Green.</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-warm-300 shadow-sm text-center">
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-warm-100 text-warm-400 flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">nutrition</span>
+            </div>
+            <h3 class="font-heading font-bold text-lg text-[#1A1A1A]">Organic Fresh Dairy & Oat</h3>
+            <p class="text-xs text-gray-600 mt-2 leading-relaxed">We use farm-fresh whole milk, creamy coconut milk, and barista oat milk. Customize your sweetness from 0% to 100% pure cane sugar.</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-warm-300 shadow-sm text-center">
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-accent-pink/40 text-gray-900 flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">cookie</span>
+            </div>
+            <h3 class="font-heading font-bold text-lg text-[#1A1A1A]">Fresh Daily Mochi & Boba</h3>
+            <p class="text-xs text-gray-600 mt-2 leading-relaxed">Our tapioca pearls and artisan Pon de Ring mochi donuts are hand-crafted fresh every single morning for the perfect chew.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       5. Sticky Mobile Bottom Cart Bar
+       ========================================================================= -->
+  <div id="mobile-cart-bar" class="hidden sm:hidden fixed bottom-4 left-4 right-4 z-40">
+    <button 
+      onclick="window.app.openCartDrawer()" 
+      class="w-full bg-brand-600 hover:bg-brand-800 text-white px-5 py-4 rounded-2xl shadow-2xl flex items-center justify-between font-heading font-bold transition-all btn-press border border-brand-500/30"
+    >
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-xl">shopping_bag</span>
+        <span id="mobile-cart-count">2 items</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="mobile-cart-total">$13.00</span>
+        <span class="text-xs font-semibold bg-white/20 px-2.5 py-1 rounded-full">View Cart →</span>
+      </div>
+    </button>
+  </div>
+
+  <!-- =========================================================================
+       6. Modals & Overlays
+       ========================================================================= -->
+
+  <!-- A. Product Detail / Customization Modal -->
+  <div id="product-modal-container" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 glass-dark animate-backdrop" onclick="window.app.closeProductModal()"></div>
+    <div class="flex min-h-full items-center justify-center p-4 sm:p-6 relative z-10">
+      <div id="product-modal-content" class="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-warm-300 animate-modal overflow-hidden">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- B. Ordering Method & Location Modal (Pickup / Delivery) -->
+  <div id="location-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 glass-dark animate-backdrop" onclick="window.app.closeLocationModal()"></div>
+    <div class="flex min-h-full items-center justify-center p-4 sm:p-6 relative z-10">
+      <div id="location-modal-content" class="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-warm-300 animate-modal overflow-hidden">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- C. Slide-in Cart Drawer -->
+  <div id="cart-drawer-backdrop" class="hidden fixed inset-0 glass-dark z-50 transition-opacity" onclick="window.app.closeCartDrawer()"></div>
+  <div 
+    id="cart-drawer" 
+    class="fixed top-0 right-0 bottom-0 w-full max-w-md bg-[#FAF7F2] shadow-2xl z-50 flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out border-l border-warm-300"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Drawer Header -->
+    <div class="p-5 bg-white border-b border-warm-300 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center">
+          <span class="material-symbols-outlined text-lg">shopping_bag</span>
+        </div>
+        <div>
+          <h3 class="font-heading font-bold text-lg text-[#1A1A1A]">Your Order</h3>
+          <p class="text-xs text-gray-500 font-medium">Review your items before checkout</p>
+        </div>
+      </div>
+      <button 
+        onclick="window.app.closeCartDrawer()" 
+        class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
+        aria-label="Close cart"
+      >
+        <span class="material-symbols-outlined text-lg">close</span>
+      </button>
+    </div>
+
+    <!-- Drawer Items List -->
+    <div id="cart-drawer-items" class="flex-grow p-5 space-y-3 overflow-y-auto">
+      <!-- Rendered dynamically by app.js -->
+    </div>
+
+    <!-- Drawer Footer / Summary -->
+    <div id="cart-drawer-footer" class="p-5 bg-white border-t border-warm-300">
+      <!-- Rendered dynamically by app.js -->
+    </div>
+  </div>
+
+  <!-- D. Checkout Modal -->
+  <div id="checkout-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 glass-dark animate-backdrop" onclick="window.app.closeCheckoutModal()"></div>
+    <div class="flex min-h-full items-center justify-center p-4 sm:p-6 relative z-10">
+      <div id="checkout-modal-content" class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-warm-300 animate-modal overflow-hidden">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- E. Order Confirmation Modal -->
+  <div id="confirmation-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 glass-dark animate-backdrop" onclick="window.app.closeConfirmationModal()"></div>
+    <div class="flex min-h-full items-center justify-center p-4 sm:p-6 relative z-10">
+      <div id="confirmation-modal-content" class="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-warm-300 animate-modal overflow-hidden">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       7. Toast Notifications Container
+       ========================================================================= -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- =========================================================================
+       8. Footer
+       ========================================================================= -->
+  <footer class="bg-[#1A1A1A] text-white border-t border-gray-800 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <!-- Brand Col -->
+        <div class="space-y-4 md:col-span-1">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-white">
+              <span class="material-symbols-outlined text-lg">eco</span>
+            </div>
+            <span class="font-heading font-extrabold text-2xl tracking-tight text-white">MiTea</span>
+          </div>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Crafted with care, served with love. Organic loose leaf bubble teas and artisan Japanese mochi in the Twin Cities.
+          </p>
+          <div class="flex items-center gap-3 text-gray-400 text-sm">
+            <span class="hover:text-white cursor-pointer transition-colors">Instagram</span> •
+            <span class="hover:text-white cursor-pointer transition-colors">TikTok</span> •
+            <span class="hover:text-white cursor-pointer transition-colors">Facebook</span>
+          </div>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div class="space-y-2.5 text-xs text-gray-400">
+          <h4 class="font-heading font-bold text-sm text-white uppercase tracking-wider mb-3">Menu & Orders</h4>
+          <p><a href="#milk-tea" class="hover:text-white transition-colors">Classic Milk Tea</a></p>
+          <p><a href="#fruit-tea" class="hover:text-white transition-colors">Real Fruit Teas</a></p>
+          <p><a href="#energy" class="hover:text-white transition-colors">Energy Series</a></p>
+          <p><a href="#desserts" class="hover:text-white transition-colors">Pon de Ring Mochi</a></p>
+          <p><a href="#snacks" class="hover:text-white transition-colors">Taiwanese Street Snacks</a></p>
+        </div>
+
+        <!-- Col 3: Locations -->
+        <div id="locations" class="space-y-2.5 text-xs text-gray-400">
+          <h4 class="font-heading font-bold text-sm text-white uppercase tracking-wider mb-3">Store Locations</h4>
+          <p><strong class="text-green-400">Golden Valley (Main):</strong> 7724 Olson Mem Hwy, MN 55427</p>
+          <p><strong class="text-gray-300">Minneapolis Downtown:</strong> 350 Nicollet Mall, MN 55401</p>
+          <p><strong class="text-gray-300">St. Paul:</strong> 168 Snelling Ave N, MN 55104</p>
+          <p><strong class="text-gray-300">Uptown:</strong> 1420 W Lake St, MN 55408</p>
+        </div>
+
+        <!-- Col 4: Hours & Contact -->
+        <div class="space-y-2.5 text-xs text-gray-400">
+          <h4 class="font-heading font-bold text-sm text-white uppercase tracking-wider mb-3">Hours & Support</h4>
+          <p>Mon – Thu: 10:00 AM – 10:00 PM</p>
+          <p>Fri – Sun: 10:00 AM – 11:00 PM</p>
+          <p class="pt-2 text-gray-300 font-medium">Customer Hotline: (763) 555-0192</p>
+          <p>Email: order@mitea.menu</p>
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+        <p>© 2024–2026 MiTea Craft Beverage Co. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-gray-300 transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-gray-300 transition-colors">Terms of Service</a>
+          <a href="#" class="hover:text-gray-300 transition-colors">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core Scripts -->
+  <script src="assets/menu-data.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

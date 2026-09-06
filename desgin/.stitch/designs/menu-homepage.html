@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MiTea - Premium Bubble Tea</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-container": "#6e4a21",
+                      "on-surface-variant": "#5e5f60",
+                      "tertiary-fixed": "#fdc7cb",
+                      "outline-variant": "#b1b2b2",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed-dim": "#fecb97",
+                      "on-primary": "#e7ffea",
+                      "surface-tint": "#3b684a",
+                      "on-error-container": "#6e0a12",
+                      "background": "#fbf9f8",
+                      "on-tertiary-fixed": "#4f2c30",
+                      "primary-container": "#bceec8",
+                      "surface-container": "#eeeeed",
+                      "on-primary-fixed": "#1a482c",
+                      "inverse-surface": "#0d0e0e",
+                      "on-tertiary": "#fff7f7",
+                      "error-container": "#fa746f",
+                      "primary-fixed": "#bceec8",
+                      "tertiary-fixed-dim": "#eeb9bd",
+                      "on-error": "#fff7f6",
+                      "surface-container-high": "#e8e8e8",
+                      "on-tertiary-fixed-variant": "#6f484c",
+                      "inverse-on-surface": "#9d9d9d",
+                      "on-tertiary-container": "#653f42",
+                      "primary-dim": "#2f5c3f",
+                      "surface-container-highest": "#e2e2e2",
+                      "secondary-fixed": "#ffdcbc",
+                      "primary": "#3b684a",
+                      "on-primary-fixed-variant": "#386547",
+                      "inverse-primary": "#cafdd6",
+                      "surface-bright": "#fbf9f8",
+                      "on-secondary-fixed": "#593811",
+                      "tertiary-dim": "#70484c",
+                      "secondary-dim": "#6f4c23",
+                      "on-primary-container": "#2e5b3e",
+                      "error": "#a83836",
+                      "tertiary-container": "#fdc7cb",
+                      "tertiary": "#7d5458",
+                      "secondary": "#7d572d",
+                      "primary-fixed-dim": "#aee0bb",
+                      "surface": "#fbf9f8",
+                      "surface-variant": "#e2e2e2",
+                      "on-background": "#313333",
+                      "outline": "#797b7b",
+                      "on-surface": "#313333",
+                      "on-secondary": "#fff7f3",
+                      "surface-dim": "#d9dada",
+                      "surface-container-low": "#f4f3f3",
+                      "secondary-container": "#ffdcbc",
+                      "on-secondary-fixed-variant": "#79542a",
+                      "error-dim": "#67040d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-gap": "64px",
+                      "content-gap": "24px",
+                      "container-max": "1200px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-md": [
+                              "DM Sans"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "DM Sans"
+                      ],
+                      "body-lg": [
+                              "DM Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col pt-[88px]">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm border-b-0 dark:bg-surface-dim/80">
+<div class="flex justify-between items-center px-content-gap py-4 max-w-container-max mx-auto">
+<a class="flex items-center gap-2 font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed" href="#">
+<img alt="MiTea Logo" class="h-10 w-10 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9_Fy1UM27OdxBPZuCT3_CAYNddSgxSWlk3cbWfGhDvhenTnN0kymd_WO66_e2EjOaA8abMV-9Bb-JeZ9_-pPiaOCFxEdPkOYqdFbJ9Z5hG3-FImvgZdMzzeUlHbZ1fP7GX62Cgzly6WLbjzMo1KbHnjDc52HCWWx-QiSC_2RcjVi3wsz9Zv0lxlofiZ-Zkl-9j76rX84eAd9saJBdHsvjgfnqvjFU4Kj-uT4GEu6_lmQLe11ve98e-RQLHTzC9GoqVjRCtAZDBmDx"/>
+</a>
+<nav class="hidden md:flex items-center gap-8 font-body-md text-body-md">
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1" href="#">Menu</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">Locations</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">Our Story</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">Rewards</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 hidden sm:block">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shopping_bag</span>
+<span class="absolute top-1 right-1 bg-primary text-on-primary text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">2</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 hidden sm:block">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+</button>
+<a class="hidden md:inline-flex items-center justify-center bg-primary text-on-primary font-label-md text-label-md px-6 py-2.5 rounded-full hover:bg-primary-dim transition-all duration-300 transform active:scale-95 duration-150 transition-transform" href="#">
+                    Order Now
+                </a>
+<button class="md:hidden text-on-surface-variant p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Order Status Bar -->
+<div class="bg-surface-container-low border-b border-surface-variant">
+<div class="max-w-container-max mx-auto px-content-gap py-3 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-body-md font-body-md text-on-surface-variant text-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">storefront</span>
+<span>Pickup from <strong>7724 Olson Memorial Hwy</strong></span>
+</div>
+<div class="hidden sm:block text-outline-variant">•</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">schedule</span>
+<span>Today at <strong>10:15 AM</strong></span>
+</div>
+<a class="text-primary font-medium hover:underline text-sm ml-2" href="#">Change</a>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-grow">
+<!-- Category Navigation (Sticky) -->
+<div class="sticky top-[88px] z-40 bg-background/90 backdrop-blur-md border-b border-surface-variant py-4">
+<div class="max-w-container-max mx-auto px-content-gap">
+<div class="flex overflow-x-auto no-scrollbar gap-3 pb-2 -mb-2">
+<button class="shrink-0 px-5 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap transition-colors">Most Popular</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">Milk Tea</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">Fruit Tea</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">Fresh Tea</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">Energy Series</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">No Caffeine</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">Mochi Dough</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">Desserts</button>
+<button class="shrink-0 px-5 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md whitespace-nowrap transition-colors">Snacks</button>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-content-gap py-section-gap flex flex-col gap-16">
+<!-- Section: Most Popular -->
+<section id="most-popular">
+<h2 class="font-headline-md text-headline-md text-primary mb-8">Most Popular</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Product Card 1 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT border border-outline-variant/30 overflow-hidden hover:shadow-sm transition-shadow group flex flex-col">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A refreshing Coconut Milk Tea in a clear branded cup with tapioca pearls at the bottom, placed on a light wooden table against a clean white background. High-quality food photography, bright lighting, warm cream tones, modern tea house aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc2HEvhSUsgIgOxBCTvAEnJA2RRgA6hZcV9kbah9TfeiEh158W19nmSpuzf2MyhXBcr_twLtL9iZnBYU4wJn38hX7LdJN5CHwozsOHyVGbFki0-1tdGqMk_K-cDj4RQj-PyzR0va4DjNbTv_7x2PBe74l8V9ZiVV5coNkFFJRucCnxp3zQJ1shrY5dEoGy8-GGAaabHaOer0oXz_3RryX6rMOqCglFcYzjkc0i1XJs8hLO46AAAoLaW6mY8BKlT__nZqazMaim3pn4"/>
+<div class="absolute top-3 left-3 bg-error text-on-error text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">Popular</div>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-lg font-bold text-on-surface">Coconut Milk Tea</h3>
+<span class="font-label-md text-label-md font-bold text-primary">$5.50</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm line-clamp-2 mb-4 flex-grow">Creamy coconut blend with classic black tea and our signature chewy brown sugar boba.</p>
+<button class="w-full py-2.5 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Add to order
+                            </button>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT border border-outline-variant/30 overflow-hidden hover:shadow-sm transition-shadow group flex flex-col">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A rich Brown Sugar Boba Milk drink with mesmerizing dark syrup tiger stripes cascading down the inside of a clear cup, sitting on a marble counter. Premium food photography, soft diffused lighting, warm minimalist environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAis78aZVZ7V_-tnQfcpV4MvNewdbdFCWctgYGPfIfI-UHEjYqDhNWnJD0QFl5qoCwkQ-SYu0_FxRLU3C1_lREJ3dqWNgtlZ7KR0SbSrMCmAehp2JGpy8QES0fFdP1H7ZX2ZFNGc-ypOGzr0lpH1RxWciDPUdK1wOwQR07KzOp2w4WwXk9wgkX7zgz8l3729BGqltqCKdP6JbvdK3AvylPwoQr4DVjWrk-Fn7ngYKuafTNtIRANiv3KIoleu59jmUejqoJ-RT3etyUf"/>
+<div class="absolute top-3 left-3 bg-error text-on-error text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">Popular</div>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-lg font-bold text-on-surface">Brown Sugar Boba Milk</h3>
+<span class="font-label-md text-label-md font-bold text-primary">$6.75</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm line-clamp-2 mb-4 flex-grow">Rich, caramelized brown sugar syrup with fresh organic milk and warm, chewy boba.</p>
+<button class="w-full py-2.5 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Add to order
+                            </button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT border border-outline-variant/30 overflow-hidden hover:shadow-sm transition-shadow group flex flex-col">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A vibrant green Matcha Milk Tea in a clear cup, showing a beautiful gradient from dark green at the bottom to milky white at the top, placed on a light oak surface. Bright, clean lighting, contemporary Asian cafe aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiZ2Cl3ypSLhFm-X_FGupnsJe0g6gAwyaOwhXoQfvMJXFyTYXEVCfFp-kQYYNstKsMG_haet20hTWPoT0Vz9uqHD0aFKCkMCxtG7NTNmppU3i9DMgnHD33hUOUBUqs-ZDCYb_DywTVH8a3C79TOqERl7nIYqA4nLQYEDrUDbTprh7x3FMEhLdJVN4X6GSvZFVaysdQUxKAxlNmHPles4y4DS0wmpeQXg2nVDo0wUbEAeqcfiNQ70CjIztHzFdKeYXNjCA2_5Z0H6pd"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-lg font-bold text-on-surface">Matcha Milk Tea</h3>
+<span class="font-label-md text-label-md font-bold text-primary">$6.25</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm line-clamp-2 mb-4 flex-grow">Premium ceremonial grade matcha layered with fresh milk and our classic syrup.</p>
+<button class="w-full py-2.5 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Add to order
+                            </button>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT border border-outline-variant/30 overflow-hidden hover:shadow-sm transition-shadow group flex flex-col">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A light golden Jasmine Milk Tea in a clear cup with tapioca pearls, surrounded by subtle white jasmine flowers on a clean beige backdrop. Soft, elegant lighting, premium modern tea shop style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlBUZa_5FGUJSHs5neKtA_7QXFf_hxC8A8Y-mo3b_6GBrBJBpVZzcAJGBfODtalYAjKGRDOqpbuEpE7NMIO_NaqmEpeIneWt5OaEJbDCuEmnsIV1IpT-81KUPqIqTXSoKw9qvcaO0EuaTNI7mtwy-Ox9ovGYj0hOO7SLzaL9narhWIE3QpKNAjjpNjB-RVVAThh1YRC9x3esH-yPAondbOQsG-fRQbNqKUTybMWEE1ydQWs552EPFpubx4VA8DRGm3c-aUAD-OLKPR"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-lg font-bold text-on-surface">Jasmine Milk Tea</h3>
+<span class="font-label-md text-label-md font-bold text-primary">$5.50</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm line-clamp-2 mb-4 flex-grow">Light and floral jasmine green tea infused with creamy milk.</p>
+<button class="w-full py-2.5 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Add to order
+                            </button>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT border border-outline-variant/30 overflow-hidden hover:shadow-sm transition-shadow group flex flex-col">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A pale purple Taro Milk Tea in a clear cup with boba at the bottom, placed next to a small piece of raw taro root on a light neutral surface. Warm, appetizing lighting, clean minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChd5WET2vLT2aLDDIJQsDMm77O0qMllmwZOKPeKHDC2xqw2HzZXph0WZhu8e3CQ85OHmVvNypKRwZPoI-XbK1F-8NpY0cy2lWy-MmlWqU4E99v2knbw5QnFzWuz5bptGqyeJXtWQ3TtKrtmLmV3fyYx8xFTD-s1RUm2GgW7tX3WxINE3KUaKLg3l9tFrXIoYivx1m9xF2Mzh6RUXt1d_hhfTDsUY5Kf59cQ6cmB7AKGvXEgyb-8Wfbh4ybH70j_TYJErR-1c5RmQSa"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-lg font-bold text-on-surface">Taro Milk Tea</h3>
+<span class="font-label-md text-label-md font-bold text-primary">$6.00</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm line-clamp-2 mb-4 flex-grow">Sweet, earthy taro root blended smoothly with our classic milk tea base.</p>
+<button class="w-full py-2.5 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Add to order
+                            </button>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="bg-surface-container-lowest rounded-DEFAULT border border-outline-variant/30 overflow-hidden hover:shadow-sm transition-shadow group flex flex-col">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A bright yellow Mango Green Tea in a clear cup filled with ice and fresh mango chunks, with condensation on the glass. Bright, sunny lighting, set against a warm cream background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSeMLpTrkd3MNUl5PMGMeDq_BRQ52_Z_w3CClKg0j4TqWcDwmjsOkgCpFPNcsSLb-_YVQr69bgqsmG_R4m9Jc4_CCneUEXtXfNbVFdS3gT9Q0RsmPhSrk19TPZZog2GU212fkyzpCCBmqLvzRgRVKMhXM92P-WneVKPObbnhSn3nFbix9ZxKBfjPhOXRFQyJyv5ctILQqSLgaM7T_VGciQgVVYUiTiWFlPffzYL0HFwSWxHXQFdKoadDF-lYJgTL0sL94ATKw7R0O8"/>
+</div>
+<div class="p-5 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-lg font-bold text-on-surface">Mango Green Tea</h3>
+<span class="font-label-md text-label-md font-bold text-primary">$5.75</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm line-clamp-2 mb-4 flex-grow">Refreshing jasmine green tea shaken with real mango purée and fresh fruit bits.</p>
+<button class="w-full py-2.5 rounded-full border border-primary text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span> Add to order
+                            </button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container dark:bg-surface-container-highest border-t border-outline-variant w-full mt-auto">
+<div class="max-w-container-max mx-auto px-content-gap py-section-gap flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col items-center md:items-start gap-2">
+<div class="font-headline-md text-headline-md text-primary font-bold">MiTea</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Crafted with care, served with love.</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-6 font-body-md text-body-md">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Careers</a>
+</nav>
+<div class="flex items-center gap-4">
+<p class="font-body-md text-body-md text-secondary dark:text-secondary-fixed text-sm opacity-80">© 2024 MiTea Premium Tea House. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</body></html>
