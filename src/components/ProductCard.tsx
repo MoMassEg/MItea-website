@@ -11,7 +11,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ item }: ProductCardProps) {
-  const { openProductModal, addToCart, isStoreOpen, isLoadingDemo } = useOrder();
+  const { openProductModal, addToCart, isStoreOpen, isLoadingDemo, openCateringModal } = useOrder();
   const [imgError, setImgError] = useState(false);
 
   // Fallback placeholder image if external image fails to load
@@ -20,6 +20,23 @@ export default function ProductCard({ item }: ProductCardProps) {
 
   const handleAction = () => {
     if (!item.available || !isStoreOpen) return;
+    if (item.category === "catering") {
+      // Direct add catering item or open custom builder
+      addToCart({
+        id: item.id,
+        name: item.name,
+        image: item.image,
+        size: "Catering Pack",
+        sizePrice: 0,
+        sugar: "Regular (50%)",
+        ice: "Chilled with Ice Station",
+        toppings: [{ id: "boba-pack", name: "Slow-Cooked Boba & Supplies Included", price: 0 }],
+        basePrice: item.price,
+        unitPrice: item.price,
+        quantity: 1
+      });
+      return;
+    }
     if (item.customizable) {
       openProductModal(item);
     } else {
@@ -78,6 +95,152 @@ export default function ProductCard({ item }: ProductCardProps) {
   }
 
   const isUnavailable = !item.available || !isStoreOpen;
+
+  // ── SPECIAL VIP CATERING CARD LAYOUT ──
+  if (item.category === "catering") {
+    return (
+      <div className="bg-gradient-to-b from-[#1E0B04] to-[#120602] border-2 border-accent-amber/40 hover:border-accent-gold rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between transition-all duration-300 group relative">
+        {/* Luxury Gold Ambient Top Glow */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-accent-amber/10 rounded-full blur-2xl pointer-events-none" />
+
+        <div>
+          {/* Catering Image */}
+          <div className="relative h-56 w-full bg-[#2A1006] img-zoom-container overflow-hidden">
+            <Image
+              src={imgError ? fallbackImage : item.image}
+              alt={item.name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              onError={() => setImgError(true)}
+            />
+
+            {/* Badges */}
+            <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+              <span className="bg-accent-amber text-[#120602] font-heading font-extrabold text-[11px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
+                ★ {item.badge || "Catering Pack"}
+              </span>
+            </div>
+
+            {/* Serving Size Pill */}
+            <div className="absolute bottom-3 right-3 z-10">
+              <span className="bg-[#120602]/90 backdrop-blur-md text-warm-200 border border-warm-800 text-[11px] font-bold px-3 py-1 rounded-full">
+                {item.calories}
+              </span>
+            </div>
+          </div>
+
+          {/* Catering Content */}
+          <div className="p-5 sm:p-6">
+            <h3 className="font-heading font-extrabold text-lg sm:text-xl text-warm-50 leading-snug tracking-tight">
+              {item.name}
+            </h3>
+
+            <p className="text-xs sm:text-sm text-warm-300 font-light mt-2.5 leading-relaxed">
+              {item.description}
+            </p>
+
+            {/* What's Included Perks */}
+            <div className="mt-4 pt-3 border-t border-warm-800/80 space-y-1.5 text-xs text-warm-300">
+              {item.id === "catering-mochi-donut-platter" ? (
+                <>
+                  <div className="flex items-center gap-2 text-accent-amber">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-amber" />
+                    <span className="font-medium text-warm-100">24 freshly baked pull-apart mochi donuts</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span>Matcha, Black Sesame, Strawberry &amp; Brown Sugar</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-warm-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-warm-600" />
+                    <span>Luxury presentation display packaging</span>
+                  </div>
+                </>
+              ) : item.id === "catering-party-tea-jug" ? (
+                <>
+                  <div className="flex items-center gap-2 text-accent-amber">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-amber" />
+                    <span className="font-medium text-warm-100">1-Gallon insulated dispenser (10–12 servings)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span>Dedicated 1-quart jar of warm Kokuto boba</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-warm-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-warm-600" />
+                    <span>12 cups, boba straws, ice bucket &amp; spigot included</span>
+                  </div>
+                </>
+              ) : item.id === "catering-grand-celebration-bar" ? (
+                <>
+                  <div className="flex items-center gap-2 text-accent-amber">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-amber" />
+                    <span className="font-medium text-warm-100">4 Gallons signature teas (Serves 50–60 guests)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span>4 Boba &amp; jelly topping tubs + organic dairy &amp; oat milk</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-warm-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-warm-600" />
+                    <span>Full setup: ice chest, scoops, spigots, labels &amp; 60 cups</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 text-accent-amber">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-amber" />
+                    <span className="font-medium text-warm-100">2 Gallons freshly brewed loose leaf teas (Serves 25–30)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span>2 Large topping tubs (Kokuto Boba + Lychee Jelly)</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-warm-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-warm-600" />
+                    <span>Cups, jumbo straws, sweet cream &amp; ice kit included</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Actions */}
+        <div className="p-5 sm:p-6 pt-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-warm-800/60 mt-2">
+          <div>
+            <span className="text-[10px] text-warm-400 font-mono uppercase tracking-wider block">
+              Package Price
+            </span>
+            <span className="font-editorial text-2xl sm:text-3xl font-bold text-accent-amber">
+              ${item.price.toFixed(2)}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={openCateringModal}
+              className="flex-1 sm:flex-initial px-3.5 py-2.5 rounded-xl border border-warm-700 bg-white/5 hover:bg-white/10 text-warm-200 text-xs font-heading font-bold uppercase tracking-wider transition-colors cursor-pointer"
+            >
+              Customize
+            </button>
+
+            <button
+              type="button"
+              onClick={handleAction}
+              disabled={isUnavailable}
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-gradient-to-r from-accent-amber to-amber-500 hover:from-accent-gold hover:to-amber-400 text-[#120602] font-heading font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-lg transition-all cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add to Order</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
