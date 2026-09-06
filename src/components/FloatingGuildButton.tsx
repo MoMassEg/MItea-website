@@ -11,16 +11,13 @@ export default function FloatingGuildButton() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Expands only when reaching the middle of the page (~35% to 40% down)
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollRatio = docHeight > 0 ? window.scrollY / docHeight : 0;
+      if (docHeight <= 0) return;
       
-      // True only in the middle of the page (or past 1000px)
-      if (scrollRatio >= 0.35 || window.scrollY >= 1000) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      const scrollRatio = window.scrollY / docHeight;
+      
+      // Expands strictly in the middle of the page (from 48% scroll depth onwards)
+      setIsScrolled(scrollRatio >= 0.48);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
