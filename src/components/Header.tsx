@@ -12,6 +12,7 @@ import {
   Award,
   MapPin,
   PartyPopper,
+  Sparkles,
 } from "lucide-react";
 
 export default function Header() {
@@ -22,6 +23,7 @@ export default function Header() {
     openSendGiftModal,
     openRewardsModal,
     openCateringModal,
+    openGuildModal,
     isMobileNavOpen,
     openMobileNav,
     closeMobileNav,
@@ -109,12 +111,13 @@ export default function Header() {
                 Stamps
               </span>
             </button>
-            <a
-              href="#the-guild"
-              className="inline-flex items-center gap-1 text-accent-amber hover:text-accent-gold transition-colors font-bold text-xs uppercase tracking-wider"
+            <button
+              type="button"
+              onClick={openGuildModal}
+              className="inline-flex items-center gap-1 text-accent-amber hover:text-accent-gold transition-colors font-bold text-xs uppercase tracking-wider cursor-pointer"
             >
-              VIP Guild
-            </a>
+              VIP Guild (15% Off)
+            </button>
           </nav>
 
           {/* Right: search, cart, order */}
@@ -219,7 +222,6 @@ export default function Header() {
                   { label: "Home & Menu", href: "#menu-sections" },
                   { label: "Locations", href: "#locations" },
                   { label: "Our Story", href: "#our-story" },
-                  { label: "The VIP Guild (15% Off)", href: "#the-guild" },
                 ].map((link) => (
                   <a
                     key={link.label}
@@ -230,6 +232,21 @@ export default function Header() {
                     {link.label}
                   </a>
                 ))}
+
+                {/* VIP Guild Popup Launcher */}
+                <button
+                  type="button"
+                  onClick={() => { closeMobileNav(); openGuildModal(); }}
+                  className="flex items-center justify-between w-full font-heading font-bold text-sm tracking-[0.08em] uppercase text-amber-900 hover:text-amber-700 transition-colors border-b border-warm-200 pb-4 cursor-pointer text-left"
+                >
+                  <span className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-accent-amber" />
+                    <span>The VIP Guild</span>
+                  </span>
+                  <span className="bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">
+                    15% Off
+                  </span>
+                </button>
 
                 <button
                   type="button"

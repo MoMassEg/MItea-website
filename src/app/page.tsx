@@ -15,7 +15,7 @@ import CheckoutModal from "@/components/CheckoutModal";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import MobileCartBar from "@/components/MobileCartBar";
 import StorySection from "@/components/StorySection";
-import NewsletterSection from "@/components/NewsletterSection";
+import NewsletterModal from "@/components/NewsletterModal";
 import Footer from "@/components/Footer";
 import ToastContainer from "@/components/ToastContainer";
 import PressQuotes from "@/components/PressQuotes";
@@ -34,7 +34,14 @@ import {
 } from "lucide-react";
 
 export default function HomePage() {
-  const { activeCategory, setActiveCategory, searchQuery, setSearchQuery, openCateringModal } = useOrder();
+  const {
+    activeCategory,
+    setActiveCategory,
+    searchQuery,
+    setSearchQuery,
+    openCateringModal,
+    openGuildModal
+  } = useOrder();
 
   const filteredSections = useMemo(() => {
     let items = MENU_DATA.items;
@@ -295,13 +302,21 @@ export default function HomePage() {
 
         {/* Brand Story Section */}
         <StorySection />
-
-        {/* VIP Tea Guild Newsletter Subscription */}
-        <NewsletterSection />
       </main>
 
       {/* 5. Footer */}
       <Footer />
+
+      {/* Mobile Floating Side Button for 15% OFF VIP Guild */}
+      <button
+        type="button"
+        onClick={openGuildModal}
+        className="fixed right-0 top-[42%] -translate-y-1/2 z-35 md:hidden flex items-center gap-1.5 pl-3 pr-2 py-2.5 bg-gradient-to-l from-accent-amber to-amber-500 hover:from-accent-gold hover:to-amber-400 text-[#120602] font-heading font-extrabold text-[11px] uppercase tracking-wider rounded-l-2xl shadow-2xl border-l border-y border-amber-300/70 cursor-pointer transition-transform active:scale-95"
+        aria-label="Open 15% Off VIP Guild"
+      >
+        <Sparkles className="w-3.5 h-3.5" />
+        <span>15% OFF</span>
+      </button>
 
       {/* Modals & Overlays */}
       <ProductModal />
@@ -312,6 +327,7 @@ export default function HomePage() {
       <SendGiftModal />
       <RewardsModal />
       <CateringModal />
+      <NewsletterModal />
       <MobileCartBar />
       <ToastContainer />
     </div>
