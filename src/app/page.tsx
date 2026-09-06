@@ -22,6 +22,7 @@ import PressQuotes from "@/components/PressQuotes";
 import LocationsDirectory from "@/components/LocationsDirectory";
 import SendGiftModal from "@/components/SendGiftModal";
 import RewardsModal from "@/components/RewardsModal";
+import CateringModal from "@/components/CateringModal";
 import { Search, XCircle } from "lucide-react";
 
 export default function HomePage() {
@@ -213,6 +214,7 @@ export default function HomePage() {
       <ConfirmationModal />
       <SendGiftModal />
       <RewardsModal />
+      <CateringModal />
       <MobileCartBar />
       <ToastContainer />
     </div>

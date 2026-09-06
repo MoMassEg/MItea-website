@@ -83,6 +83,9 @@ interface OrderContextType {
   isRewardsOpen: boolean;
   openRewardsModal: () => void;
   closeRewardsModal: () => void;
+  isCateringOpen: boolean;
+  openCateringModal: () => void;
+  closeCateringModal: () => void;
   isMobileNavOpen: boolean;
   openMobileNav: () => void;
   closeMobileNav: () => void;
@@ -169,6 +172,10 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
   const openRewardsModal = () => setIsRewardsOpen(true);
   const closeRewardsModal = () => setIsRewardsOpen(false);
+
+  const [isCateringOpen, setIsCateringOpen] = useState<boolean>(false);
+  const openCateringModal = () => setIsCateringOpen(true);
+  const closeCateringModal = () => setIsCateringOpen(false);
 
   const openMobileNav = () => setIsMobileNavOpen(true);
   const closeMobileNav = () => setIsMobileNavOpen(false);
@@ -412,6 +419,9 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         isRewardsOpen,
         openRewardsModal,
         closeRewardsModal,
+        isCateringOpen,
+        openCateringModal,
+        closeCateringModal,
         isMobileNavOpen,
         openMobileNav,
         closeMobileNav,

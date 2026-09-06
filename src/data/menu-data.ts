@@ -114,7 +114,8 @@ export const MENU_DATA = {
     { id: "energy", name: "Energy Series", icon: "zap", count: 3 },
     { id: "no-caffeine", name: "No Caffeine", icon: "droplets", count: 4 },
     { id: "desserts", name: "Desserts & Mochi", icon: "cake", count: 4 },
-    { id: "snacks", name: "Asian Snacks", icon: "utensils", count: 4 }
+    { id: "snacks", name: "Asian Snacks", icon: "utensils", count: 4 },
+    { id: "catering", name: "Catering & Events", icon: "sparkles", count: 4 }
   ] as Category[],
 
   customizationPresets: {
@@ -657,6 +658,62 @@ export const MENU_DATA = {
       badge: "Sweet & Salty",
       caffeine: "None",
       calories: "310 kcal",
+      available: true,
+      customizable: false
+    },
+    {
+      id: "catering-artisan-boba-bar",
+      name: "Artisan Boba Bar (Serves 25–30)",
+      category: "catering",
+      price: 145.0,
+      description: "Complete pop-up tea bar: 2 gallons of freshly brewed teas (Classic Roasted Black Milk Tea + Jasmine Green Tea), 2 large boba topping tubs (Slow-Cooked Kokuto Boba & Lychee Jelly), cups, giant boba straws, sweet cream, and ice station.",
+      image: "https://images.unsplash.com/photo-1558857563-b37cf5a13348?auto=format&fit=crop&w=800&q=80",
+      popular: true,
+      badge: "Best For Teams",
+      caffeine: "Medium",
+      calories: "Serves 25–30",
+      available: true,
+      customizable: false
+    },
+    {
+      id: "catering-grand-celebration-bar",
+      name: "Grand Celebration Tea Bar (Serves 50–60)",
+      category: "catering",
+      price: 275.0,
+      description: "Deluxe catering setup: 4 gallons of signature teas (Brown Sugar Boba, Uji Matcha Latte, Passion Fruit Green Tea, Mango Oolong), 4 boba & jelly toppings, fresh organic dairy & oat milk, cups, straws, and ice kit.",
+      image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80",
+      popular: true,
+      badge: "Weddings & Galas",
+      caffeine: "Low to Med",
+      calories: "Serves 50–60",
+      available: true,
+      customizable: false
+    },
+    {
+      id: "catering-mochi-donut-platter",
+      name: "Pon de Ring Mochi Donut Platter (24 Pack)",
+      category: "catering",
+      price: 68.0,
+      description: "24 freshly baked pull-apart chewy mochi donuts in an assorted luxury display box: Uji Matcha, Black Sesame, Strawberry Sakura, and Kokuto Brown Sugar glazes.",
+      image: "https://images.unsplash.com/photo-1527515862127-a4fc05baf7a5?auto=format&fit=crop&w=800&q=80",
+      popular: true,
+      badge: "Crowd Favorite",
+      caffeine: "None",
+      calories: "24 Pieces",
+      available: true,
+      customizable: false
+    },
+    {
+      id: "catering-party-tea-jug",
+      name: "Party Tea Jug (1 Gallon / Serves 10–12)",
+      category: "catering",
+      price: 48.0,
+      description: "Insulated 1-gallon dispenser of your favorite signature tea, accompanied by 12 cups, boba straws, ice bucket, and a dedicated 1-quart jar of freshly simmered warm boba pearls.",
+      image: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80",
+      popular: false,
+      badge: "Easy Party Pick",
+      caffeine: "Medium",
+      calories: "Serves 10–12",
       available: true,
       customizable: false
     }

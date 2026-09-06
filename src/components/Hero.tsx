@@ -11,10 +11,11 @@ import {
   Leaf,
   ShieldCheck,
   MapPin,
+  PartyPopper,
 } from "lucide-react";
 
 export default function Hero() {
-  const { setActiveCategory, openSendGiftModal, openRewardsModal, openLocationModal } = useOrder();
+  const { setActiveCategory, openSendGiftModal, openRewardsModal, openLocationModal, openCateringModal } = useOrder();
 
   const handleExplore = () => {
     setActiveCategory("all");
@@ -87,6 +88,15 @@ export default function Hero() {
             >
               <span>Explore Menu</span>
               <ArrowUp className="w-4 h-4" />
+            </button>
+
+            <button
+              type="button"
+              onClick={openCateringModal}
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#1E0B04] hover:bg-[#2A1006] text-warm-100 border border-warm-800 font-heading font-bold text-xs sm:text-sm uppercase tracking-wider px-5 py-3.5 rounded-xl transition-colors cursor-pointer"
+            >
+              <PartyPopper className="w-4 h-4 text-accent-amber" />
+              <span>Catering &amp; Events</span>
             </button>
 
             <button

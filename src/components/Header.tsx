@@ -11,6 +11,7 @@ import {
   Gift,
   Award,
   MapPin,
+  PartyPopper,
 } from "lucide-react";
 
 export default function Header() {
@@ -20,6 +21,7 @@ export default function Header() {
     openLocationModal,
     openSendGiftModal,
     openRewardsModal,
+    openCateringModal,
     isMobileNavOpen,
     openMobileNav,
     closeMobileNav,
@@ -77,6 +79,17 @@ export default function Header() {
             <a href="#our-story" className="text-brand-800 hover:text-brand-600 transition-colors">
               Our Story
             </a>
+            <button
+              type="button"
+              onClick={openCateringModal}
+              className="flex items-center gap-1.5 text-brand-800 hover:text-brand-600 transition-colors cursor-pointer"
+            >
+              <PartyPopper className="w-3.5 h-3.5 text-accent-amber" />
+              <span>Catering</span>
+              <span className="bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+                Events
+              </span>
+            </button>
             <button
               type="button"
               onClick={openSendGiftModal}
@@ -217,6 +230,18 @@ export default function Header() {
                     {link.label}
                   </a>
                 ))}
+
+                <button
+                  type="button"
+                  onClick={() => { closeMobileNav(); openCateringModal(); }}
+                  className="flex items-center justify-between w-full font-heading font-bold text-sm tracking-[0.08em] uppercase text-brand-800 hover:text-brand-600 transition-colors border-b border-warm-200 pb-4 cursor-pointer"
+                >
+                  <span className="flex items-center gap-2">
+                    <PartyPopper className="w-4 h-4 text-accent-amber" />
+                    <span>Catering &amp; Events</span>
+                  </span>
+                  <span className="bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">Party Bars</span>
+                </button>
 
                 <button
                   type="button"
