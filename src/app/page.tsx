@@ -95,14 +95,14 @@ export default function HomePage() {
           : [];
 
       return [
+        ...cateringSection,
         {
           id: "most-popular",
           name: "Most Popular & House Specialties",
           description: "Our customer-favorite handcrafted milk teas, fruit blends, and mochi",
           items: popularItems
         },
-        ...normalSections,
-        ...cateringSection
+        ...normalSections
       ];
     } else {
       const targetCategory = MENU_DATA.categories.find((c) => c.id === activeCategory);
