@@ -107,6 +107,7 @@ export const MENU_DATA = {
   currencySymbol: "$",
 
   categories: [
+    { id: "catering", name: "Catering & Events", icon: "sparkles", count: 4 },
     { id: "all", name: "Most Popular", icon: "flame", count: 6 },
     { id: "milk-tea", name: "Milk Tea", icon: "coffee", count: 6 },
     { id: "fruit-tea", name: "Fruit Tea", icon: "citrus", count: 5 },
@@ -114,8 +115,7 @@ export const MENU_DATA = {
     { id: "energy", name: "Energy Series", icon: "zap", count: 3 },
     { id: "no-caffeine", name: "No Caffeine", icon: "droplets", count: 4 },
     { id: "desserts", name: "Desserts & Mochi", icon: "cake", count: 4 },
-    { id: "snacks", name: "Asian Snacks", icon: "utensils", count: 4 },
-    { id: "catering", name: "Catering & Events", icon: "sparkles", count: 4 }
+    { id: "snacks", name: "Asian Snacks", icon: "utensils", count: 4 }
   ] as Category[],
 
   customizationPresets: {

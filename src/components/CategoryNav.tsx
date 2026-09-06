@@ -47,6 +47,16 @@ export default function CategoryNav() {
     <div className="sticky top-[70px] z-30 backdrop-blur-md border-b border-warm-300 py-3.5 transition-all" style={{ background: 'rgba(253,246,227,0.95)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex overflow-x-auto no-scrollbar gap-2.5 pb-1 items-center">
+          {/* Quick Catering Modal Launcher - FIRST */}
+          <button
+            type="button"
+            onClick={openCateringModal}
+            className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase text-amber-950 bg-gradient-to-r from-accent-amber/90 to-amber-400 hover:from-accent-amber hover:to-amber-500 rounded-md shadow-xs transition-all cursor-pointer border border-amber-500/50 mr-0.5"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Book Catering</span>
+          </button>
+
           {MENU_DATA.categories.map((cat) => {
             const isActive = activeCategory === cat.id;
             return (
@@ -80,16 +90,6 @@ export default function CategoryNav() {
               </button>
             );
           })}
-
-          {/* Quick Catering Modal Launcher */}
-          <button
-            type="button"
-            onClick={openCateringModal}
-            className="shrink-0 flex items-center gap-1.5 px-3 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase text-amber-950 bg-gradient-to-r from-accent-amber/90 to-amber-400 hover:from-accent-amber hover:to-amber-500 rounded-md shadow-xs transition-all cursor-pointer border border-amber-500/50 ml-1"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Book Catering</span>
-          </button>
         </div>
       </div>
     </div>
