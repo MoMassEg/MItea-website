@@ -44,6 +44,19 @@ export default function HomePage() {
     openGuildModal
   } = useOrder();
 
+  const cateringSection = useMemo(() => {
+    const cateringCat = MENU_DATA.categories.find((cat) => cat.id === "catering");
+    const cateringItems = MENU_DATA.items.filter((item) => item.category === "catering");
+    if (!cateringCat || cateringItems.length === 0) return null;
+    return {
+      id: "catering",
+      name: cateringCat.name,
+      description: getCategoryDescription("catering"),
+      items: cateringItems
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const filteredSections = useMemo(() => {
     let items = MENU_DATA.items;
 
@@ -80,20 +93,6 @@ export default function HomePage() {
 
       const popularItems = items.filter((item) => item.popular && item.category !== "catering");
 
-      const cateringCat = MENU_DATA.categories.find((cat) => cat.id === "catering");
-      const cateringItems = items.filter((item) => item.category === "catering");
-      const cateringSection =
-        cateringCat && cateringItems.length > 0
-          ? [
-              {
-                id: "catering",
-                name: cateringCat.name,
-                description: getCategoryDescription("catering"),
-                items: cateringItems
-              }
-            ]
-          : [];
-
       return [
         {
           id: "most-popular",
@@ -101,9 +100,10 @@ export default function HomePage() {
           description: "Our customer-favorite handcrafted milk teas, fruit blends, and mochi",
           items: popularItems
         },
-        ...cateringSection,
         ...normalSections
       ];
+    } else if (activeCategory === "catering") {
+      return [];
     } else {
       const targetCategory = MENU_DATA.categories.find((c) => c.id === activeCategory);
       return [
@@ -291,6 +291,73 @@ export default function HomePage() {
             </div>
           )}
         </div>
+
+        {/* Catering & Events — placed right before the editorial hero */}
+        {cateringSection && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+            <section
+              id="catering"
+              className="scroll-mt-36 bg-gradient-to-br from-[#1E0B04] via-[#2A1006] to-[#120602] border-2 border-accent-amber/50 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden"
+            >
+              {/* Ambient luxury glow decoration */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-accent-amber/15 rounded-full blur-3xl pointer-events-none" />
+
+              {/* Specialized Catering Header */}
+              <div className="relative z-10 mb-8 border-b border-warm-800/80 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-amber/20 border border-accent-amber/40 text-accent-amber text-[11px] font-heading font-extrabold uppercase tracking-widest mb-3">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>👑 VIP Large-Format Event Service</span>
+                  </div>
+                  <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-warm-50 tracking-tight">
+                    {cateringSection.name}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-warm-300 font-light mt-2 max-w-2xl leading-relaxed">
+                    {cateringSection.description}. Every package includes insulated dispensers, compostable cups, jumbo straws, and fresh slow-cooked boba.
+                  </p>
+
+                  {/* Included Perks Checklist */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-xs text-warm-300">
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-accent-amber shrink-0" />
+                      <span>Insulated Urns</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-accent-amber shrink-0" />
+                      <span>Cups &amp; Giant Straws</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-accent-amber shrink-0" />
+                      <span>Ice Kit &amp; Spigots</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-accent-amber shrink-0" />
+                      <span>Twin Cities Delivery</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="shrink-0 flex flex-col sm:flex-row gap-3">
+                  <button
+                    type="button"
+                    onClick={openCateringModal}
+                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-accent-amber to-amber-500 hover:from-accent-gold hover:to-amber-400 text-[#120602] font-heading font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-lg transition-all cursor-pointer"
+                  >
+                    <SlidersHorizontal className="w-4 h-4" />
+                    <span>Launch Custom Builder</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Specialized Catering 2-Column Wide Grid */}
+              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {cateringSection.items.map((item: MenuItem) => (
+                  <ProductCard key={item.id} item={item} />
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
 
         {/* Brand Editorial & Craft Feature (Centered After Menu) */}
         <Hero />

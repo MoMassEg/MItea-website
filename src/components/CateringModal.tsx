@@ -384,36 +384,37 @@ export default function CateringModal() {
       }}
     >
       <div
-        className="relative w-full max-w-3xl bg-[#FDFBF7] rounded-3xl shadow-2xl border border-warm-300 overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-3xl bg-[#FDFBF7] rounded-2xl sm:rounded-3xl shadow-2xl border border-warm-300 overflow-hidden flex flex-col max-h-[96vh] sm:max-h-[92vh] animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ── Modal Header ── */}
-        <div className="bg-[#1C0902] text-warm-50 px-6 py-5 flex items-start justify-between relative overflow-hidden">
+        <div className="bg-[#1C0902] text-warm-50 px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-accent-amber/10 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-amber to-amber-700 flex items-center justify-center shadow-lg shrink-0">
-              <PartyPopper className="w-6 h-6 text-[#120602]" />
+          <div className="relative z-10 flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent-amber to-amber-700 flex items-center justify-center shadow-lg shrink-0">
+              <PartyPopper className="w-5 h-5 sm:w-6 sm:h-6 text-[#120602]" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-warm-50 tracking-tight">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-heading font-extrabold text-base sm:text-2xl text-warm-50 tracking-tight leading-tight">
                   MiTea Artisan Catering
                 </h3>
-                <span className="bg-accent-amber/20 border border-accent-amber/40 text-accent-amber text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="hidden sm:inline bg-accent-amber/20 border border-accent-amber/40 text-accent-amber text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0">
                   Custom Orders
                 </span>
               </div>
-              <p className="text-xs text-warm-300 mt-0.5 font-light">
+              <p className="hidden sm:block text-xs text-warm-300 mt-0.5 font-light">
                 Choose your exact drinks, toppings &amp; quantities — freshly steeped for 10 to 500+ guests
               </p>
+              <p className="sm:hidden text-[10px] text-warm-400 mt-0.5">10–500+ guests · Custom builder</p>
             </div>
           </div>
 
           <button
             type="button"
             onClick={closeCateringModal}
-            className="relative z-10 text-warm-400 hover:text-warm-100 p-1.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
+            className="relative z-10 text-warm-400 hover:text-warm-100 p-2 rounded-full hover:bg-white/10 transition-colors cursor-pointer shrink-0 ml-2"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -421,21 +422,22 @@ export default function CateringModal() {
         </div>
 
         {/* ── 3 Tabs Switcher ── */}
-        <div className="flex border-b border-warm-200 bg-warm-100/70 px-4 sm:px-6 pt-3 gap-2 overflow-x-auto no-scrollbar">
+        <div className="flex border-b border-warm-200 bg-warm-100/70 px-2 sm:px-6 pt-2 sm:pt-3 gap-0.5 sm:gap-2">
           <button
             type="button"
             onClick={() => {
               setActiveTab("builder");
               setIsSubmitted(false);
             }}
-            className={`shrink-0 flex items-center gap-2 px-4 py-2.5 text-xs font-heading font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-2 sm:px-4 py-2.5 text-[10px] sm:text-xs font-heading font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
               activeTab === "builder"
                 ? "border-brand-600 text-brand-900 bg-white rounded-t-xl shadow-xs"
                 : "border-transparent text-warm-600 hover:text-brand-800"
             }`}
           >
-            <Sliders className="w-3.5 h-3.5 text-accent-amber" />
-            <span>Build Your Order (Custom)</span>
+            <Sliders className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-accent-amber shrink-0" />
+            <span className="sm:hidden">Build</span>
+            <span className="hidden sm:inline">Build Your Order (Custom)</span>
           </button>
 
           <button
@@ -444,40 +446,42 @@ export default function CateringModal() {
               setActiveTab("packages");
               setIsSubmitted(false);
             }}
-            className={`shrink-0 flex items-center gap-2 px-4 py-2.5 text-xs font-heading font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-2 sm:px-4 py-2.5 text-[10px] sm:text-xs font-heading font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
               activeTab === "packages"
                 ? "border-brand-600 text-brand-900 bg-white rounded-t-xl shadow-xs"
                 : "border-transparent text-warm-600 hover:text-brand-800"
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-brand-600" />
-            <span>Pre-Set Party Packages</span>
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-600 shrink-0" />
+            <span className="sm:hidden">Packages</span>
+            <span className="hidden sm:inline">Pre-Set Party Packages</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("custom")}
-            className={`shrink-0 flex items-center gap-2 px-4 py-2.5 text-xs font-heading font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-2 sm:px-4 py-2.5 text-[10px] sm:text-xs font-heading font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
               activeTab === "custom"
                 ? "border-brand-600 text-brand-900 bg-white rounded-t-xl shadow-xs"
                 : "border-transparent text-warm-600 hover:text-brand-800"
             }`}
           >
-            <Calendar className="w-3.5 h-3.5 text-brand-600" />
-            <span>Event Quote Request</span>
+            <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-600 shrink-0" />
+            <span className="sm:hidden">Quote</span>
+            <span className="hidden sm:inline">Event Quote Request</span>
           </button>
         </div>
 
         {/* ── Modal Body (Scrollable) ── */}
-        <div className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-grow">
+        <div className="p-3 sm:p-6 overflow-y-auto space-y-5 sm:space-y-6 flex-grow">
           {/* TAB 1: CUSTOM CATERING BUILDER */}
           {activeTab === "builder" && (
-            <div className="space-y-6">
+            <div className="space-y-5 sm:space-y-6">
               {/* Serving format & discounts banner */}
-              <div className="bg-gradient-to-r from-amber-50 to-orange-50/70 border border-amber-200/90 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-accent-amber/20 text-accent-amber flex items-center justify-center shrink-0">
-                    <Percent className="w-5 h-5" />
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50/70 border border-amber-200/90 rounded-2xl p-3 sm:p-4">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-xl bg-accent-amber/20 text-accent-amber flex items-center justify-center shrink-0">
+                    <Percent className="w-4 h-4" />
                   </div>
                   <div className="text-xs text-amber-950">
                     <span className="font-bold block">Bulk Catering Discount:</span>
@@ -485,12 +489,12 @@ export default function CateringModal() {
                   </div>
                 </div>
 
-                {/* Serving Format Switcher */}
-                <div className="flex items-center bg-white border border-amber-300/80 rounded-xl p-0.5 shrink-0 self-stretch sm:self-auto justify-center">
+                {/* Serving Format Switcher — full width on mobile */}
+                <div className="flex items-center bg-white border border-amber-300/80 rounded-xl p-0.5 w-full">
                   <button
                     type="button"
                     onClick={() => setFormatType("cups")}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       formatType === "cups"
                         ? "bg-brand-600 text-white shadow-xs"
                         : "text-warm-700 hover:text-brand-900"
@@ -501,7 +505,7 @@ export default function CateringModal() {
                   <button
                     type="button"
                     onClick={() => setFormatType("jugs")}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       formatType === "jugs"
                         ? "bg-brand-600 text-white shadow-xs"
                         : "text-warm-700 hover:text-brand-900"
@@ -528,7 +532,7 @@ export default function CateringModal() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-1">
+                <div className="grid grid-cols-1 gap-3 max-h-72 sm:max-h-80 overflow-y-auto pr-1">
                   {cateringDrinkCandidates.map((drink) => {
                     const sel = drinkSelections[drink.id];
                     const qty = sel?.quantity || 0;
@@ -764,9 +768,9 @@ export default function CateringModal() {
               </div>
 
               {/* ── LIVE STICKY ORDER TOTAL & ADD TO CART BAR ── */}
-              <div className="bg-[#1C0902] text-warm-50 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl border border-warm-800">
-                <div>
-                  <div className="flex items-center gap-2 text-xs">
+              <div className="bg-[#1C0902] text-warm-50 p-3 sm:p-4 rounded-2xl shadow-xl border border-warm-800">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] sm:text-xs">
                     <span className="font-bold text-warm-200">
                       {totalDrinksCount} {formatType === "jugs" ? "Jugs" : "Drinks"}
                     </span>
@@ -779,15 +783,12 @@ export default function CateringModal() {
                       {Object.values(bakerySelection).reduce((s, b) => s + b.quantity, 0)} Platters
                     </span>
                   </div>
-
-                  <div className="flex items-baseline gap-2 mt-1">
-                    <span className="font-editorial text-2xl sm:text-3xl font-bold text-accent-amber">
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="font-editorial text-xl sm:text-2xl font-bold text-accent-amber">
                       ${customTotal.toFixed(2)}
                     </span>
                     {discountAmount > 0 && (
-                      <span className="text-xs text-emerald-400 font-medium line-through">
-                        ${rawSubtotal.toFixed(2)} ({discountPercent}% Bulk Off)
-                      </span>
+                      <span className="text-[10px] text-emerald-400 font-medium">-{discountPercent}% off</span>
                     )}
                   </div>
                 </div>
@@ -795,7 +796,7 @@ export default function CateringModal() {
                 <button
                   type="button"
                   onClick={handleAddCustomOrderToCart}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-accent-amber to-amber-500 hover:from-accent-gold hover:to-amber-400 text-[#120602] font-heading font-bold text-xs uppercase tracking-wider px-8 py-3.5 rounded-xl shadow-lg transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-accent-amber to-amber-500 hover:from-accent-gold hover:to-amber-400 text-[#120602] font-heading font-bold text-xs uppercase tracking-wider px-4 py-3 rounded-xl shadow-lg transition-all cursor-pointer"
                 >
                   <ShoppingBag className="w-4 h-4" />
                   <span>Add Custom Order to Cart</span>
