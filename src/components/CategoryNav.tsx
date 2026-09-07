@@ -47,47 +47,52 @@ export default function CategoryNav() {
     <div className="sticky top-[70px] z-30 backdrop-blur-md border-b border-warm-300 py-3.5 transition-all" style={{ background: 'rgba(253,246,227,0.95)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex overflow-x-auto no-scrollbar gap-2.5 pb-1 items-center">
-          {/* Quick Catering Modal Launcher - FIRST */}
-          <button
-            type="button"
-            onClick={openCateringModal}
-            className="shrink-0 flex items-center gap-1.5 px-3.5 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase text-amber-950 bg-gradient-to-r from-accent-amber/90 to-amber-400 hover:from-accent-amber hover:to-amber-500 rounded-md shadow-xs transition-all cursor-pointer border border-amber-500/50 mr-0.5"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Book Catering</span>
-          </button>
-
           {MENU_DATA.categories.map((cat) => {
             const isActive = activeCategory === cat.id;
+            const isCatering = cat.id === "catering";
+
             return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => {
-                  setActiveCategory(cat.id);
-                  const el = document.getElementById("menu-sections");
-                  if (el) {
-                    el.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
-                className={`shrink-0 flex items-center gap-2 px-3.5 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase transition-all cursor-pointer ${
-                  isActive
-                    ? "bg-brand-600 text-warm-50 shadow-sm rounded-md"
-                    : "bg-white text-brand-800 border border-warm-300 rounded-md hover:bg-warm-100"
-                }`}
-              >
-                <span className={isActive ? "text-white" : "text-brand-600"}>
-                  <span style={{ color: isActive ? 'rgba(253,246,227,0.85)' : '#D4903A' }}>{getCategoryIcon(cat.icon)}</span>
-                </span>
-                <span>{cat.name}</span>
-                <span
-                  className={`text-[9px] px-1.5 py-0.5 rounded-sm font-bold ${
-                    isActive ? "bg-white/20 text-warm-100" : "bg-warm-200 text-warm-600"
+              <React.Fragment key={cat.id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveCategory(cat.id);
+                    const el = document.getElementById("menu-sections");
+                    if (el) {
+                      el.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className={`shrink-0 flex items-center gap-2 px-3.5 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-brand-600 text-warm-50 shadow-sm rounded-md"
+                      : "bg-white text-brand-800 border border-warm-300 rounded-md hover:bg-warm-100"
                   }`}
                 >
-                  {cat.count}
-                </span>
-              </button>
+                  <span className={isActive ? "text-white" : "text-brand-600"}>
+                    <span style={{ color: isActive ? 'rgba(253,246,227,0.85)' : '#D4903A' }}>{getCategoryIcon(cat.icon)}</span>
+                  </span>
+                  <span>{cat.name}</span>
+                  <span
+                    className={`text-[9px] px-1.5 py-0.5 rounded-sm font-bold ${
+                      isActive ? "bg-white/20 text-warm-100" : "bg-warm-200 text-warm-600"
+                    }`}
+                  >
+                    {cat.count}
+                  </span>
+                </button>
+
+                {/* Quick Catering Modal Launcher - placed right after Catering & Events */}
+                {isCatering && (
+                  <button
+                    type="button"
+                    onClick={openCateringModal}
+                    className="shrink-0 flex items-center gap-1.5 px-3 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase text-amber-950 bg-gradient-to-r from-accent-amber/90 to-amber-400 hover:from-accent-amber hover:to-amber-500 rounded-md shadow-xs transition-all cursor-pointer border border-amber-500/50"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Book Catering</span>
+                  </button>
+                )}
+              </React.Fragment>
             );
           })}
         </div>
