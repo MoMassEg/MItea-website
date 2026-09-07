@@ -107,8 +107,8 @@ export const MENU_DATA = {
   currencySymbol: "$",
 
   categories: [
-    { id: "all", name: "Most Popular", icon: "flame", count: 6 },
     { id: "catering", name: "Catering & Events", icon: "sparkles", count: 4 },
+    { id: "all", name: "Most Popular", icon: "flame", count: 6 },
     { id: "milk-tea", name: "Milk Tea", icon: "coffee", count: 6 },
     { id: "fruit-tea", name: "Fruit Tea", icon: "citrus", count: 5 },
     { id: "fresh-tea", name: "Fresh Tea", icon: "leaf", count: 4 },
