@@ -285,13 +285,13 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   // Promos
   const applyPromo = (code: string): { success: boolean; message: string } => {
     const clean = code.trim().toUpperCase();
-    if (clean === "BOBA10") {
+    if (clean === "BOBA10" || clean === "GUILD10") {
       setAppliedPromo({
-        code: "BOBA10",
+        code: clean,
         percent: 10,
         description: "10% off your entire order"
       });
-      showToast("Promo BOBA10 applied! 10% discount added.", "success");
+      showToast(`Promo ${clean} applied! 10% discount added.`, "success");
       return { success: true, message: "10% off applied!" };
     } else if (clean === "FREEDROP") {
       setAppliedPromo({

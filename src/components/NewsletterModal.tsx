@@ -43,15 +43,15 @@ export default function NewsletterModal() {
     setStatus("loading");
     setTimeout(() => {
       setStatus("success");
-      applyPromo("GUILD15");
-      showToast("🎉 VIP 15% Off Code applied to your order!", "success");
+      applyPromo("GUILD10");
+      showToast("🎉 VIP 10% Off Code applied to your order!", "success");
     }, 800);
   };
 
   const copyPromo = () => {
-    navigator.clipboard?.writeText("GUILD15");
+    navigator.clipboard?.writeText("GUILD10");
     setCopiedCode(true);
-    showToast("Promo code GUILD15 copied!", "success");
+    showToast("Promo code GUILD10 copied!", "success");
     setTimeout(() => setCopiedCode(false), 2500);
   };
 
@@ -101,7 +101,7 @@ export default function NewsletterModal() {
           </h2>
 
           <p className="mt-3 text-xs sm:text-sm text-warm-300 max-w-md mx-auto leading-relaxed font-light">
-            Join over 12,000 tea purists across the Twin Cities. Unlock <strong className="font-semibold text-warm-100">15% off your inaugural order</strong>, secret seasonal releases 48h early, and private invites to single-origin tastings.
+            Join over 12,000 tea purists across the Twin Cities. Unlock <strong className="font-semibold text-warm-100">10% off your inaugural order</strong>, secret seasonal releases 48h early, and private invites to single-origin tastings.
           </p>
 
           {/* Form / Success State */}
@@ -117,7 +117,7 @@ export default function NewsletterModal() {
                       Welcome to the Guild!
                     </h4>
                     <p className="text-xs text-warm-300">
-                      15% discount has been unlocked for <strong className="text-warm-100">{email}</strong>
+                      10% discount has been unlocked for <strong className="text-warm-100">{email}</strong>
                     </p>
                   </div>
                 </div>
@@ -127,7 +127,7 @@ export default function NewsletterModal() {
                     <Gift className="w-4 h-4 text-accent-amber" />
                     <span className="text-xs text-warm-300">Promo Code:</span>
                     <span className="font-mono font-bold text-accent-amber bg-black/50 px-2 py-0.5 rounded border border-accent-amber/30 text-xs">
-                      GUILD15
+                      GUILD10
                     </span>
                   </div>
 
@@ -166,7 +166,7 @@ export default function NewsletterModal() {
                     <span className="inline-block w-4 h-4 border-2 border-[#120602] border-t-transparent rounded-full animate-spin" />
                   ) : (
                     <>
-                      <span>Claim 15% Off</span>
+                      <span>Claim 10% Off</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -179,33 +179,6 @@ export default function NewsletterModal() {
                 )}
               </form>
             )}
-          </div>
-
-          {/* Perks list */}
-          <div className="mt-6 pt-5 border-t border-warm-900/80 space-y-3 text-left">
-            <div className="flex items-start gap-3">
-              <ShieldCheck className="w-4 h-4 text-accent-amber shrink-0 mt-0.5" />
-              <div>
-                <h5 className="text-xs font-heading font-bold text-warm-100">Zero Spam Ever</h5>
-                <p className="text-[11px] text-warm-400 font-light">Only curated brew drops and member perks. 1-click unsubscribe.</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <Gift className="w-4 h-4 text-accent-amber shrink-0 mt-0.5" />
-              <div>
-                <h5 className="text-xs font-heading font-bold text-warm-100">Birthday Reserve</h5>
-                <p className="text-[11px] text-warm-400 font-light">Complimentary handcrafted drink during your birth month.</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <Sparkles className="w-4 h-4 text-accent-amber shrink-0 mt-0.5" />
-              <div>
-                <h5 className="text-xs font-heading font-bold text-warm-100">VIP Masterclasses</h5>
-                <p className="text-[11px] text-warm-400 font-light">Invitations to cupping sessions with Taiwanese tea masters.</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
