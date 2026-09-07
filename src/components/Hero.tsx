@@ -19,7 +19,16 @@ export default function Hero() {
 
   const handleExplore = () => {
     setActiveCategory("all");
-    document.getElementById("menu-sections")?.scrollIntoView({ behavior: "smooth" });
+    const target = document.getElementById("all") || document.getElementById("menu-sections");
+    if (target) {
+      const navOffset = 137;
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - navOffset;
+      window.scrollTo({
+        top: Math.max(0, offsetPosition),
+        behavior: "smooth"
+      });
+    }
   };
 
   return (
