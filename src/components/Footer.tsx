@@ -1,5 +1,5 @@
 import React from "react";
-import { Leaf } from "lucide-react";
+import { Leaf, MapPin, Phone, Mail } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -14,11 +14,11 @@ export default function Footer() {
                 <Leaf className="w-4 h-4 text-warm-100" />
               </div>
               <span className="font-heading font-extrabold text-xl tracking-tight text-warm-100">
-                MiTea
+                Mitea
               </span>
             </div>
             <p className="text-xs text-warm-500 leading-relaxed">
-              Crafted with care, served with love. Organic loose leaf bubble teas and artisan Japanese mochi in the Twin Cities metro area.
+              Crafted with care, served with love. Organic loose leaf bubble teas and artisan Japanese mochi in Golden Valley, Minnesota.
             </p>
             <div className="flex items-center gap-3 text-warm-500 text-xs font-semibold uppercase tracking-wider">
               <span className="hover:text-warm-200 cursor-pointer transition-colors">Instagram</span>
@@ -32,7 +32,7 @@ export default function Footer() {
           {/* Menu */}
           <div className="space-y-3">
             <h4 className="font-heading font-bold text-[11px] text-warm-400 uppercase tracking-[0.12em] mb-4">
-              Menu & Drinks
+              Menu &amp; Drinks
             </h4>
             {["Classic Milk Tea", "Real Fruit Teas", "Energy Series", "Pon de Ring Mochi", "Taiwanese Street Snacks"].map((item) => (
               <p key={item}>
@@ -46,35 +46,35 @@ export default function Footer() {
           {/* Locations */}
           <div className="space-y-3">
             <h4 className="font-heading font-bold text-[11px] text-warm-400 uppercase tracking-[0.12em] mb-4">
-              Twin Cities Stores
+              Store Location
             </h4>
-            <p className="text-xs text-warm-500">
-              <strong className="text-accent-amber">Golden Valley (Flagship):</strong><br />
-              7724 Olson Mem Hwy, MN 55427
-            </p>
-            <p className="text-xs text-warm-500">
-              <strong className="text-warm-300">Minneapolis Downtown:</strong><br />
-              350 Nicollet Mall, MN 55401
-            </p>
-            <p className="text-xs text-warm-500">
-              <strong className="text-warm-300">St. Paul / Grand Ave:</strong><br />
-              168 Snelling Ave N, MN 55104
-            </p>
-            <p className="text-xs text-warm-500">
-              <strong className="text-warm-300">Uptown Minneapolis:</strong><br />
-              1420 W Lake St, MN 55408
-            </p>
+            <div className="text-xs text-warm-500 space-y-1.5">
+              <strong className="text-accent-amber block font-bold">Mitea — Golden Valley</strong>
+              <p className="flex items-start gap-1.5 text-warm-300">
+                <MapPin className="w-3.5 h-3.5 text-accent-amber shrink-0 mt-0.5" />
+                <span>7724 Olson Mem Hwy, Golden Valley, MN 55427, United States</span>
+              </p>
+              <p className="text-[11px] text-emerald-400 font-semibold pt-1">
+                ✓ In-Store &amp; Curbside Pickup Available
+              </p>
+            </div>
           </div>
 
           {/* Hours */}
           <div className="space-y-3">
             <h4 className="font-heading font-bold text-[11px] text-warm-400 uppercase tracking-[0.12em] mb-4">
-              Hours & Orders
+              Hours &amp; Orders
             </h4>
             <p className="text-xs text-warm-500">Mon – Thu: 10:00 AM – 10:00 PM</p>
             <p className="text-xs text-warm-500">Fri – Sun: 10:00 AM – 11:00 PM</p>
-            <p className="text-xs text-warm-300 font-semibold mt-3">(763) 555-0192</p>
-            <p className="text-xs text-warm-500">order@mitea.menu</p>
+            <p className="text-xs text-warm-300 font-semibold mt-3 flex items-center gap-1.5">
+              <Phone className="w-3.5 h-3.5 text-accent-amber" />
+              <span>(763) 555-0192</span>
+            </p>
+            <p className="text-xs text-warm-500 flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-warm-600" />
+              <span>order@mitea.menu</span>
+            </p>
             <a href="#the-guild" className="inline-flex items-center gap-1.5 text-xs text-accent-amber hover:text-accent-gold font-bold mt-2 transition-colors">
               ★ Join The VIP Guild (15% Off)
             </a>
@@ -83,7 +83,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="pt-8 border-t border-warm-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] text-warm-600">
-          <p>© {new Date().getFullYear()} MiTea Craft Beverage Co. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Mitea Craft Beverage Co. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-warm-400 transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-warm-400 transition-colors">Terms of Service</a>

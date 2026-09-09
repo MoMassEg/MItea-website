@@ -26,11 +26,11 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "MiTea — Artisanal Boba & Japanese Mochi Desserts | Golden Valley, MN",
+  title: "Mitea — Artisanal Boba & Japanese Mochi Desserts | Golden Valley, MN",
   description:
-    "Crafted with organic dairy, ceremonial grade Uji matcha, and hand-simmered brown sugar pearls. Order online for quick pickup in Golden Valley or fast delivery across the Twin Cities.",
+    "Crafted with organic dairy, ceremonial grade Uji matcha, and hand-simmered brown sugar pearls. Order online for quick in-store pickup at our Golden Valley tea house (7724 Olson Mem Hwy, Golden Valley, MN).",
   keywords: [
-    "MiTea",
+    "Mitea",
     "Bubble Tea",
     "Boba",
     "Mochi Donuts",
@@ -40,12 +40,12 @@ export const metadata: Metadata = {
     "Taiwanese Fruit Tea",
     "Asian Street Snacks"
   ],
-  authors: [{ name: "MiTea Craft Beverage Co." }],
+  authors: [{ name: "Mitea Craft Beverage Co." }],
   openGraph: {
-    title: "MiTea — Premium Bubble Tea & Asian Desserts",
-    description: "Brewed with Intention, Served with Warmth. Order now for pickup or delivery.",
+    title: "Mitea — Premium Bubble Tea & Asian Desserts",
+    description: "Brewed with Intention, Served with Warmth. Order online for in-store pickup at 7724 Olson Mem Hwy, Golden Valley, MN.",
     url: "https://mitea.menu",
-    siteName: "MiTea",
+    siteName: "Mitea",
     locale: "en_US",
     type: "website",
   },

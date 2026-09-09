@@ -285,7 +285,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   // Promos
   const applyPromo = (code: string): { success: boolean; message: string } => {
     const clean = code.trim().toUpperCase();
-    if (clean === "BOBA10" || clean === "GUILD10") {
+    if (clean === "BOBA10" || clean === "MITEA10" || clean === "WELCOME10" || clean === "GUILD10") {
       setAppliedPromo({
         code: clean,
         percent: 10,
@@ -293,16 +293,8 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
       });
       showToast(`Promo ${clean} applied! 10% discount added.`, "success");
       return { success: true, message: "10% off applied!" };
-    } else if (clean === "FREEDROP") {
-      setAppliedPromo({
-        code: "FREEDROP",
-        freeDelivery: true,
-        description: "Free Delivery on orders over $15"
-      });
-      showToast("Promo FREEDROP applied! $3.99 delivery waived.", "success");
-      return { success: true, message: "Free delivery applied!" };
     } else {
-      showToast("Invalid promo code. Try 'BOBA10' or 'FREEDROP'.", "warning");
+      showToast("Invalid promo code. Try 'MITEA10' or 'BOBA10'.", "warning");
       return { success: false, message: "Invalid code" };
     }
   };
@@ -324,8 +316,8 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   const openCartDrawer = () => setIsCartDrawerOpen(true);
   const closeCartDrawer = () => setIsCartDrawerOpen(false);
 
-  const openLocationModal = (initialTab: "pickup" | "delivery" = "pickup") => {
-    setLocationModalTab(initialTab);
+  const openLocationModal = (_initialTab: "pickup" | "delivery" = "pickup") => {
+    setLocationModalTab("pickup");
     setIsLocationModalOpen(true);
   };
   const closeLocationModal = () => setIsLocationModalOpen(false);
@@ -369,7 +361,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   // Calculations
   const subtotal = Number(cart.reduce((sum, item) => sum + item.totalPrice, 0).toFixed(2));
 
-  const deliveryFee = orderType === "pickup" ? 0 : appliedPromo?.freeDelivery ? 0 : 3.99;
+  const deliveryFee = 0;
 
   const discount = appliedPromo?.percent
     ? Number((subtotal * (appliedPromo.percent / 100)).toFixed(2))

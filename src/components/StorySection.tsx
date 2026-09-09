@@ -54,7 +54,7 @@ export default function StorySection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-end mb-16">
           <div>
             <span className="block text-[10px] font-bold tracking-[0.14em] uppercase text-brand-500 mb-4">
-              The MiTea Difference
+              The Mitea Difference
             </span>
             <h2
               className="font-editorial-italic tracking-tight leading-tight"
@@ -145,7 +145,7 @@ export default function StorySection() {
         <div className="mt-16 pt-10 border-t border-warm-400/40 grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
             { v: "2019", l: "Year Founded" },
-            { v: "4",    l: "Twin Cities Locations" },
+            { v: "1",    l: "Golden Valley Location" },
             { v: "60+",  l: "Menu Items" },
             { v: "5K+",  l: "Monthly Orders" },
           ].map((s) => (

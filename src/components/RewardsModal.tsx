@@ -48,7 +48,7 @@ export default function RewardsModal() {
           </div>
 
           <span className="text-[10px] font-bold uppercase tracking-widest text-warm-200 block mb-1">
-            MiTea Loyalty Club
+            Mitea Loyalty Club
           </span>
           <h3 className="font-heading font-extrabold text-2xl text-white">
             Digital Tea Stamp Card

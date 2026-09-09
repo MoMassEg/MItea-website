@@ -245,7 +245,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5 text-accent-amber shrink-0" />
-                      <span>Twin Cities Delivery</span>
+                      <span>Curbside &amp; Store Pickup</span>
                     </div>
                   </div>
                 </div>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useOrder } from "@/context/OrderContext";
-import { ToggleLeft, ToggleRight, Sparkles, Bike } from "lucide-react";
+import { ToggleLeft, ToggleRight, Sparkles, Store } from "lucide-react";
 
 export default function DemoBanner() {
   const { isStoreOpen, toggleStoreStatus, toggleLoadingDemo, openLocationModal } = useOrder();
@@ -12,10 +12,10 @@ export default function DemoBanner() {
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1 bg-brand-600 text-warm-100 font-bold text-[9px] px-2 py-0.5 rounded-sm uppercase tracking-wider">
-            MiTea Flagship
+            Mitea
           </span>
           <span className="text-warm-500 font-medium hidden sm:inline">
-            7724 Olson Mem Hwy, Golden Valley, MN 55427 · Live Online Ordering
+            7724 Olson Mem Hwy, Golden Valley, MN 55427, United States · In-Store Pickup
           </span>
         </div>
 
@@ -46,19 +46,18 @@ export default function DemoBanner() {
             <span>Skeletons</span>
           </button>
 
-          {/* Delivery flow */}
+          {/* Store info */}
           <button
             type="button"
-            onClick={() => openLocationModal("delivery")}
+            onClick={() => openLocationModal("pickup")}
             className="flex items-center gap-1.5 text-warm-400 hover:text-warm-200 px-2.5 py-1 rounded-sm border border-warm-900 transition-colors cursor-pointer"
             style={{ background: "rgba(255,255,255,0.04)" }}
           >
-            <Bike className="w-3.5 h-3.5 text-accent-amber" />
-            <span>Test Delivery</span>
+            <Store className="w-3.5 h-3.5 text-accent-amber" />
+            <span>Store &amp; Pickup Details</span>
           </button>
         </div>
       </div>
     </div>
   );
 }
-

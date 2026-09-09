@@ -78,7 +78,7 @@ export default function CheckoutModal() {
             ? "Credit Card ending in 4242"
             : paymentMethod === "express"
             ? "Apple Pay"
-            : "Cash on Delivery / Pickup",
+            : "Pay at Counter upon Pickup",
         customerName,
         customerPhone
       };
@@ -137,25 +137,19 @@ export default function CheckoutModal() {
             <div className="bg-warm-100 rounded-2xl p-4 border border-warm-300 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center shrink-0">
-                  {orderType === "pickup" ? (
-                    <Store className="w-4 h-4" />
-                  ) : (
-                    <Bike className="w-4 h-4" />
-                  )}
+                  <Store className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="font-heading font-bold text-xs uppercase tracking-wider text-gray-700">
-                    {orderType === "pickup" ? "Pickup Location" : "Delivery Destination"}
+                    Pickup Location (In-Store)
                   </h4>
                   <p className="text-xs font-semibold text-gray-900 mt-0.5">
-                    {orderType === "pickup"
-                      ? selectedStore.name
-                      : deliveryAddress.street}
+                    {selectedStore.address}
                   </p>
                 </div>
               </div>
               <span className="text-xs font-bold text-brand-700 bg-white px-2.5 py-1 rounded-full border border-warm-300">
-                {orderType === "pickup" ? selectedStore.pickupTime : deliveryAddress.estTime}
+                Ready in {selectedStore.pickupTime}
               </span>
             </div>
 
@@ -254,7 +248,7 @@ export default function CheckoutModal() {
                   }`}
                 >
                   <Banknote className="w-5 h-5" />
-                  <span className="text-xs">Cash {orderType === "pickup" ? "Pickup" : "on Delivery"}</span>
+                  <span className="text-xs">Pay at Counter</span>
                 </button>
               </div>
 
@@ -270,50 +264,44 @@ export default function CheckoutModal() {
                         type="text"
                         value={cardNumber}
                         onChange={(e) => setCardNumber(e.target.value)}
-                        className="w-full bg-white border border-warm-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:border-brand-600"
+                        className="w-full bg-white border border-warm-300 rounded-xl px-3.5 py-2.5 pl-10 text-xs sm:text-sm font-mono text-gray-900 focus:outline-none focus:border-brand-600"
                       />
-                      <div className="absolute right-3 top-2 flex items-center gap-1 text-[10px] font-bold text-gray-400">
-                        <span>VISA</span> • <span>MC</span> • <span>AMEX</span>
-                      </div>
+                      <CreditCard className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
                     <div>
-                      <label className="block text-xs text-gray-600 font-semibold mb-1">
+                      <label className="block text-[10px] text-gray-500 font-semibold mb-1 uppercase">
                         Expiry
                       </label>
                       <input
                         type="text"
                         value={cardExpiry}
                         onChange={(e) => setCardExpiry(e.target.value)}
-                        placeholder="MM/YY"
-                        className="w-full bg-white border border-warm-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:border-brand-600"
+                        className="w-full bg-white border border-warm-300 rounded-xl px-2.5 py-2 text-xs font-mono text-gray-900 text-center focus:outline-none focus:border-brand-600"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-600 font-semibold mb-1">
+                      <label className="block text-[10px] text-gray-500 font-semibold mb-1 uppercase">
                         CVC
                       </label>
                       <input
-                        type="password"
-                        maxLength={4}
+                        type="text"
                         value={cardCvc}
                         onChange={(e) => setCardCvc(e.target.value)}
-                        placeholder="CVC"
-                        className="w-full bg-white border border-warm-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:border-brand-600"
+                        className="w-full bg-white border border-warm-300 rounded-xl px-2.5 py-2 text-xs font-mono text-gray-900 text-center focus:outline-none focus:border-brand-600"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-600 font-semibold mb-1">
-                        ZIP
+                      <label className="block text-[10px] text-gray-500 font-semibold mb-1 uppercase">
+                        ZIP Code
                       </label>
                       <input
                         type="text"
                         value={cardZip}
                         onChange={(e) => setCardZip(e.target.value)}
-                        placeholder="55427"
-                        className="w-full bg-white border border-warm-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:border-brand-600"
+                        className="w-full bg-white border border-warm-300 rounded-xl px-2.5 py-2 text-xs font-mono text-gray-900 text-center focus:outline-none focus:border-brand-600"
                       />
                     </div>
                   </div>
@@ -321,12 +309,17 @@ export default function CheckoutModal() {
               )}
 
               {paymentMethod === "express" && (
-                <div className="bg-warm-100 p-4 rounded-2xl border border-warm-300 text-center space-y-2 animate-modal">
-                  <p className="text-xs text-gray-600 font-medium">
-                    Use one-touch biometric checkout with your device
+                <div className="bg-warm-100 p-4 rounded-2xl border border-warm-300 space-y-2 text-xs text-gray-700 animate-modal">
+                  <div className="flex items-center gap-2 font-bold text-gray-900">
+                    <ShieldCheck className="w-4 h-4 text-brand-600" />
+                    <span>Instant Apple Pay Checkout</span>
+                  </div>
+                  <p className="text-gray-600 text-[11px]">
+                    Authenticate with Touch ID or Face ID on your device to finalize your in-store pickup order.
                   </p>
                   <button
                     type="button"
+                    onClick={handleSubmitOrder}
                     className="w-full bg-black text-white font-bold py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors cursor-pointer"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -340,10 +333,10 @@ export default function CheckoutModal() {
               {paymentMethod === "cash" && (
                 <div className="bg-warm-100 p-4 rounded-2xl border border-warm-300 space-y-1 text-xs text-gray-700 animate-modal">
                   <p className="font-bold text-gray-900">
-                    Pay at Counter or upon Delivery
+                    Pay at Counter upon Pickup
                   </p>
                   <p className="text-gray-600">
-                    Please prepare exact change if paying cash upon delivery. For pickup, you can pay at the register when collecting your drinks.
+                    You can pay with cash, card, or contactless at the front register when picking up your drinks.
                   </p>
                 </div>
               )}
@@ -398,14 +391,6 @@ export default function CheckoutModal() {
                     <span>-${discount.toFixed(2)}</span>
                   </div>
                 )}
-                {orderType === "delivery" && (
-                  <div className="flex justify-between">
-                    <span>Delivery</span>
-                    <span className="font-medium text-gray-900">
-                      {deliveryFee === 0 ? "FREE" : `$${deliveryFee.toFixed(2)}`}
-                    </span>
-                  </div>
-                )}
                 <div className="flex justify-between">
                   <span>Minnesota Tax (8.875%)</span>
                   <span className="font-medium text-gray-900">${tax.toFixed(2)}</span>
@@ -444,7 +429,7 @@ export default function CheckoutModal() {
               </button>
 
               <p className="text-[11px] text-gray-500 text-center leading-relaxed">
-                By placing your order, you agree to MiTea&apos;s Terms of Service and fresh-brewed beverage pickup policy.
+                By placing your order, you agree to Mitea&apos;s Terms of Service and fresh-brewed beverage pickup policy.
               </p>
             </div>
           </div>

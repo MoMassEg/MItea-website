@@ -2,13 +2,11 @@
 
 import React from "react";
 import { useOrder } from "@/context/OrderContext";
-import { Store, Bike, AlertTriangle, Clock, MapPin, ChevronRight } from "lucide-react";
+import { Store, AlertTriangle, Clock, MapPin, ChevronRight } from "lucide-react";
 
 export default function StatusBar() {
   const {
-    orderType,
     selectedStore,
-    deliveryAddress,
     isStoreOpen,
     openLocationModal
   } = useOrder();
@@ -29,36 +27,30 @@ export default function StatusBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
         <div className="flex items-center gap-2.5 text-gray-700">
           <div className="w-7 h-7 rounded-md bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
-            {orderType === "pickup" ? (
-              <Store className="w-4 h-4" />
-            ) : (
-              <Bike className="w-4 h-4" />
-            )}
+            <Store className="w-4 h-4" />
           </div>
           <div>
-            <span className="font-bold text-brand-900 capitalize">
-              {orderType === "pickup" ? "Pickup" : "Delivery"}:
+            <span className="font-bold text-brand-900">
+              Pickup Only:
             </span>{" "}
             <span className="text-brand-700 font-medium">
-              {orderType === "pickup"
-                ? `${selectedStore.shortAddress} (${selectedStore.city})`
-                : `${deliveryAddress.street}, ${deliveryAddress.city}`}
+              {selectedStore.shortAddress}, Golden Valley, MN
             </span>
             <span className="text-warm-400 mx-1.5">·</span>
             <span className="inline-flex items-center gap-1 font-semibold text-brand-700">
               <Clock className="w-3.5 h-3.5" />
-              {orderType === "pickup" ? selectedStore.pickupTime : deliveryAddress.estTime}
+              Ready in {selectedStore.pickupTime}
             </span>
           </div>
         </div>
 
         <button
           type="button"
-          onClick={() => openLocationModal(orderType)}
+          onClick={() => openLocationModal("pickup")}
           className="inline-flex items-center gap-1 text-[11px] font-bold tracking-[0.05em] uppercase text-brand-600 hover:text-brand-800 bg-white px-3 py-1.5 rounded-md border border-warm-300 shadow-xs hover:bg-warm-100 transition-colors cursor-pointer"
         >
           <MapPin className="w-3.5 h-3.5 text-brand-600" />
-          <span>Change Fulfillment</span>
+          <span>Store Info &amp; Hours</span>
           <ChevronRight className="w-3 h-3 text-gray-400" />
         </button>
       </div>

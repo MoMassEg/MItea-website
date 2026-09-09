@@ -133,7 +133,7 @@ export default function Hero() {
             className="mt-8 pt-5 border-t border-warm-800/60 flex items-center justify-center gap-2 text-xs text-warm-400 hover:text-warm-200 cursor-pointer transition-colors group"
           >
             <MapPin className="w-3.5 h-3.5 text-accent-amber shrink-0 group-hover:scale-110 transition-transform" />
-            <span>Flagship: 7724 Olson Mem Hwy, Golden Valley · <strong className="text-accent-amber">Pickup ready in 10–15 min</strong></span>
+            <span>7724 Olson Mem Hwy, Golden Valley, MN 55427, United States · <strong className="text-accent-amber">Pickup ready in 10–15 min</strong></span>
           </div>
         </div>
       </div>
@@ -147,8 +147,8 @@ export default function Hero() {
           </div>
 
           <div>
-            <span className="font-editorial text-2xl sm:text-3xl font-bold text-accent-amber block">4 Locations</span>
-            <span className="text-[11px] text-warm-400 font-medium uppercase tracking-wider">Across Twin Cities Metro</span>
+            <span className="font-editorial text-2xl sm:text-3xl font-bold text-accent-amber block">Golden Valley</span>
+            <span className="text-[11px] text-warm-400 font-medium uppercase tracking-wider">7724 Olson Mem Hwy</span>
           </div>
 
           <div>

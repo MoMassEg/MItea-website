@@ -28,10 +28,7 @@ export default function ConfirmationModal() {
   const steps = [
     { label: "Received", desc: "Sent to kitchen" },
     { label: "Preparing", desc: "Steeping & Shaking" },
-    {
-      label: currentOrder.orderType === "pickup" ? "Ready" : "On the Way",
-      desc: currentOrder.orderType === "pickup" ? "At pickup counter" : "Driver dispatched"
-    },
+    { label: "Ready", desc: "At pickup counter" },
     { label: "Completed", desc: "Enjoy your boba!" }
   ];
 
@@ -84,7 +81,7 @@ export default function ConfirmationModal() {
               <span>
                 {orderTrackingStep === 0 && "Order Received"}
                 {orderTrackingStep === 1 && "Brewing & Shaking"}
-                {orderTrackingStep === 2 && (currentOrder.orderType === "pickup" ? "Ready for Pickup!" : "Out for Delivery")}
+                {orderTrackingStep === 2 && "Ready for Pickup!"}
                 {orderTrackingStep === 3 && "Order Completed"}
               </span>
             </div>
@@ -153,23 +150,19 @@ export default function ConfirmationModal() {
             <div className="flex items-center justify-between font-bold text-gray-900">
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-brand-600" />
-                {currentOrder.orderType === "pickup" ? "Pickup Location" : "Delivering To"}
+                Pickup Location
               </span>
               <span className="text-brand-700 flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5" />
-                Est: {currentOrder.orderType === "pickup" ? currentOrder.store.pickupTime : currentOrder.deliveryAddress.estTime}
+                Est: {currentOrder.store.pickupTime}
               </span>
             </div>
             <p className="text-gray-600 pl-5">
-              {currentOrder.orderType === "pickup"
-                ? `${currentOrder.store.name} — ${currentOrder.store.address}`
-                : `${currentOrder.deliveryAddress.street}, ${currentOrder.deliveryAddress.city}`}
+              {currentOrder.store.name} — {currentOrder.store.address}
             </p>
-            {currentOrder.orderType === "pickup" && (
-              <p className="text-gray-500 pl-5 text-[11px]">
-                Head to the mobile pickup counter inside and display Order #{currentOrder.orderId}.
-              </p>
-            )}
+            <p className="text-gray-500 pl-5 text-[11px]">
+              Head to the mobile pickup counter inside and display Order #{currentOrder.orderId}.
+            </p>
           </div>
 
           {/* Receipt Items */}
@@ -210,12 +203,10 @@ export default function ConfirmationModal() {
                     <span>-${currentOrder.discount.toFixed(2)}</span>
                   </div>
                 )}
-                {currentOrder.orderType === "delivery" && (
-                  <div className="flex justify-between">
-                    <span>Delivery</span>
-                    <span>{currentOrder.deliveryFee === 0 ? "FREE" : `$${currentOrder.deliveryFee.toFixed(2)}`}</span>
-                  </div>
-                )}
+                <div className="flex justify-between">
+                  <span>Fulfillment</span>
+                  <span className="font-semibold text-brand-700">In-Store Pickup</span>
+                </div>
                 <div className="flex justify-between">
                   <span>Sales Tax (8.875%)</span>
                   <span>${currentOrder.tax.toFixed(2)}</span>

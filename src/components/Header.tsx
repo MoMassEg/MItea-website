@@ -57,7 +57,7 @@ export default function Header() {
               </div>
               <div className="flex flex-col leading-none">
                 <span className="font-heading font-extrabold text-xl tracking-tight text-brand-800 group-hover:text-brand-900 transition-colors">
-                  MiTea
+                  Mitea
                 </span>
                 <span className="text-[9px] font-bold tracking-[0.14em] uppercase text-warm-500 mt-0.5">
                   Tea Craft &amp; Mochi
@@ -196,7 +196,7 @@ export default function Header() {
                     <Leaf className="w-4 h-4 text-warm-100" />
                   </div>
                   <span className="font-heading font-extrabold text-xl tracking-tight text-brand-800">
-                    MiTea
+                    Mitea
                   </span>
                 </div>
                 <button
@@ -260,7 +260,7 @@ export default function Header() {
                   onClick={() => { closeMobileNav(); openLocationModal(); }}
                   className="w-full bg-brand-600 hover:bg-brand-700 text-warm-50 font-heading font-bold text-[12px] tracking-[0.07em] uppercase py-3 rounded-md transition-colors cursor-pointer mt-2"
                 >
-                  Order Online
+                  Order Pickup
                 </button>
               </nav>
             </div>
@@ -268,12 +268,12 @@ export default function Header() {
             {/* Footer */}
             <div className="pt-5 border-t border-warm-300 space-y-3">
               <div className="flex gap-4 text-[11px] font-semibold uppercase tracking-wider text-warm-500">
-                <a href="#locations" onClick={closeMobileNav} className="hover:text-brand-600">Locations</a>
+                <a href="#locations" onClick={closeMobileNav} className="hover:text-brand-600">Location</a>
                 <button type="button" onClick={() => showToast("Customer Support: (763) 555-0192", "info")} className="hover:text-brand-600 cursor-pointer">Contact</button>
                 <button type="button" onClick={() => showToast("100% Organic dairy & single-origin teas guarantee.", "info")} className="hover:text-brand-600 cursor-pointer">Guarantee</button>
               </div>
               <p className="text-[10px] text-warm-400">
-                © {new Date().getFullYear()} MiTea Craft Beverage Co.
+                © {new Date().getFullYear()} Mitea Craft Beverage Co.
               </p>
             </div>
           </div>

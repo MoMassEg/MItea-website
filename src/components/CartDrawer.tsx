@@ -189,7 +189,7 @@ export default function CartDrawer() {
                     <Tag className="w-3.5 h-3.5 text-brand-600" />
                     Promo Code
                   </span>
-                  <span className="text-[10px] text-gray-400">Try &apos;BOBA10&apos; or &apos;FREEDROP&apos;</span>
+                  <span className="text-[10px] text-gray-400">Try &apos;MITEA10&apos; or &apos;BOBA10&apos;</span>
                 </div>
 
                 {appliedPromo ? (
@@ -214,14 +214,14 @@ export default function CartDrawer() {
                   <form onSubmit={handleApplyPromo} className="flex gap-2">
                     <input
                       type="text"
-                      placeholder="Enter promo code..."
+                      placeholder="Enter promo code (e.g. MITEA10)"
                       value={promoInput}
                       onChange={(e) => setPromoInput(e.target.value)}
-                      className="flex-grow bg-warm-100 border border-warm-300 rounded-xl px-3 py-2 text-xs uppercase placeholder-gray-400 focus:outline-none focus:border-brand-600 font-semibold"
+                      className="flex-grow bg-warm-100 border border-warm-300 rounded-xl px-3 py-1.5 text-xs text-brand-900 uppercase font-mono focus:outline-none focus:border-brand-600"
                     />
                     <button
                       type="submit"
-                      className="bg-gray-900 hover:bg-black text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors cursor-pointer"
+                      className="bg-brand-600 hover:bg-brand-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl transition-colors cursor-pointer"
                     >
                       Apply
                     </button>
@@ -230,29 +230,29 @@ export default function CartDrawer() {
               </div>
             )}
 
-            {/* Tip Presets */}
+            {/* Tip Selection */}
             {cart.length > 0 && (
-              <div className="bg-white rounded-2xl border border-warm-300 p-3.5 shadow-xs">
-                <div className="flex items-center justify-between mb-2">
+              <div className="bg-white rounded-2xl border border-warm-300 p-3.5 shadow-xs space-y-2">
+                <div className="flex items-center justify-between">
                   <span className="text-xs font-heading font-bold text-gray-800 flex items-center gap-1.5">
-                    <HeartHandshake className="w-3.5 h-3.5 text-rose-500" />
-                    Support Our Tearistas
+                    <HeartHandshake className="w-3.5 h-3.5 text-brand-600" />
+                    Support Tea Craftsmen (Tip)
                   </span>
-                  <span className="text-[10px] text-gray-400">100% goes to staff</span>
+                  <span className="text-[10px] text-gray-400">Optional</span>
                 </div>
                 <div className="grid grid-cols-4 gap-2">
-                  {tipOptions.map((tip) => (
+                  {tipOptions.map((opt) => (
                     <button
-                      key={tip.label}
+                      key={opt.label}
                       type="button"
-                      onClick={() => setSelectedTip(tip.value)}
-                      className={`py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                        selectedTip === tip.value
-                          ? "bg-brand-600 text-white border-brand-600 shadow-xs"
-                          : "bg-warm-100 hover:bg-warm-200 text-gray-700 border-warm-300"
+                      onClick={() => setSelectedTip(opt.value)}
+                      className={`py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        selectedTip === opt.value
+                          ? "bg-brand-600 text-white shadow-xs"
+                          : "bg-warm-100 text-gray-700 hover:bg-warm-200"
                       }`}
                     >
-                      {tip.label}
+                      {opt.label}
                     </button>
                   ))}
                 </div>
@@ -274,18 +274,10 @@ export default function CartDrawer() {
                     <span>-${discount.toFixed(2)}</span>
                   </div>
                 )}
-                {orderType === "delivery" && (
-                  <div className="flex justify-between">
-                    <span>Delivery Fee</span>
-                    <span className="font-semibold text-gray-900">
-                      {deliveryFee === 0 ? (
-                        <span className="text-emerald-700">FREE</span>
-                      ) : (
-                        `$${deliveryFee.toFixed(2)}`
-                      )}
-                    </span>
-                  </div>
-                )}
+                <div className="flex justify-between text-brand-800 font-medium">
+                  <span>Fulfillment</span>
+                  <span className="font-bold">In-Store Pickup (Free)</span>
+                </div>
                 <div className="flex justify-between">
                   <span>MN Sales Tax (8.875%)</span>
                   <span className="font-semibold text-gray-900">${tax.toFixed(2)}</span>

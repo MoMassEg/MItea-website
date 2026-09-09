@@ -146,7 +146,7 @@ export default function SendGiftModal() {
             <div className="relative bg-gradient-to-br from-[#2D5A3D] via-[#244931] to-[#152C1E] rounded-2xl p-5 text-white shadow-xl overflow-hidden border border-brand-700">
               {/* Decorative Wax Seal Stamp */}
               <div className="absolute top-4 right-4 w-12 h-12 rounded-full bg-warm-400/90 border-2 border-warm-300/80 text-[#2D5A3D] flex flex-col items-center justify-center font-serif font-black text-[9px] shadow-lg rotate-12">
-                <span>MiTea</span>
+                <span>Mitea</span>
                 <span className="text-[7px] uppercase font-sans">Craft</span>
               </div>
 

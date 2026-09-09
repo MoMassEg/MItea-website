@@ -398,7 +398,7 @@ export default function CateringModal() {
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-heading font-extrabold text-base sm:text-2xl text-warm-50 tracking-tight leading-tight">
-                  MiTea Artisan Catering
+                  Mitea Artisan Catering
                 </h3>
                 <span className="hidden sm:inline bg-accent-amber/20 border border-accent-amber/40 text-accent-amber text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0">
                   Custom Orders
@@ -811,8 +811,8 @@ export default function CateringModal() {
               <div className="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-4 flex items-center gap-3">
                 <Truck className="w-5 h-5 text-accent-amber shrink-0" />
                 <div className="text-xs text-amber-950">
-                  <span className="font-bold">Free Twin Cities Delivery</span> on orders over $150.
-                  Includes cups, wide straws, napkins, and thermal dispensers.
+                  <span className="font-bold">Complimentary Thermal Packaging Kit</span> on orders over $150.
+                  Includes cups, wide straws, napkins, and thermal dispensers for fresh Golden Valley pickup.
                 </div>
               </div>
 
@@ -1075,7 +1075,7 @@ export default function CateringModal() {
 
               <div>
                 <label className="block text-[11px] font-bold text-warm-800 uppercase tracking-wider mb-1">
-                  Delivery Venue Address (Twin Cities Metro)
+                  Event Venue / Organization Address
                 </label>
                 <input
                   type="text"

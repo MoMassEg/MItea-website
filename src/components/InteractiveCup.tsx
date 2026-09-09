@@ -171,7 +171,7 @@ export default function InteractiveCup() {
     teaTexture.wrapS = THREE.RepeatWrapping;
     teaTexture.wrapT = THREE.ClampToEdgeWrapping;
 
-    // ── Generate Crisp Black MiTea Brand Logo ──
+    // ── Generate Crisp Black Mitea Brand Logo ──
     const canvasSeal = document.createElement("canvas");
     canvasSeal.width = 1024;
     canvasSeal.height = 1024;
@@ -229,12 +229,12 @@ export default function InteractiveCup() {
       ctxSeal.arc(512, 200, 14, 0, Math.PI * 2);
       ctxSeal.fill();
 
-      // 5. Bold "MiTea" Brand Name
+      // 5. Bold "Mitea" Brand Name
       ctxSeal.fillStyle = blackColor;
       ctxSeal.font = "bold 110px 'Georgia', 'Times New Roman', serif";
       ctxSeal.textAlign = "center";
       ctxSeal.textBaseline = "middle";
-      ctxSeal.fillText("MiTea", 512, 490);
+      ctxSeal.fillText("Mitea", 512, 490);
 
       // 6. Subtitle & Details
       ctxSeal.font = "bold 26px sans-serif";
