@@ -133,24 +133,31 @@ export default function HomePage() {
         <CategoryNav />
 
         {/* Plan Your Event Banner */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-0 flex">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-0 flex justify-center">
           <button
             type="button"
             onClick={() =>
               document.getElementById("catering")?.scrollIntoView({ behavior: "smooth", block: "start" })
             }
-            className="group inline-flex items-center gap-2 bg-[#FFF4F3] hover:bg-[#FFE8E6] border border-[#F8847F]/30 hover:border-[#F8847F]/60 rounded-full px-4 py-1.5 transition-all cursor-pointer"
+            className="group inline-flex items-center gap-3 bg-[#FFF4F3] hover:bg-[#FFE8E6] border border-[#F8847F]/30 hover:border-[#F8847F]/60 rounded-2xl px-4 py-2.5 transition-all hover:shadow-sm cursor-pointer"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
-            <span className="text-[11px] font-heading font-bold uppercase tracking-wider text-gray-800">
-              Plan Your Event
-            </span>
-            <ChevronDown className="w-3 h-3 text-[#F8847F] group-hover:translate-y-0.5 transition-transform" />
+            <div className="w-7 h-7 rounded-lg bg-[#F8847F]/15 flex items-center justify-center shrink-0">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#F8847F]" />
+            </div>
+            <div className="text-left">
+              <span className="block text-[11px] font-heading font-extrabold uppercase tracking-wider text-gray-900">
+                Plan Your Event
+              </span>
+              <span className="block text-[10px] text-gray-500">
+                Catering packages · Custom orders · Live bar setup
+              </span>
+            </div>
+            <ChevronDown className="w-3.5 h-3.5 text-[#F8847F] group-hover:translate-y-0.5 transition-transform ml-1" />
           </button>
         </div>
 
         {/* Menu Grid Content */}
-        <div id="menu-sections" className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <div id="menu-sections" className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-8">
           {searchQuery && (
             <div className="mb-6 bg-white border border-warm-300 rounded-2xl p-4 flex items-center justify-between shadow-xs">
               <div className="flex items-center gap-2 text-sm text-gray-900">
