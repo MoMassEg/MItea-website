@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#6B3A2A",
+  themeColor: "#F8847F",
   width: "device-width",
   initialScale: 1,
 };
@@ -67,7 +67,7 @@ export default function RootLayout({
       lang="en"
       className={`${plusJakartaSans.variable} ${dmSans.variable} ${cormorantGaramond.variable} scroll-smooth`}
     >
-      <body className="bg-[#FDF6E3] text-[#1C0A00] font-body min-h-screen flex flex-col antialiased">
+      <body className="bg-[#FFF8F6] text-gray-900 font-body min-h-screen flex flex-col antialiased">
         <OrderProvider>
           {children}
         </OrderProvider>

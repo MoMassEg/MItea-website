@@ -1,14 +1,35 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { useOrder } from "@/context/OrderContext";
-import { MENU_DATA, ToppingOption } from "@/data/menu-data";
-import { X, Check, Plus, Minus, Sparkles } from "lucide-react";
+import { MENU_DATA, MenuItem, CartItem } from "@/data/menu-data";
+import { X, Check, Plus, Minus } from "lucide-react";
 
 export default function ProductModal() {
   const { selectedProduct, closeProductModal, addToCart } = useOrder();
 
+  if (!selectedProduct) return null;
+
+  return (
+    <ProductModalDialog
+      key={selectedProduct.id}
+      product={selectedProduct}
+      onClose={closeProductModal}
+      onAddToCart={addToCart}
+    />
+  );
+}
+
+function ProductModalDialog({
+  product,
+  onClose,
+  onAddToCart,
+}: {
+  product: MenuItem;
+  onClose: () => void;
+  onAddToCart: (item: Omit<CartItem, "uid" | "totalPrice">) => void;
+}) {
   const presets = MENU_DATA.customizationPresets;
 
   const [quantity, setQuantity] = useState(1);
@@ -16,18 +37,6 @@ export default function ProductModal() {
   const [selectedSugar, setSelectedSugar] = useState<string>("50");
   const [selectedIce, setSelectedIce] = useState<string>("regular");
   const [selectedToppings, setSelectedToppings] = useState<string[]>(["boba"]);
-
-  useEffect(() => {
-    if (selectedProduct) {
-      setQuantity(1);
-      setSelectedSize("regular");
-      setSelectedSugar("50");
-      setSelectedIce("regular");
-      setSelectedToppings(["boba"]);
-    }
-  }, [selectedProduct]);
-
-  if (!selectedProduct) return null;
 
   const currentSizeObj = presets.sizes.find((s) => s.value === selectedSize) || presets.sizes[0];
   const sizePrice = currentSizeObj.priceModifier;
@@ -37,7 +46,7 @@ export default function ProductModal() {
     return sum + (t ? t.price : 0);
   }, 0);
 
-  const unitPrice = Number((selectedProduct.price + sizePrice + toppingsPrice).toFixed(2));
+  const unitPrice = Number((product.price + sizePrice + toppingsPrice).toFixed(2));
   const totalPrice = Number((unitPrice * quantity).toFixed(2));
 
   const toggleTopping = (toppingId: string) => {
@@ -56,21 +65,21 @@ export default function ProductModal() {
       })
       .filter(Boolean) as { id: string; name: string; price: number }[];
 
-    addToCart({
-      id: selectedProduct.id,
-      name: selectedProduct.name,
-      image: selectedProduct.image,
+    onAddToCart({
+      id: product.id,
+      name: product.name,
+      image: product.image,
       size: currentSizeObj.label,
       sizePrice: currentSizeObj.priceModifier,
       sugar: sugarObj ? sugarObj.label : "50%",
       ice: iceObj ? iceObj.label : "Regular Ice",
       toppings: chosenToppings,
-      basePrice: selectedProduct.price,
+      basePrice: product.price,
       unitPrice: unitPrice,
       quantity: quantity
     });
 
-    closeProductModal();
+    onClose();
   };
 
   return (
@@ -82,7 +91,7 @@ export default function ProductModal() {
       {/* Dark backdrop */}
       <div
         className="fixed inset-0 glass-dark animate-backdrop"
-        onClick={closeProductModal}
+        onClick={onClose}
       />
 
       {/* Modal Card */}
@@ -90,15 +99,15 @@ export default function ProductModal() {
         {/* Modal Header */}
         <div className="relative h-48 sm:h-56 w-full bg-warm-200 shrink-0">
           <Image
-            src={selectedProduct.image}
-            alt={selectedProduct.name}
+            src={product.image}
+            alt={product.name}
             fill
             sizes="(max-width: 640px) 100vw, 512px"
             className="object-cover"
           />
           <button
             type="button"
-            onClick={closeProductModal}
+            onClick={onClose}
             className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/85 hover:bg-white text-gray-700 flex items-center justify-center shadow-md backdrop-blur-sm transition-all cursor-pointer z-10"
             aria-label="Close"
           >
@@ -106,10 +115,10 @@ export default function ProductModal() {
           </button>
           <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 sm:p-5 text-white">
             <span className="text-[11px] font-bold uppercase tracking-wider bg-brand-600 px-2 py-0.5 rounded-full inline-block mb-1">
-              {selectedProduct.category}
+              {product.category}
             </span>
             <h2 className="font-heading font-extrabold text-xl sm:text-2xl leading-tight">
-              {selectedProduct.name}
+              {product.name}
             </h2>
           </div>
         </div>
@@ -117,7 +126,7 @@ export default function ProductModal() {
         {/* Scrollable Customization Options */}
         <div className="p-5 sm:p-6 overflow-y-auto space-y-6 flex-grow">
           <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-            {selectedProduct.description}
+            {product.description}
           </p>
 
           {/* Size Options */}

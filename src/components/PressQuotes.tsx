@@ -44,7 +44,7 @@ export default function PressQuotes() {
   const q = QUOTES[idx];
 
   return (
-    <section className="py-20 px-4 sm:px-6 border-y border-warm-300" style={{ background: "#FFFDF8" }}>
+    <section className="py-20 px-4 sm:px-6 border-y border-warm-300" style={{ background: "#FFF9F6" }}>
       <div className="max-w-2xl mx-auto relative flex items-center justify-between">
 
         {/* Prev */}
@@ -52,7 +52,7 @@ export default function PressQuotes() {
           type="button"
           onClick={prev}
           aria-label="Previous"
-          className="w-10 h-10 sm:w-11 sm:h-11 rounded-md bg-warm-100 hover:bg-warm-200 border border-warm-300 flex items-center justify-center text-brand-600 transition-colors shadow-xs cursor-pointer shrink-0 z-10"
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-warm-100 border border-warm-300 flex items-center justify-center text-gray-800 transition-colors shadow-2xs cursor-pointer shrink-0 z-10"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
@@ -66,8 +66,8 @@ export default function PressQuotes() {
                 fontFamily: "var(--font-cormorant), Georgia, serif",
                 fontSize: "5rem",
                 lineHeight: 1,
-                color: "#D4903A",
-                opacity: 0.5,
+                color: "#F8847F",
+                opacity: 0.6,
                 userSelect: "none",
               }}
             >
@@ -84,7 +84,7 @@ export default function PressQuotes() {
               fontSize: "clamp(1.4rem, 3.5vw, 2.2rem)",
               lineHeight: 1.22,
               letterSpacing: "-0.01em",
-              color: "#1C0A00",
+              color: "#18181B",
               marginBottom: "1.25rem",
             }}
           >
@@ -92,16 +92,16 @@ export default function PressQuotes() {
           </h3>
 
           {/* Body */}
-          <p className="text-sm text-brand-700 leading-relaxed max-w-lg mx-auto">
+          <p className="text-sm text-gray-600 leading-relaxed max-w-lg mx-auto">
             {q.body}
           </p>
 
           {/* Attribution */}
           <div className="mt-7 pt-5 border-t border-warm-300">
-            <p className="font-heading font-bold text-[11px] tracking-[0.12em] uppercase text-brand-800">
+            <p className="font-heading font-bold text-[11px] tracking-[0.12em] uppercase text-gray-900">
               {q.source}
             </p>
-            <p className="text-[11px] text-warm-500 font-medium mt-0.5">{q.author}</p>
+            <p className="text-[11px] text-warm-600 font-medium mt-0.5">{q.author}</p>
           </div>
 
           {/* Dot indicators */}
@@ -117,7 +117,7 @@ export default function PressQuotes() {
                   width: i === idx ? "24px" : "7px",
                   height: "7px",
                   borderRadius: "4px",
-                  background: i === idx ? "#6B3010" : "#DFC8A5",
+                  background: i === idx ? "#F8847F" : "#F5DFD5",
                   border: "none",
                 }}
               />
@@ -130,7 +130,7 @@ export default function PressQuotes() {
           type="button"
           onClick={next}
           aria-label="Next"
-          className="w-10 h-10 sm:w-11 sm:h-11 rounded-md bg-warm-100 hover:bg-warm-200 border border-warm-300 flex items-center justify-center text-brand-600 transition-colors shadow-xs cursor-pointer shrink-0 z-10"
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-warm-100 border border-warm-300 flex items-center justify-center text-gray-800 transition-colors shadow-2xs cursor-pointer shrink-0 z-10"
         >
           <ArrowRight className="w-4 h-4" />
         </button>

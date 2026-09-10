@@ -1,34 +1,54 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DESIGN TOKENS — Rich Brown / Espresso / Caramel Palette
+   DESIGN TOKENS — Coral Pink, Deep Espresso & Warm Cream Palette
+   (Inspired by reference aesthetic)
    ============================================================ */
 @theme {
-  /* Brand Browns (replaces the old green) */
-  --color-brand-50:  #FDF6E3;
-  --color-brand-100: #F5E6CC;
-  --color-brand-200: #E8D0A8;
-  --color-brand-300: #D4AE80;
-  --color-brand-400: #B88048;
-  --color-brand-500: #8B4513;
-  --color-brand-600: #6B3010;
-  --color-brand-700: #4A1E08;
-  --color-brand-800: #2C1006;
-  --color-brand-900: #150602;
+  /* Brand Coral / Strawberry Pink scale */
+  --color-brand-50:  #FFF5F4;
+  --color-brand-100: #FEECE9;
+  --color-brand-200: #FDCFD0;
+  --color-brand-300: #FBAEA9;
+  --color-brand-400: #F9938D;
+  --color-brand-500: #F8847F;
+  --color-brand-600: #F56B65;
+  --color-brand-700: #E14E47;
+  --color-brand-800: #B93630;
+  --color-brand-900: #8B2621;
 
-  /* Warm Caramel / Parchment Tones */
-  --color-warm-50:  #FDFAF5;
-  --color-warm-100: #FAF3E8;
-  --color-warm-200: #F0E2CC;
-  --color-warm-300: #DFC8A5;
-  --color-warm-400: #C8A070;
-  --color-warm-500: #A07848;
-  --color-warm-600: #7A5828;
+  /* Warm Peach, Oat & Cream Tones */
+  --color-warm-50:  #FFFAF8;
+  --color-warm-100: #FFF6F2;
+  --color-warm-200: #FDF0E9;
+  --color-warm-300: #F5DFD5;
+  --color-warm-400: #E8C5B8;
+  --color-warm-500: #BD9485;
+  --color-warm-600: #906B5E;
+  --color-warm-700: #67483D;
+  --color-warm-800: #422B24;
+  --color-warm-900: #281611;
+
+  /* Deep Neutral Charcoal (Replacing any espresso brown) */
+  --color-espresso-950: #09090B;
+  --color-espresso-900: #18181B;
+  --color-espresso-800: #27272A;
+  --color-espresso-700: #3F3F46;
+  --color-espresso-600: #52525B;
+  --color-espresso-500: #71717A;
 
   /* Accent Amber / Gold */
-  --color-accent-amber: #D4903A;
-  --color-accent-gold:  #C8800A;
-  --color-accent-cream: #FDF6E3;
+  --color-accent-amber: #DF9749;
+  --color-accent-gold:  #C87A2E;
+  --color-accent-cream: #FFF6F2;
+
+  /* Pill Tag Colorway */
+  --color-tag-terracotta: #E35843;
+  --color-tag-cocoa:      #18181B;
+  --color-tag-oat:        #F0E5DA;
+  --color-tag-honey:      #DF9749;
+  --color-tag-rose:       #F58F85;
+  --color-tag-caramel:    #D98357;
 
   /* Typography */
   --font-heading: var(--font-plus-jakarta-sans), -apple-system, BlinkMacSystemFont, sans-serif;
@@ -40,27 +60,27 @@
    CSS VARIABLES — Semantic Tokens
    ============================================================ */
 :root {
-  --color-primary:       #6B3010;
-  --color-primary-dark:  #2C1006;
-  --color-primary-light: #8B4513;
-  --color-primary-soft:  #F5E6CC;
+  --color-primary:       #F8847F;
+  --color-primary-dark:  #18181B;
+  --color-primary-light: #FBAEA9;
+  --color-primary-soft:  #FEECE9;
 
-  --color-secondary:      #C8A070;
-  --color-secondary-soft: #FAF3E8;
+  --color-secondary:      #DF9749;
+  --color-secondary-soft: #FFF1E8;
 
-  --color-accent:         #D4903A;
-  --color-accent-soft:    #FDF0D8;
+  --color-accent:         #E35843;
+  --color-accent-soft:    #FDF0E9;
 
-  --color-bg:             #FDF6E3;
+  --color-bg:             #FFF8F6;
   --color-surface:        #FFFFFF;
-  --color-surface-soft:   #F5E6CC;
+  --color-surface-soft:   #FFF1E8;
 
-  --color-text-primary:   #1C0A00;
-  --color-text-secondary: #5C3520;
-  --color-text-muted:     #8B6040;
+  --color-text-primary:   #18181B;
+  --color-text-secondary: #3F3F46;
+  --color-text-muted:     #71717A;
 
-  --color-border:         #DFC8A5;
-  --color-border-light:   #F0E2CC;
+  --color-border:         #F5DFD5;
+  --color-border-light:   #FDF0E9;
 }
 
 /* ============================================================
@@ -100,9 +120,9 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   scrollbar-width: none;
 }
 
-/* Glassmorphism — tuned for warm cream palette */
+/* Glassmorphism — tuned for warm cream and coral palette */
 .glass-nav {
-  background-color: rgba(253, 246, 227, 0.93);
+  background-color: rgba(255, 246, 242, 0.94);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -114,7 +134,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 .glass-dark {
-  background-color: rgba(15, 7, 4, 0.7);
+  background-color: rgba(40, 18, 16, 0.75);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -124,7 +144,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .transform-3d { transform-style: preserve-3d; }
 
 /* ============================================================
-   CARD HOVER — Brown shadow system
+   CARD HOVER — Coral-Espresso shadow system
    ============================================================ */
 .transition-card {
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
@@ -132,7 +152,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
 .transition-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(107, 48, 16, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 20px 40px -12px rgba(248, 132, 127, 0.25), 0 4px 12px -2px rgba(40, 18, 16, 0.08);
 }
 
 .img-zoom-container { overflow: hidden; }
@@ -233,53 +253,54 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .pulse-dot { animation: pulseDot 2s infinite ease-in-out; }
 
 /* ============================================================
-   PRODUCT BADGES
+   PRODUCT BADGES — Multi-color pill palette from reference image
    ============================================================ */
 .badge-popular {
-  background-color: #FDF2E9;
-  color: #C05621;
-  border: 1px solid #FBD38D;
+  background-color: #E35843;
+  color: #FFFFFF;
+  border: 1px solid #D44733;
 }
 
 .badge-bestseller {
-  background-color: #FEF3C7;
-  color: #92400E;
-  border: 1px solid #FCD34D;
+  background-color: #DF9749;
+  color: #FFFFFF;
+  border: 1px solid #C88337;
 }
 
 .badge-signature {
-  background-color: #FBF0E0;
-  color: #7A3B0F;
-  border: 1px solid #D4A070;
+  background-color: #E14E47;
+  color: #FFFFFF;
+  border: 1px solid #C53B35;
 }
 
 .badge-vegan {
-  background-color: #F0FDF4;
-  color: #166534;
-  border: 1px solid #BBF7D0;
+  background-color: #F0E5DA;
+  color: #18181B;
+  border: 1px solid #DFC9B5;
 }
 
 .badge-caffeine-free {
-  background-color: #EFF6FF;
-  color: #1E40AF;
-  border: 1px solid #BFDBFE;
+  background-color: #F58F85;
+  color: #FFFFFF;
+  border: 1px solid #E67A70;
 }
 
 /* ============================================================
-   HERO SECTION — Dark Espresso / Chocolate Brown
+   HERO SECTION — Signature Coral Pink & Crisp Dark Charcoal
    ============================================================ */
 
 .hero-outer {
   position: relative;
-  min-height: 580px;
-  background-color: #100804;
+  min-height: 560px;
+  background: linear-gradient(165deg, #F8847F 0%, #FA918B 35%, #F7746D 70%, #F56B65 100%);
+  color: #18181B;
 }
 
-/* Ambient blobs — amber/brown warmth */
+/* Ambient blobs — soft warm peach and white light glow */
 .hero-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
+  filter: blur(90px);
   pointer-events: none;
   z-index: 0;
 }
@@ -287,27 +308,27 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .hero-blob-1 {
   width: 520px;
   height: 520px;
-  background: radial-gradient(circle, rgba(160, 80, 20, 0.50) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.40) 0%, transparent 65%);
   top: -120px;
-  left: -100px;
+  left: -80px;
   animation: blobDrift1 20s ease-in-out infinite alternate;
 }
 
 .hero-blob-2 {
-  width: 380px;
-  height: 380px;
-  background: radial-gradient(circle, rgba(200, 128, 30, 0.22) 0%, transparent 65%);
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(255, 235, 230, 0.45) 0%, transparent 65%);
   bottom: -20px;
-  right: 8%;
+  right: 6%;
   animation: blobDrift2 24s ease-in-out infinite alternate;
 }
 
 .hero-blob-3 {
-  width: 260px;
-  height: 260px;
-  background: radial-gradient(circle, rgba(180, 80, 10, 0.18) 0%, transparent 65%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, transparent 65%);
   top: 35%;
-  left: 42%;
+  left: 45%;
   animation: blobDrift1 16s ease-in-out infinite alternate-reverse;
 }
 
@@ -326,37 +347,35 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: rgba(212, 144, 58, 0.10);
-  border: 1px solid rgba(212, 144, 58, 0.22);
-  color: rgba(212, 144, 58, 0.90);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  color: #18181B;
   font-family: var(--font-plus-jakarta-sans), sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 3px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
   backdrop-filter: blur(8px);
 }
 
-/* Hero H1 — Cormorant for grandeur */
+/* Hero H1 — Cormorant Garamond */
 .hero-h1 {
   font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(3rem, 6.5vw, 5.5rem);
   line-height: 1.04;
   letter-spacing: -0.01em;
-  color: #FDF6E3;
+  color: #18181B;
 }
 
-/* Italic display accent */
+/* Display accent */
 .hero-highlight {
   font-style: italic;
   font-weight: 500;
-  background: linear-gradient(135deg, #F0C870 0%, #D4903A 45%, #FDF6E3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #E14E47;
 }
 
 /* Rotating word */
@@ -432,39 +451,33 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 /* ============================================================
-   HERO CTA BUTTONS — Crafted / Stamped aesthetic
+   HERO CTA BUTTONS — Tactile Pill aesthetic from reference image
    ============================================================ */
 
 .hero-cta-primary {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  background: #7A3B0F;
-  color: #FDF6E3;
+  background: #F8847F;
+  color: #FFFFFF;
   font-family: var(--font-plus-jakarta-sans), sans-serif;
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  padding: 13px 26px;
-  border-radius: 5px;
-  border: 1px solid rgba(212, 144, 58, 0.30);
+  padding: 13px 28px;
+  border-radius: 9999px;
+  border: 1px solid rgba(248, 132, 127, 0.4);
   box-shadow: 
-    0 0 0 1px rgba(107, 48, 16, 0.5),
-    0 1px 0 0 rgba(212, 144, 58, 0.15) inset,
-    0 8px 24px -4px rgba(120, 60, 10, 0.55);
+    0 8px 24px -4px rgba(248, 132, 127, 0.40);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .hero-cta-primary:hover {
-  background: #8B4513;
-  border-color: rgba(212, 144, 58, 0.45);
-  box-shadow:
-    0 0 0 1px rgba(107, 48, 16, 0.6),
-    0 1px 0 0 rgba(212, 144, 58, 0.2) inset,
-    0 12px 30px -4px rgba(120, 60, 10, 0.65);
+  background: #F56B65;
   transform: translateY(-1px);
+  box-shadow: 0 12px 28px -4px rgba(248, 132, 127, 0.50);
 }
 
 .hero-cta-primary:active { transform: scale(0.97); }
@@ -473,26 +486,27 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  background: rgba(253, 246, 227, 0.06);
-  color: rgba(253, 246, 227, 0.80);
-  border: 1px solid rgba(253, 246, 227, 0.16);
+  background: rgba(255, 255, 255, 0.90);
+  color: #18181B;
+  border: 1px solid rgba(255, 255, 255, 0.95);
   font-family: var(--font-plus-jakarta-sans), sans-serif;
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  padding: 13px 22px;
-  border-radius: 5px;
+  padding: 13px 24px;
+  border-radius: 9999px;
   backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .hero-cta-secondary:hover {
-  background: rgba(253, 246, 227, 0.11);
-  border-color: rgba(253, 246, 227, 0.28);
-  color: rgba(253, 246, 227, 0.95);
+  background: #FFFFFF;
+  color: #000000;
   transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
 }
 
 .hero-cta-secondary:active { transform: scale(0.97); }
@@ -501,20 +515,20 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: rgba(253, 246, 227, 0.38);
+  color: #374151;
   font-family: var(--font-plus-jakarta-sans), sans-serif;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 10px 12px;
-  border-radius: 5px;
+  padding: 10px 14px;
+  border-radius: 9999px;
   transition: color 0.2s ease;
   cursor: pointer;
 }
 
 .hero-cta-ghost:hover {
-  color: rgba(253, 246, 227, 0.72);
+  color: #000000;
 }
 
 /* ============================================================
@@ -527,11 +541,12 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(28, 10, 0, 0.55);
-  border: 1px solid rgba(212, 144, 58, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 20px rgba(40, 18, 16, 0.08);
   backdrop-filter: blur(16px);
-  border-radius: 8px;
-  padding: 10px 16px;
+  border-radius: 9999px;
+  padding: 8px 16px;
   z-index: 20;
   gap: 1px;
   pointer-events: none;
@@ -547,7 +562,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   width: 280px;
   height: 280px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(160, 80, 20, 0.45) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(248, 132, 127, 0.3) 50%, transparent 70%);
   filter: blur(50px);
   top: 50%;
   left: 50%;

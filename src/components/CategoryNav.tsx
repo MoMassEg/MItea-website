@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export default function CategoryNav() {
-  const { activeCategory, setActiveCategory, openCateringModal } = useOrder();
+  const { activeCategory, setActiveCategory } = useOrder();
   const navContainerRef = useRef<HTMLDivElement>(null);
   const isClickScrollingRef = useRef(false);
 
@@ -127,8 +127,8 @@ export default function CategoryNav() {
 
   return (
     <div
-      className="sticky top-[70px] z-30 backdrop-blur-md border-b border-warm-300 py-3.5 transition-all"
-      style={{ background: "rgba(253,246,227,0.95)" }}
+      className="sticky top-[72px] z-30 backdrop-blur-md border-b border-warm-300 py-3 transition-all"
+      style={{ background: "rgba(255, 246, 242, 0.95)" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div
@@ -145,44 +145,35 @@ export default function CategoryNav() {
                   type="button"
                   data-category-id={cat.id}
                   onClick={() => scrollToCategory(cat.id)}
-                  className={`shrink-0 flex items-center gap-2 px-3.5 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase transition-all cursor-pointer ${
+                  className={`shrink-0 flex items-center gap-2 px-4 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase transition-all cursor-pointer rounded-full ${
                     isActive
-                      ? "bg-brand-600 text-warm-50 shadow-sm rounded-md"
-                      : "bg-white text-brand-800 border border-warm-300 rounded-md hover:bg-warm-100"
+                      ? "bg-[#F8847F] text-white shadow-md shadow-[#F8847F]/25 hover:bg-[#F56B65]"
+                      : "bg-white text-gray-800 border border-gray-200 hover:border-brand-300 hover:bg-brand-50/50"
                   }`}
                 >
-                  <span className={isActive ? "text-white" : "text-brand-600"}>
-                    <span
-                      style={{
-                        color: isActive
-                          ? "rgba(253,246,227,0.85)"
-                          : "#D4903A"
-                      }}
-                    >
-                      {getCategoryIcon(cat.icon)}
-                    </span>
+                  <span className={isActive ? "text-white" : "text-brand-500"}>
+                    {getCategoryIcon(cat.icon)}
                   </span>
                   <span>{cat.name}</span>
                   <span
-                    className={`text-[9px] px-1.5 py-0.5 rounded-sm font-bold ${
+                    className={`text-[9.5px] px-2 py-0.5 rounded-full font-bold ${
                       isActive
-                        ? "bg-white/20 text-warm-100"
-                        : "bg-warm-200 text-warm-600"
+                        ? "bg-white/25 text-white"
+                        : "bg-warm-200 text-gray-700"
                     }`}
                   >
                     {cat.count}
                   </span>
                 </button>
 
-                {/* Quick Catering Modal Launcher - placed right after Catering & Events */}
+                {/* Quick Event Planning Button - text only */}
                 {isCatering && (
                   <button
                     type="button"
-                    onClick={openCateringModal}
-                    className="shrink-0 flex items-center gap-1.5 px-3 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase text-amber-950 bg-gradient-to-r from-accent-amber/90 to-amber-400 hover:from-accent-amber hover:to-amber-500 rounded-md shadow-xs transition-all cursor-pointer border border-amber-500/50"
+                    onClick={() => scrollToCategory("catering")}
+                    className="shrink-0 px-4 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-105 rounded-full shadow-2xs transition-all cursor-pointer border border-amber-400/50"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Book Catering</span>
+                    Plan Event
                   </button>
                 )}
               </React.Fragment>

@@ -31,15 +31,13 @@ import {
   Users,
   CheckCircle2,
   SlidersHorizontal,
-  ArrowRight
 } from "lucide-react";
 
 export default function HomePage() {
   const {
     searchQuery,
     setSearchQuery,
-    openCateringModal,
-    openGuildModal
+    openCateringModal
   } = useOrder();
 
   const cateringSection = useMemo(() => {
@@ -52,7 +50,6 @@ export default function HomePage() {
       description: getCategoryDescription("catering"),
       items: cateringItems
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filteredSections = useMemo(() => {
@@ -104,7 +101,7 @@ export default function HomePage() {
   function getCategoryDescription(catId: string): string {
     switch (catId) {
       case "catering":
-        return "Pop-up boba bars, party gallon jugs, and fresh mochi donut platters for meetings, weddings & gatherings (10–500+ guests)";
+        return "Bring the MiTea bar to your next event. We set up a full drink bar with towers of mochi donuts and take care of all the cups. It's a great fit for office parties, birthdays, and graduations. We handle every detail so you can enjoy the event.";
       case "milk-tea":
         return "Whole loose leaf teas infused with fresh organic dairy, coconut milk, and oat milk";
       case "fruit-tea":
@@ -137,9 +134,9 @@ export default function HomePage() {
         {/* Menu Grid Content */}
         <div id="menu-sections" className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           {searchQuery && (
-            <div className="mb-6 bg-brand-50 border border-brand-200 rounded-2xl p-4 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-brand-900">
-                <Search className="w-4 h-4 text-brand-600" />
+            <div className="mb-6 bg-white border border-warm-300 rounded-2xl p-4 flex items-center justify-between shadow-xs">
+              <div className="flex items-center gap-2 text-sm text-gray-900">
+                <Search className="w-4 h-4 text-[#F8847F]" />
                 <span>
                   Filtering menu for <strong>&ldquo;{searchQuery}&rdquo;</strong>
                 </span>
@@ -147,7 +144,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="text-xs font-bold text-brand-700 hover:text-brand-900 flex items-center gap-1 cursor-pointer"
+                className="text-xs font-bold text-[#F8847F] hover:text-gray-900 flex items-center gap-1 cursor-pointer"
               >
                 <XCircle className="w-4 h-4" />
                 <span>Clear Filter</span>
@@ -163,13 +160,13 @@ export default function HomePage() {
               <h3 className="font-heading font-bold text-xl text-gray-900">
                 No items match your search
               </h3>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1 max-w-sm mx-auto">
+              <p className="text-xs sm:text-sm text-gray-600 mt-1 max-w-sm mx-auto">
                 We couldn&apos;t find anything matching &ldquo;{searchQuery}&rdquo;. Try searching for &ldquo;boba&rdquo;, &ldquo;matcha&rdquo;, &ldquo;taro&rdquo;, or &ldquo;mochi&rdquo;.
               </p>
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="mt-5 bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-heading font-bold px-6 py-2.5 rounded-full transition-colors cursor-pointer"
+                className="mt-5 bg-[#F8847F] hover:bg-[#F56B65] text-white text-xs sm:text-sm font-heading font-bold px-6 py-2.5 rounded-full transition-colors cursor-pointer shadow-sm"
               >
                 View Full Menu
               </button>
@@ -179,16 +176,16 @@ export default function HomePage() {
               {filteredSections.map((section) => (
                 <section key={section.id} id={section.id} className="scroll-mt-36">
                   {/* Standard Section Title */}
-                  <div className="mb-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 border-b border-warm-300/80 pb-3">
+                  <div className="mb-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 border-b border-warm-300 pb-3">
                     <div>
-                      <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-[#1A1A1A] tracking-tight">
+                      <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-gray-900 tracking-tight">
                         {section.name}
                       </h2>
                       <p className="text-xs sm:text-sm text-gray-600 mt-1">
                         {section.description}
                       </p>
                     </div>
-                    <span className="text-xs font-semibold text-gray-400">
+                    <span className="text-xs font-semibold text-warm-600">
                       {section.items.length} item{section.items.length !== 1 ? "s" : ""}
                     </span>
                   </div>
@@ -210,42 +207,42 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
             <section
               id="catering"
-              className="scroll-mt-36 bg-gradient-to-br from-[#1E0B04] via-[#2A1006] to-[#120602] border-2 border-accent-amber/50 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden"
+              className="scroll-mt-36 bg-white border-2 border-brand-200/90 rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden text-gray-900"
             >
-              {/* Ambient luxury glow decoration */}
-              <div className="absolute top-0 right-0 w-96 h-96 bg-accent-amber/15 rounded-full blur-3xl pointer-events-none" />
+              {/* Soft ambient coral glow */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-[#F8847F]/10 rounded-full blur-3xl pointer-events-none" />
 
               {/* Specialized Catering Header */}
-              <div className="relative z-10 mb-8 border-b border-warm-800/80 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div className="relative z-10 mb-10 border-b border-warm-200 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-amber/20 border border-accent-amber/40 text-accent-amber text-[11px] font-heading font-extrabold uppercase tracking-widest mb-3">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F8847F]/10 border border-[#F8847F]/30 text-[#E14E47] text-[11px] font-heading font-extrabold uppercase tracking-widest mb-3">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>👑 VIP Large-Format Event Service</span>
+                    <span>Catering &amp; Events</span>
                   </div>
-                  <h2 className="font-heading font-extrabold text-2xl sm:text-3xl lg:text-4xl text-warm-50 tracking-tight">
-                    {cateringSection.name}
+                  <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-gray-900 tracking-tight">
+                    Catering
                   </h2>
-                  <p className="text-xs sm:text-sm text-warm-300 font-light mt-2 max-w-2xl leading-relaxed">
-                    {cateringSection.description}. Every package includes insulated dispensers, compostable cups, jumbo straws, and fresh slow-cooked boba.
+                  <p className="text-sm sm:text-base text-gray-600 font-normal mt-3 max-w-2xl leading-relaxed">
+                    Bring the MiTea bar to your next event. We set up a full drink bar with towers of mochi donuts and take care of all the cups. It&apos;s a great fit for office parties, birthdays, and graduations. We handle every detail so you can enjoy the event.
                   </p>
 
                   {/* Included Perks Checklist */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-xs text-warm-300">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-xs text-gray-700">
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-accent-amber shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
                       <span>Insulated Urns</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-accent-amber shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
                       <span>Cups &amp; Giant Straws</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-accent-amber shrink-0" />
-                      <span>Ice Kit &amp; Spigots</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
+                      <span>Donut Towers</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-accent-amber shrink-0" />
-                      <span>Curbside &amp; Store Pickup</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
+                      <span>Full Service &amp; Setup</span>
                     </div>
                   </div>
                 </div>
@@ -254,19 +251,195 @@ export default function HomePage() {
                   <button
                     type="button"
                     onClick={openCateringModal}
-                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-accent-amber to-amber-500 hover:from-accent-gold hover:to-amber-400 text-[#120602] font-heading font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-lg transition-all cursor-pointer"
+                    className="flex items-center justify-center gap-2 bg-[#F8847F] hover:bg-[#F56B65] text-white font-heading font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded-full shadow-lg shadow-brand-500/25 transition-all cursor-pointer"
                   >
                     <SlidersHorizontal className="w-4 h-4" />
-                    <span>Launch Custom Builder</span>
+                    <span>Plan Your Event</span>
                   </button>
                 </div>
               </div>
 
-              {/* Specialized Catering 2-Column Wide Grid */}
-              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {cateringSection.items.map((item: MenuItem) => (
-                  <ProductCard key={item.id} item={item} />
-                ))}
+              {/* ── PACKAGES SECTION (User Requested 3 Options) ── */}
+              <div className="relative z-10 mb-12">
+                <div className="flex items-center gap-2 mb-6">
+                  <span className="text-[11px] font-heading font-bold tracking-[0.14em] uppercase text-[#F8847F]">
+                    Packages
+                  </span>
+                  <span className="h-px flex-grow bg-warm-200" />
+                  <span className="text-xs text-gray-500 font-medium">Choose Your Experience</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* First Option: The Drop-Off */}
+                  <div className="bg-[#FFF8F6] border-2 border-warm-200 hover:border-[#F8847F] rounded-2xl p-6 flex flex-col justify-between transition-all hover:-translate-y-1 shadow-xs hover:shadow-md group">
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <span className="text-[10px] font-heading font-extrabold uppercase tracking-widest text-[#E35843] bg-[#E35843]/10 border border-[#E35843]/20 px-2.5 py-1 rounded-full">
+                          First Option
+                        </span>
+                        <span className="text-[11px] text-gray-500 font-medium">
+                          Pick a size
+                        </span>
+                      </div>
+
+                      <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-gray-900 tracking-tight">
+                        The Drop-Off
+                      </h3>
+
+                      <div className="inline-flex items-center gap-1.5 text-xs text-[#E35843] font-bold bg-[#E35843]/10 px-3 py-1 rounded-full mt-2 mb-3">
+                        <Users className="w-3.5 h-3.5" />
+                        <span>10 - 25 people</span>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-gray-600 font-normal leading-relaxed mt-2">
+                        A tray of pre-made drinks in your pick of four flavours, plus two dozen mochi donuts. Delivered cold and ready.
+                      </p>
+
+                      <ul className="mt-4 pt-3 border-t border-warm-200 space-y-2 text-xs text-gray-600">
+                        <li className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#E35843] shrink-0" />
+                          <span>4 Signature drink flavours of your choice</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#E35843] shrink-0" />
+                          <span>2 Dozen fresh pull-apart mochi donuts</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#E35843] shrink-0" />
+                          <span>Delivered cold and ready to serve</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={openCateringModal}
+                      className="mt-6 w-full py-3.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider bg-[#F8847F] hover:bg-[#F56B65] text-white transition-all cursor-pointer shadow-sm"
+                    >
+                      Select The Drop-Off
+                    </button>
+                  </div>
+
+                  {/* Second Option: The MiTea Bar */}
+                  <div className="bg-[#FFFBF5] border-2 border-amber-400 rounded-2xl p-6 flex flex-col justify-between transition-all hover:-translate-y-1 shadow-sm hover:shadow-md relative group">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-black text-[10px] font-heading font-extrabold uppercase tracking-widest px-3 py-0.5 rounded-full shadow-xs">
+                      Most Popular
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-3 mt-1">
+                        <span className="text-[10px] font-heading font-extrabold uppercase tracking-widest text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-full">
+                          Second Option
+                        </span>
+                        <span className="text-[11px] text-amber-700 font-medium">
+                          On-Site Bar
+                        </span>
+                      </div>
+
+                      <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-gray-900 tracking-tight">
+                        The MiTea Bar
+                      </h3>
+
+                      <div className="inline-flex items-center gap-1.5 text-xs text-amber-800 font-bold bg-amber-100 px-3 py-1 rounded-full mt-2 mb-3">
+                        <Users className="w-3.5 h-3.5" />
+                        <span>25 - 75 people</span>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-gray-600 font-normal leading-relaxed mt-2">
+                        We set up on site and make drinks to order with sugar, ice and toppings chosen by each guest, same as in the shop.
+                      </p>
+
+                      <ul className="mt-4 pt-3 border-t border-amber-200 space-y-2 text-xs text-gray-600">
+                        <li className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                          <span>Full live on-site mobile boba bar setup</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                          <span>Made to order with custom sweetness &amp; ice</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                          <span>Fresh toppings chosen by each guest</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={openCateringModal}
+                      className="mt-6 w-full py-3.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-105 text-black shadow-sm transition-all cursor-pointer font-extrabold"
+                    >
+                      Select The MiTea Bar
+                    </button>
+                  </div>
+
+                  {/* 3rd Option: The Whole Thing */}
+                  <div className="bg-[#FFF8F6] border-2 border-warm-200 hover:border-[#F8847F] rounded-2xl p-6 flex flex-col justify-between transition-all hover:-translate-y-1 shadow-xs hover:shadow-md group">
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <span className="text-[10px] font-heading font-extrabold uppercase tracking-widest text-[#F8847F] bg-[#F8847F]/10 border border-[#F8847F]/20 px-2.5 py-1 rounded-full">
+                          3rd Option
+                        </span>
+                        <span className="text-[11px] text-gray-500 font-medium">
+                          Full Event Service
+                        </span>
+                      </div>
+
+                      <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-gray-900 tracking-tight">
+                        The Whole Thing
+                      </h3>
+
+                      <div className="inline-flex items-center gap-1.5 text-xs text-[#F8847F] font-bold bg-[#F8847F]/10 px-3 py-1 rounded-full mt-2 mb-3">
+                        <Users className="w-3.5 h-3.5" />
+                        <span>75+ people</span>
+                      </div>
+
+                      <p className="text-xs sm:text-sm text-gray-600 font-normal leading-relaxed mt-2">
+                        Full bar service, a donut tower, and staff for the length of your event. Tell us the room and we&apos;ll plan it.
+                      </p>
+
+                      <ul className="mt-4 pt-3 border-t border-warm-200 space-y-2 text-xs text-gray-600">
+                        <li className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
+                          <span>Full bar service with custom curated menu</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
+                          <span>Showstopping Pon de Ring mochi donut tower</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
+                          <span>Dedicated staff for the length of your event</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={openCateringModal}
+                      className="mt-6 w-full py-3.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider bg-[#F8847F] hover:bg-[#F56B65] text-white transition-all cursor-pointer shadow-sm"
+                    >
+                      Select The Whole Thing
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* À La Carte Catering Items Grid */}
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-6">
+                  <span className="text-[11px] font-heading font-bold tracking-[0.14em] uppercase text-gray-500">
+                    À La Carte Platters &amp; Gallon Jugs
+                  </span>
+                  <span className="h-px flex-grow bg-warm-200" />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {cateringSection.items.map((item: MenuItem) => (
+                    <ProductCard key={item.id} item={item} />
+                  ))}
+                </div>
               </div>
             </section>
           </div>
