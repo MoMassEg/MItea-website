@@ -215,10 +215,7 @@ export default function HomePage() {
               {/* Specialized Catering Header */}
               <div className="relative z-10 mb-10 border-b border-warm-200 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F8847F]/10 border border-[#F8847F]/30 text-[#E14E47] text-[11px] font-heading font-extrabold uppercase tracking-widest mb-3">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Catering &amp; Events</span>
-                  </div>
+
                   <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-gray-900 tracking-tight">
                     Catering
                   </h2>
@@ -226,25 +223,7 @@ export default function HomePage() {
                     Bring the MiTea bar to your next event. We set up a full drink bar with towers of mochi donuts and take care of all the cups. It&apos;s a great fit for office parties, birthdays, and graduations. We handle every detail so you can enjoy the event.
                   </p>
 
-                  {/* Included Perks Checklist */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-xs text-gray-700">
-                    <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
-                      <span>Insulated Urns</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
-                      <span>Cups &amp; Giant Straws</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
-                      <span>Donut Towers</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
-                      <span>Full Service &amp; Setup</span>
-                    </div>
-                  </div>
+
                 </div>
 
                 <div className="shrink-0 flex flex-col sm:flex-row gap-3">

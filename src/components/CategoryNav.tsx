@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export default function CategoryNav() {
-  const { activeCategory, setActiveCategory } = useOrder();
+  const { activeCategory, setActiveCategory, openCateringModal } = useOrder();
   const navContainerRef = useRef<HTMLDivElement>(null);
   const isClickScrollingRef = useRef(false);
 
@@ -170,7 +170,7 @@ export default function CategoryNav() {
                 {isCatering && (
                   <button
                     type="button"
-                    onClick={() => scrollToCategory("catering")}
+                    onClick={openCateringModal}
                     className="shrink-0 px-4 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-105 rounded-full shadow-2xs transition-all cursor-pointer border border-amber-400/50"
                   >
                     Plan Event

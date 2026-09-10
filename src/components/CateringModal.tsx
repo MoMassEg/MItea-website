@@ -392,14 +392,13 @@ export default function CateringModal() {
                 <h3 className="font-heading font-extrabold text-base sm:text-2xl text-white tracking-tight leading-tight">
                   Catering
                 </h3>
-                <span className="hidden sm:inline bg-white/25 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0">
+                <span className="bg-white/25 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0">
                   Custom Orders &amp; Packages
                 </span>
               </div>
-              <p className="hidden sm:block text-xs text-white/90 mt-0.5 font-light">
+              <p className="text-xs text-white/90 mt-0.5 font-light">
                 Bring the MiTea bar to your next event. We set up a full drink bar with towers of mochi donuts and handle every detail.
               </p>
-              <p className="sm:hidden text-[10px] text-white/90 mt-0.5">Bring the MiTea bar to your next event</p>
             </div>
           </div>
 
