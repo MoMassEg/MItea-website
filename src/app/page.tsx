@@ -31,6 +31,7 @@ import {
   Users,
   CheckCircle2,
   SlidersHorizontal,
+  ChevronDown,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -130,6 +131,35 @@ export default function HomePage() {
       <main className="flex-grow">
         {/* Sticky Horizontal Category Nav (Menu is First) */}
         <CategoryNav />
+
+        {/* Plan Your Event Banner */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-0">
+          <button
+            type="button"
+            onClick={() =>
+              document.getElementById("catering")?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
+            className="group w-full flex items-center justify-between gap-4 bg-gradient-to-r from-[#FFF4F3] to-amber-50 border border-[#F8847F]/30 hover:border-[#F8847F]/70 rounded-2xl px-5 py-3.5 transition-all hover:shadow-md cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-[#F8847F]/15 flex items-center justify-center shrink-0">
+                <SlidersHorizontal className="w-4 h-4 text-[#F8847F]" />
+              </div>
+              <div className="text-left">
+                <span className="block text-xs font-heading font-extrabold uppercase tracking-wider text-gray-900">
+                  Plan Your Event
+                </span>
+                <span className="block text-[11px] text-gray-500 mt-0.5">
+                  Catering packages · Custom orders · Live bar setup
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 text-[#F8847F] shrink-0">
+              <span className="text-[11px] font-bold hidden sm:inline">See packages</span>
+              <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+            </div>
+          </button>
+        </div>
 
         {/* Menu Grid Content */}
         <div id="menu-sections" className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
