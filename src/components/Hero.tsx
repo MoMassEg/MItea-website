@@ -13,7 +13,6 @@ import {
   ShieldCheck,
   MapPin,
   PartyPopper,
-  Play,
   Heart
 } from "lucide-react";
 
@@ -95,15 +94,7 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Circular badge inspired by the "PLAY VIDEO" round badge in reference */}
-            <button
-              type="button"
-              onClick={handleExplore}
-              className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white/95 hover:bg-white text-gray-900 border border-white px-4 py-2 rounded-full shadow-lg font-heading font-bold text-[11px] uppercase tracking-wider cursor-pointer hover:scale-105 transition-all"
-            >
-              <Play className="w-3.5 h-3.5 fill-[#F8847F] text-[#F8847F]" />
-              <span>Explore Fresh Menu</span>
-            </button>
+
           </div>
 
           {/* Dietary & Quality Pill Tags — zero brown */}
