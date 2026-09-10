@@ -178,7 +178,7 @@ export default function HomePage() {
                   {/* Standard Section Title */}
                   <div className="mb-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 border-b border-warm-300 pb-3">
                     <div>
-                      <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-gray-900 tracking-tight">
+                      <h2 className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight">
                         {section.name}
                       </h2>
                       <p className="text-xs sm:text-sm text-gray-600 mt-1">

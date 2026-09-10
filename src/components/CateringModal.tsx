@@ -44,7 +44,7 @@ interface CustomBakerySelection {
 export default function CateringModal() {
   const { isCateringOpen, closeCateringModal, addToCart, openCartDrawer, showToast } = useOrder();
 
-  const [activeTab, setActiveTab] = useState<"builder" | "packages">("builder");
+  const [activeTab, setActiveTab] = useState<"builder" | "packages">("packages");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -388,17 +388,6 @@ export default function CateringModal() {
               <PartyPopper className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="font-heading font-extrabold text-base sm:text-2xl text-white tracking-tight leading-tight">
-                  Catering
-                </h3>
-                <span className="bg-white/25 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0">
-                  Custom Orders &amp; Packages
-                </span>
-              </div>
-              <p className="text-xs text-white/90 mt-0.5 font-light">
-                Bring the MiTea bar to your next event. We set up a full drink bar with towers of mochi donuts and handle every detail.
-              </p>
             </div>
           </div>
 
@@ -1144,91 +1133,7 @@ export default function CateringModal() {
                 </div>
               </div>
 
-              {/* Individual Catering Items */}
-              <div className="pt-2">
-                <span className="text-xs font-heading font-extrabold uppercase tracking-widest text-gray-900 block mb-3">
-                  Individual Platter &amp; Jug Orders
-                </span>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {cateringItems.map((pkg) => {
-                  const qty = packageQuantities[pkg.id] || 1;
-
-                  return (
-                    <div
-                      key={pkg.id}
-                      className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-col justify-between hover:border-[#F8847F]/40 hover:shadow-md transition-all group"
-                    >
-                      <div>
-                        {/* Image + Badge */}
-                        <div className="relative h-32 rounded-xl overflow-hidden mb-3 bg-warm-200">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={pkg.image}
-                            alt={pkg.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <span className="absolute top-2 left-2 bg-black/80 backdrop-blur-md text-[#DF9749] font-heading font-bold text-[10px] uppercase px-2 py-0.5 rounded-md">
-                            {pkg.badge}
-                          </span>
-                          <span className="absolute bottom-2 right-2 bg-white/95 text-gray-900 font-editorial font-bold text-base px-2.5 py-0.5 rounded-lg shadow-sm">
-                            ${(pkg.price * qty).toFixed(2)}
-                          </span>
-                        </div>
-
-                        <h4 className="font-heading font-bold text-sm text-gray-900 leading-snug">
-                          {pkg.name}
-                        </h4>
-                        <p className="text-xs text-gray-600 mt-1.5 leading-relaxed line-clamp-3">
-                          {pkg.description}
-                        </p>
-                      </div>
-
-                      {/* Quantity Selector + Add Button */}
-                      <div className="mt-4 pt-3 border-t border-warm-100 flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[11px] text-gray-500 font-medium">Qty:</span>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setPackageQuantities((prev) => ({
-                                ...prev,
-                                [pkg.id]: Math.max(1, (prev[pkg.id] || 1) - 1),
-                              }))
-                            }
-                            className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center justify-center transition-colors cursor-pointer"
-                          >
-                            <Minus className="w-3 h-3" />
-                          </button>
-                          <span className="w-6 text-center font-bold text-xs font-mono">{qty}</span>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setPackageQuantities((prev) => ({
-                                ...prev,
-                                [pkg.id]: (prev[pkg.id] || 1) + 1,
-                              }))
-                            }
-                            className="w-7 h-7 rounded-lg bg-[#F8847F] hover:bg-[#F56B65] text-white flex items-center justify-center transition-colors cursor-pointer"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => handleAddPackageWithQty(pkg)}
-                          className="flex items-center gap-1.5 bg-[#F8847F] hover:bg-[#F56B65] text-white text-xs font-heading font-bold uppercase tracking-wider px-3.5 py-2 rounded-xl transition-all shadow-sm cursor-pointer"
-                        >
-                          <Plus className="w-4 h-4" />
-                          <span>Add ({qty})</span>
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
 
               {/* Need custom headcount banner */}
               <div className="border-t border-warm-200 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
