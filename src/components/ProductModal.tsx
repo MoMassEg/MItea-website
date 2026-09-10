@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useOrder } from "@/context/OrderContext";
-import { MENU_DATA, MenuItem, CartItem } from "@/data/menu-data";
+import { MENU_DATA, MenuItem, CartItem, ToppingOption } from "@/data/menu-data";
 import { X, Check, Plus, Minus } from "lucide-react";
 
 export default function ProductModal() {
