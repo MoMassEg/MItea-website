@@ -17,9 +17,11 @@ import {
 import { ShieldCheck, AlertCircle, Sparkles } from 'lucide-react';
 import { apiClient } from '@/lib/api-client';
 
-// Initialize Stripe once outside components
-const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
-const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
+// Initialize Stripe with environment variable or fallback to configured project key
+const DEFAULT_STRIPE_KEY =
+  'pk_test_51UCOlyFhWLJMtlj6wXtpGVscQbF5u5crxDIQgism0HpxLIIirlF5IaK2W4gM8WjfSaH1LVMU2IrcHQCR8fRlLwFt00ZwDtcZJQ';
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || DEFAULT_STRIPE_KEY;
+const defaultStripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
 export interface StripePaymentFormRef {
   validate: () => Promise<boolean>;
@@ -300,7 +302,7 @@ export const StripePaymentForm = forwardRef<StripePaymentFormRef, StripePaymentF
       };
     }, [amount]);
 
-    if (!publishableKey || !stripePromise) {
+    if (!publishableKey || !defaultStripePromise) {
       return (
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-800 space-y-1">
           <p className="font-bold flex items-center gap-1.5">
@@ -308,14 +310,14 @@ export const StripePaymentForm = forwardRef<StripePaymentFormRef, StripePaymentF
             Stripe Publishable Key Missing
           </p>
           <p>
-            Please set <code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code> in <code>.env.local</code> to enable real Stripe payments.
+            Please set <code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code> in <code>.env</code> to enable real Stripe payments.
           </p>
         </div>
       );
     }
 
     return (
-      <Elements stripe={stripePromise} options={elementsOptions}>
+      <Elements stripe={defaultStripePromise} options={elementsOptions}>
         <StripePaymentFormInner
           ref={ref}
           amount={amount}
