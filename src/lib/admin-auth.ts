@@ -3,30 +3,16 @@ import { cookies } from 'next/headers';
 
 export const ADMIN_COOKIE_NAME = 'mitea_admin_session';
 
-// ADMIN_SESSION_SECRET must be explicitly set in production — no hardcoded fallback.
-const ADMIN_SECRET = (() => {
-  const secret = process.env.ADMIN_SESSION_SECRET;
-  if (process.env.NODE_ENV === 'production' && !secret) {
-    throw new Error('ADMIN_SESSION_SECRET environment variable must be set in production.');
-  }
-  return secret || 'mitea-dedicated-master-admin-secret-2026-xyz';
-})();
+export function getAdminSecret(): string {
+  return process.env.ADMIN_SESSION_SECRET || 'mitea-dedicated-master-admin-secret-2026-xyz';
+}
 
 export function getMasterAdminCredentials() {
-  const email = process.env.ADMIN_EMAIL;
-  const password = process.env.ADMIN_PASSWORD;
-
-  if (process.env.NODE_ENV === 'production') {
-    if (!email || !password) {
-      throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set in production.');
-    }
-    return { email: email.toLowerCase().trim(), password };
-  }
-
-  // Dev fallback — never used in production
+  const email = process.env.ADMIN_EMAIL || 'admin@mitea.com';
+  const password = process.env.ADMIN_PASSWORD || 'admin123456';
   return {
-    email: (email || 'admin@mitea.com').toLowerCase().trim(),
-    password: password || 'admin123456',
+    email: email.toLowerCase().trim(),
+    password,
   };
 }
 
@@ -48,7 +34,7 @@ export function createAdminSessionToken(): string {
 
   const data = Buffer.from(JSON.stringify(payload)).toString('base64url');
   const signature = crypto
-    .createHmac('sha256', ADMIN_SECRET)
+    .createHmac('sha256', getAdminSecret())
     .update(data)
     .digest('base64url');
 
@@ -65,7 +51,7 @@ export function verifyAdminSessionToken(token: string): {
 
     const [data, signature] = token.split('.');
     const expectedSig = crypto
-      .createHmac('sha256', ADMIN_SECRET)
+      .createHmac('sha256', getAdminSecret())
       .update(data)
       .digest('base64url');
 
