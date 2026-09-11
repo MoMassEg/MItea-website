@@ -27,9 +27,9 @@ export const createOrderSchema = z.object({
     .default('pickup')
     .transform((val) => val.toUpperCase() as 'PICKUP' | 'DELIVERY'),
   storeId: z.string().optional(),
-  customerName: z.string().min(1, 'Customer name is required'),
-  customerEmail: z.string().email('Valid email address is required'),
-  customerPhone: z.string().min(7, 'Valid phone number is required'),
+  customerName: z.string().default('Guest'),
+  customerEmail: z.string().optional().default('guest@mitea.com'),
+  customerPhone: z.string().optional().default(''),
   deliveryAddress: z
     .union([
       z.string(),

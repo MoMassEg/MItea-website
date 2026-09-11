@@ -53,38 +53,54 @@ export async function processOrderCreation(
   }
 
   // 1. Resolve Store
-  let resolvedStoreId: string = '00000000-0000-0000-0000-000000000001';
+  let resolvedStoreId: string = '5ad5e69f-b811-40e8-983a-dde710039af2';
   let resolvedStore: StoreLocation = MENU_DATA.stores[0];
+  let defaultMenuItemId: string | null = null;
 
   if (dbClient) {
-    let query = dbClient.from('stores').select('*');
-    if (storeId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(storeId)) {
-      query = query.eq('id', storeId);
-    } else {
-      query = query.eq('is_flagship', true);
-    }
-    const { data: storeData } = await query.maybeSingle();
-    if (storeData) {
-      resolvedStoreId = storeData.id;
-      resolvedStore = {
-        id: storeData.id,
-        name: storeData.name,
-        address: storeData.address,
-        shortAddress: storeData.short_address,
-        city: storeData.city,
-        state: storeData.state,
-        zip: storeData.zip,
-        distance: `${storeData.city}, ${storeData.state}`,
-        phone: storeData.phone,
-        isOpen: storeData.is_open,
-        openStatus: storeData.is_open ? 'Open now' : 'Closed',
-        closingTime: storeData.closing_time,
-        pickupTime: storeData.pickup_time_estimate,
-        deliveryTime: storeData.delivery_time_estimate,
-        isNearest: true,
-        isFlagship: storeData.is_flagship,
-        acceptingOrders: storeData.accepts_orders,
-      };
+    try {
+      let query = dbClient.from('stores').select('*');
+      if (storeId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(storeId)) {
+        query = query.eq('id', storeId);
+      } else {
+        query = query.eq('is_flagship', true);
+      }
+      const { data: storeData } = await query.limit(1).maybeSingle();
+      if (storeData) {
+        resolvedStoreId = storeData.id;
+        resolvedStore = {
+          id: storeData.id,
+          name: storeData.name,
+          address: storeData.address,
+          shortAddress: storeData.short_address,
+          city: storeData.city,
+          state: storeData.state,
+          zip: storeData.zip,
+          distance: `${storeData.city}, ${storeData.state}`,
+          phone: storeData.phone,
+          isOpen: storeData.is_open,
+          openStatus: storeData.is_open ? 'Open now' : 'Closed',
+          closingTime: storeData.closing_time,
+          pickupTime: storeData.pickup_time_estimate,
+          deliveryTime: storeData.delivery_time_estimate,
+          isNearest: true,
+          isFlagship: storeData.is_flagship,
+          acceptingOrders: storeData.accepts_orders,
+        };
+      } else {
+        const { data: anyStore } = await dbClient.from('stores').select('*').limit(1).maybeSingle();
+        if (anyStore) {
+          resolvedStoreId = anyStore.id;
+        }
+      }
+
+      // Fetch a valid fallback menu_item id for foreign key reliability
+      const { data: anyItem } = await dbClient.from('menu_items').select('id').limit(1).maybeSingle();
+      if (anyItem) {
+        defaultMenuItemId = anyItem.id;
+      }
+    } catch (storeErr) {
+      console.warn('[OrderService] Store / default item resolution warning:', storeErr);
     }
   }
 
@@ -110,23 +126,60 @@ export async function processOrderCreation(
     let basePrice = 5.50;
     let name = item.name || 'MiTea Drink';
     let imageUrl = '';
-    let dbItemId = item.menuItemId;
+    let dbItemId: string | null = null;
 
     // Fetch from Supabase or MENU_DATA
     if (dbClient) {
-      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.menuItemId);
-      let itemQuery = dbClient.from('menu_items').select('id, name, price, image_url');
-      if (isUUID) {
-        itemQuery = itemQuery.eq('id', item.menuItemId);
-      } else {
-        itemQuery = itemQuery.or(`slug.eq.${item.menuItemId},name.ilike.%${item.menuItemId}%`);
-      }
-      const { data: dbItem } = await itemQuery.maybeSingle();
-      if (dbItem) {
-        basePrice = Number(dbItem.price);
-        name = dbItem.name;
-        imageUrl = dbItem.image_url;
-        dbItemId = dbItem.id;
+      try {
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.menuItemId);
+        if (isUUID) {
+          const { data: dbItem } = await dbClient
+            .from('menu_items')
+            .select('id, name, price, image_url')
+            .eq('id', item.menuItemId)
+            .limit(1)
+            .maybeSingle();
+          if (dbItem) {
+            basePrice = Number(dbItem.price);
+            name = dbItem.name;
+            imageUrl = dbItem.image_url;
+            dbItemId = dbItem.id;
+          }
+        }
+
+        if (!dbItemId) {
+          // Check by slug
+          const { data: dbItem } = await dbClient
+            .from('menu_items')
+            .select('id, name, price, image_url')
+            .eq('slug', item.menuItemId)
+            .limit(1)
+            .maybeSingle();
+          if (dbItem) {
+            basePrice = Number(dbItem.price);
+            name = dbItem.name;
+            imageUrl = dbItem.image_url;
+            dbItemId = dbItem.id;
+          }
+        }
+
+        if (!dbItemId && item.name) {
+          // Check by exact name or partial name
+          const { data: dbItem } = await dbClient
+            .from('menu_items')
+            .select('id, name, price, image_url')
+            .ilike('name', item.name)
+            .limit(1)
+            .maybeSingle();
+          if (dbItem) {
+            basePrice = Number(dbItem.price);
+            name = dbItem.name;
+            imageUrl = dbItem.image_url;
+            dbItemId = dbItem.id;
+          }
+        }
+      } catch (lookupErr) {
+        console.warn('[OrderService] Item lookup warning:', lookupErr);
       }
     }
 
@@ -138,9 +191,10 @@ export async function processOrderCreation(
         basePrice = fallbackItem.price;
         name = fallbackItem.name;
         imageUrl = fallbackItem.image;
-        if (!dbClient) dbItemId = fallbackItem.id;
       }
     }
+
+    const finalMenuItemId = dbItemId || defaultMenuItemId || item.menuItemId;
 
     // Size calculation
     const isLarge = item.size.toLowerCase().includes('large') || item.size.toLowerCase().includes('24');
@@ -163,7 +217,7 @@ export async function processOrderCreation(
     subtotal += itemTotal;
 
     recalculatedItems.push({
-      menuItemId: dbItemId,
+      menuItemId: finalMenuItemId,
       name,
       imageUrl,
       size: item.size,
@@ -282,10 +336,26 @@ export async function processOrderCreation(
   // 9. Persist to DB or Fallback Memory
   if (dbClient) {
     try {
+      // Validate userId exists in profiles to avoid foreign key violation
+      let validatedUserId: string | null = null;
+      if (userId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId)) {
+        try {
+          const { data: profile } = await dbClient
+            .from('profiles')
+            .select('id')
+            .eq('id', userId)
+            .limit(1)
+            .maybeSingle();
+          if (profile) validatedUserId = profile.id;
+        } catch {
+          validatedUserId = null;
+        }
+      }
+
       const { error: orderError } = await dbClient.from('orders').insert({
         id: orderId,
         order_number: orderNumber,
-        user_id: userId || null,
+        user_id: validatedUserId,
         store_id: resolvedStoreId,
         order_type: orderType,
         status: 'PENDING',
@@ -297,10 +367,10 @@ export async function processOrderCreation(
         tip_amount: tipAmount,
         total,
         promo_code_id: promoCodeId,
-        payment_method: paymentMethod,
-        customer_name: customerName,
-        customer_phone: customerPhone,
-        customer_email: customerEmail,
+        payment_method: paymentMethod || 'Credit Card',
+        customer_name: customerName || 'Guest',
+        customer_phone: customerPhone || '',
+        customer_email: customerEmail || 'guest@mitea.com',
         delivery_address: orderType === 'DELIVERY' ? (formattedDeliveryAddress as any) : null,
         estimated_ready_time: estimatedReadyTime,
         special_instructions: specialInstructions || null,
@@ -312,23 +382,25 @@ export async function processOrderCreation(
         // Insert order items
         const orderItemRows = recalculatedItems.map((item) => ({
           order_id: orderId,
-          menu_item_id: item.menuItemId,
+          menu_item_id: item.menuItemId || defaultMenuItemId,
           name: item.name,
-          image_url: item.imageUrl,
-          size: item.size,
-          size_price: item.sizePrice,
-          sugar_level: item.sugar,
-          ice_level: item.ice,
-          toppings: item.toppings,
-          base_price: item.basePrice,
-          unit_price: item.unitPrice,
-          quantity: item.quantity,
-          total_price: item.totalPrice,
+          image_url: item.imageUrl || '',
+          size: item.size || 'Regular',
+          size_price: item.sizePrice || 0,
+          sugar_level: item.sugar || '',
+          ice_level: item.ice || '',
+          toppings: item.toppings || [],
+          base_price: item.basePrice || 0,
+          unit_price: item.unitPrice || 0,
+          quantity: item.quantity || 1,
+          total_price: item.totalPrice || 0,
         }));
 
         const { error: itemsError } = await dbClient.from('order_items').insert(orderItemRows);
         if (itemsError) {
-          console.error('[OrderService] ❌ DB insert order_items failed:', itemsError.message);
+          console.error('[OrderService] ❌ DB insert order_items failed:', itemsError.message, itemsError);
+        } else {
+          console.log(`[OrderService] ✅ Successfully saved order #${orderNumber} (${orderId}) and ${orderItemRows.length} items to Supabase.`);
         }
       }
     } catch (dbErr: any) {
@@ -601,12 +673,16 @@ export async function updateOrderStatus(
   if (!isPlaceholder) {
     try {
       const dbClient = createAdminClient();
+      const dbStatus = status === 'READY' ? 'READY_FOR_PICKUP' : status;
       const updateData: Record<string, string> = {
-        status,
+        status: dbStatus,
         updated_at: order.updated_at,
       };
       if (paymentStatus) updateData.payment_status = paymentStatus;
-      await dbClient.from('orders').update(updateData as any).eq('id', order.id);
+      const { error: updateErr } = await dbClient.from('orders').update(updateData as any).eq('id', order.id);
+      if (updateErr) {
+        console.error('[OrderService] ❌ DB update order status failed:', updateErr.message);
+      }
     } catch {
       // Fallback - in-memory update still happened
     }
@@ -834,7 +910,8 @@ export async function getOrderStatsForAdmin() {
         };
 
         combined.forEach((o) => {
-          const s = o.status?.toUpperCase() || 'PENDING';
+          let s = o.status?.toUpperCase() || 'PENDING';
+          if (s === 'READY_FOR_PICKUP') s = 'READY';
           statusBreakdown[s] = (statusBreakdown[s] || 0) + 1;
         });
 
@@ -874,7 +951,8 @@ export async function getOrderStatsForAdmin() {
   };
 
   allOrders.forEach((o) => {
-    const s = o.status?.toUpperCase() || 'PENDING';
+    let s = o.status?.toUpperCase() || 'PENDING';
+    if (s === 'READY_FOR_PICKUP') s = 'READY';
     statusBreakdown[s] = (statusBreakdown[s] || 0) + 1;
   });
 

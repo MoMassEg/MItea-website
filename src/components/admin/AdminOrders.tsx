@@ -82,7 +82,7 @@ export default function AdminOrders() {
       const s = o.status?.toUpperCase();
       const matchesStatus =
         selectedStatus === "all" ||
-        (selectedStatus === "ACTIVE" && ["PENDING", "CONFIRMED", "PREPARING", "READY"].includes(s)) ||
+        (selectedStatus === "ACTIVE" && ["PENDING", "CONFIRMED", "PREPARING", "READY", "READY_FOR_PICKUP"].includes(s)) ||
         s === selectedStatus;
 
       const q = searchQuery.toLowerCase().trim();
