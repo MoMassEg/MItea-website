@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useOrder } from "@/context/OrderContext";
+import { useCancelOrder, useGetOrder } from "@/lib/hooks/useOrders";
 import {
   X,
   CheckCircle,
@@ -11,7 +12,9 @@ import {
   CupSoda,
   CheckCircle2,
   PackageCheck,
-  RotateCcw
+  RotateCcw,
+  Loader2,
+  XCircle
 } from "lucide-react";
 
 export default function ConfirmationModal() {
@@ -20,10 +23,46 @@ export default function ConfirmationModal() {
     closeConfirmationModal,
     currentOrder,
     orderTrackingStep,
-    setOrderTrackingStep
+    setOrderTrackingStep,
+    clearCart,
+    showToast,
   } = useOrder();
 
+  // Task 6: cancel order hook
+  const { cancelOrder, loading: isCancelling } = useCancelOrder();
+  // Task 10: live order refresh from DB
+  const { getOrder } = useGetOrder();
+  const [liveOrder, setLiveOrder] = useState(currentOrder);
+
+  useEffect(() => {
+    setLiveOrder(currentOrder);
+    if (!currentOrder?.orderId) return;
+    let mounted = true;
+    getOrder(currentOrder.orderId)
+      .then((res) => { if (mounted && res?.order) setLiveOrder((prev) => ({ ...prev!, ...res.order })); })
+      .catch(() => {});
+    return () => { mounted = false; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentOrder?.orderId]);
+
+  // Task 6: cancel handler
+  const handleCancelOrder = async () => {
+    if (!currentOrder?.orderId) return;
+    if (!confirm("Are you sure you want to cancel this order?")) return;
+    try {
+      await cancelOrder(currentOrder.orderId, "Customer requested cancellation");
+      showToast("Order cancelled successfully.", "info");
+      clearCart();
+      closeConfirmationModal();
+    } catch (err: any) {
+      showToast(err?.message || "Failed to cancel order. Please call the store.", "warning");
+    }
+  };
+
   if (!isConfirmationModalOpen || !currentOrder) return null;
+
+  // Use live order data where available, fall back to local order
+  const displayOrder = liveOrder ?? currentOrder;
 
   const steps = [
     { label: "Received", desc: "Sent to kitchen" },
@@ -62,10 +101,10 @@ export default function ConfirmationModal() {
             Order Confirmed
           </span>
           <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-white">
-            Thank You, {currentOrder.customerName.split(" ")[0]}!
+            Thank You, {displayOrder.customerName.split(" ")[0]}!
           </h2>
           <p className="text-xs sm:text-sm text-warm-100/90 mt-1">
-            Order #{currentOrder.orderId} • Placed at {currentOrder.createdAt}
+            Order #{displayOrder.orderId} • Placed at {displayOrder.createdAt}
           </p>
         </div>
 
@@ -158,10 +197,10 @@ export default function ConfirmationModal() {
               </span>
             </div>
             <p className="text-gray-600 pl-5">
-              {currentOrder.store.name} — {currentOrder.store.address}
+              {displayOrder.store.name} — {displayOrder.store.address}
             </p>
             <p className="text-gray-500 pl-5 text-[11px]">
-              Head to the mobile pickup counter inside and display Order #{currentOrder.orderId}.
+              Head to the mobile pickup counter inside and display Order #{displayOrder.orderId}.
             </p>
           </div>
 
@@ -230,17 +269,34 @@ export default function ConfirmationModal() {
         <div className="p-4 sm:p-5 bg-warm-100 border-t border-warm-300 flex items-center justify-between shrink-0">
           <div className="text-xs text-gray-500 flex items-center gap-1.5">
             <PackageCheck className="w-4 h-4 text-emerald-600" />
-            <span>SMS updates will be sent to {currentOrder.customerPhone}</span>
+            <span>SMS updates will be sent to {displayOrder.customerPhone}</span>
           </div>
 
-          <button
-            type="button"
-            onClick={closeConfirmationModal}
-            className="px-6 py-2.5 rounded-full bg-brand-600 hover:bg-brand-800 text-white font-heading font-bold text-xs sm:text-sm shadow-md shadow-brand-600/20 btn-press transition-all flex items-center gap-1.5 cursor-pointer"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Start New Order</span>
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Task 6: Cancel Order button */}
+            <button
+              type="button"
+              onClick={handleCancelOrder}
+              disabled={isCancelling}
+              className="px-4 py-2.5 rounded-full border border-red-200 text-red-600 hover:bg-red-50 font-heading font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            >
+              {isCancelling ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <XCircle className="w-3.5 h-3.5" />
+              )}
+              <span>Cancel Order</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={closeConfirmationModal}
+              className="px-6 py-2.5 rounded-full bg-brand-600 hover:bg-brand-800 text-white font-heading font-bold text-xs sm:text-sm shadow-md shadow-brand-600/20 btn-press transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Start New Order</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

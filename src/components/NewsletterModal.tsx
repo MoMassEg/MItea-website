@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useOrder } from "@/context/OrderContext";
+import { apiClient } from '@/lib/api-client';
 import {
   X,
   Mail,
@@ -32,7 +33,7 @@ export default function NewsletterModal() {
 
   if (!isGuildModalOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@") || !email.includes(".")) {
       setStatus("error");
@@ -41,11 +42,18 @@ export default function NewsletterModal() {
     }
 
     setStatus("loading");
-    setTimeout(() => {
+    setErrorMsg("");
+
+    try {
+      const data = await apiClient.post<{ promoCode?: string }>("/api/newsletter/subscribe", { email: email.trim() });
+      if (data.promoCode) {
+        applyPromo(data.promoCode);
+      }
       setStatus("success");
-      applyPromo("GUILD10");
-      showToast("🎉 VIP 10% Off Code applied to your order!", "success");
-    }, 800);
+    } catch (err: any) {
+      setStatus("error");
+      setErrorMsg(err.message || "Failed to subscribe. Please try again.");
+    }
   };
 
   const copyPromo = () => {

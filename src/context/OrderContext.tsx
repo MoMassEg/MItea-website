@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { apiClient } from '@/lib/api-client';
 import {
   MENU_DATA,
   ADDRESS_DATABASE,
@@ -92,10 +93,20 @@ interface OrderContextType {
   isMobileNavOpen: boolean;
   openMobileNav: () => void;
   closeMobileNav: () => void;
+  isOrderHistoryOpen: boolean;
+  openOrderHistoryModal: () => void;
+  closeOrderHistoryModal: () => void;
+  isAuthModalOpen: boolean;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
+  currentUser: { id: string; email: string; name?: string; role?: string } | null;
+  setCurrentUser: (user: { id: string; email: string; name?: string; role?: string } | null) => void;
+  logout: () => Promise<void>;
   loyaltyStamps: number;
+  setLoyaltyStamps: (stamps: number) => void;
   addLoyaltyStamp: () => void;
   appliedPromo: PromoCode | null;
-  applyPromo: (code: string) => { success: boolean; message: string };
+  applyPromo: (code: string) => Promise<{ success: boolean; message: string }>;
   removePromo: () => void;
   selectedTip: number;
   setSelectedTip: (tip: number) => void;
@@ -119,39 +130,33 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   const [selectedStore, setSelectedStore] = useState<StoreLocation>(MENU_DATA.stores[0]);
   const [deliveryAddress, setDeliveryAddress] = useState<DeliveryAddress>(ADDRESS_DATABASE[1]);
   
-  // Initial demo cart matching prototype
-  const [cart, setCart] = useState<CartItem[]>([
-    {
-      uid: "init-cart-1",
-      id: "coconut-milk-tea",
-      name: "Coconut Milk Tea",
-      image: MENU_DATA.items[0].image,
-      size: "Regular (16 oz)",
-      sizePrice: 0,
-      sugar: "50%",
-      ice: "Regular Ice",
-      toppings: [{ id: "boba", name: "Tapioca Pearls", price: 0.75 }],
-      basePrice: 5.50,
-      unitPrice: 6.25,
-      quantity: 1,
-      totalPrice: 6.25
-    },
-    {
-      uid: "init-cart-2",
-      id: "brown-sugar-boba-milk",
-      name: "Brown Sugar Boba Milk",
-      image: MENU_DATA.items[1].image,
-      size: "Regular (16 oz)",
-      sizePrice: 0,
-      sugar: "75%",
-      ice: "Less Ice",
-      toppings: [],
-      basePrice: 6.75,
-      unitPrice: 6.75,
-      quantity: 1,
-      totalPrice: 6.75
+  // Cart — starts empty on both server and client (avoids SSR hydration mismatch)
+  // Rehydrated from localStorage in useEffect after first mount
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  // After mount: restore cart from localStorage (client-only)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('mitea_cart');
+      if (saved) {
+        const parsed = JSON.parse(saved) as CartItem[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setCart(parsed);
+        }
+      }
+    } catch {
+      // Ignore parse / storage errors
     }
-  ]);
+  }, []);
+
+  // Keep localStorage in sync whenever cart changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('mitea_cart', JSON.stringify(cart));
+    } catch {
+      // Silently ignore storage errors (private mode, quota exceeded, etc.)
+    }
+  }, [cart]);
 
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -168,7 +173,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   const [isSendGiftOpen, setIsSendGiftOpen] = useState<boolean>(false);
   const [isRewardsOpen, setIsRewardsOpen] = useState<boolean>(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState<boolean>(false);
-  const [loyaltyStamps, setLoyaltyStamps] = useState<number>(7);
+  const [loyaltyStamps, setLoyaltyStamps] = useState<number>(0); // Task 8: start at 0; real count loaded from DB on login
 
   const openSendGiftModal = () => setIsSendGiftOpen(true);
   const closeSendGiftModal = () => setIsSendGiftOpen(false);
@@ -187,13 +192,113 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   const openMobileNav = () => setIsMobileNavOpen(true);
   const closeMobileNav = () => setIsMobileNavOpen(false);
 
-  const addLoyaltyStamp = () => {
+  // Order History Modal
+  const [isOrderHistoryOpen, setIsOrderHistoryOpen] = useState<boolean>(false);
+  const openOrderHistoryModal = () => setIsOrderHistoryOpen(true);
+  const closeOrderHistoryModal = () => setIsOrderHistoryOpen(false);
+
+  // Auth State & Modals
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<{
+    id: string;
+    email: string;
+    name?: string;
+    role?: string;
+  } | null>(null);
+
+  const openAuthModal = () => setIsAuthModalOpen(true);
+  const closeAuthModal = () => setIsAuthModalOpen(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user && isMounted) {
+            setCurrentUser({
+              id: data.user.id,
+              email: data.user.email,
+              name: data.profile?.name || data.user.email?.split('@')[0],
+              role: data.profile?.role || 'CUSTOMER',
+            });
+          }
+        }
+      } catch {
+        // Dev fallback
+      }
+    }
+    checkAuth();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Hydrate loyalty stamps from API when authenticated
+  useEffect(() => {
+    if (!currentUser) return;
+    let isMounted = true;
+    async function fetchLoyalty() {
+      try {
+        const res = await fetch('/api/loyalty/stamps');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.card && isMounted) {
+            setLoyaltyStamps(data.card.stamps);
+          }
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    fetchLoyalty();
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser]);
+
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      setCurrentUser(null);
+      showToast('You have been signed out.', 'info');
+    } catch {
+      showToast('Failed to sign out', 'warning');
+    }
+  };
+
+  const addLoyaltyStamp = async () => {
+    try {
+      if (currentUser) {
+        const res = await fetch('/api/loyalty/stamps', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ count: 1 }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.card) {
+            setLoyaltyStamps(data.card.stamps);
+            if (data.card.stamps >= 10) {
+              showToast('🎉 10th Stamp! You unlocked a FREE Drink voucher!', 'success');
+            } else {
+              showToast(`Loyalty stamp punched! ${data.card.stamps}/10 stamps collected. 🧋`, 'success');
+            }
+            return;
+          }
+        }
+      }
+    } catch {
+      // Fall through to local update
+    }
+
     setLoyaltyStamps((s) => {
       const next = s >= 10 ? 1 : s + 1;
       if (next === 10) {
-        showToast("🎉 10th Stamp! You unlocked a FREE Drink voucher!", "success");
+        showToast('🎉 10th Stamp! You unlocked a FREE Drink voucher!', 'success');
       } else {
-        showToast(`Loyalty stamp punched! ${next}/10 stamps collected. 🧋`, "success");
+        showToast(`Loyalty stamp punched! ${next}/10 stamps collected. 🧋`, 'success');
       }
       return next;
     });
@@ -201,7 +306,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
   // Promo and Tip
   const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
-  const [selectedTip, setSelectedTip] = useState<number>(2.00);
+  const [selectedTip, setSelectedTip] = useState<number>(0);
 
   // Orders and Tracking
   const [currentOrder, setCurrentOrder] = useState<PlacedOrder | null>(null);
@@ -280,22 +385,57 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = () => {
     setCart([]);
+    try { localStorage.removeItem('mitea_cart'); } catch { /* ignore */ }
   };
 
   // Promos
-  const applyPromo = (code: string): { success: boolean; message: string } => {
+  const applyPromo = async (code: string): Promise<{ success: boolean; message: string }> => {
     const clean = code.trim().toUpperCase();
-    if (clean === "BOBA10" || clean === "MITEA10" || clean === "WELCOME10" || clean === "GUILD10") {
-      setAppliedPromo({
-        code: clean,
-        percent: 10,
-        description: "10% off your entire order"
-      });
-      showToast(`Promo ${clean} applied! 10% discount added.`, "success");
-      return { success: true, message: "10% off applied!" };
-    } else {
-      showToast("Invalid promo code. Try 'MITEA10' or 'BOBA10'.", "warning");
-      return { success: false, message: "Invalid code" };
+    if (!clean) {
+      showToast("Please enter a promo code.", "warning");
+      return { success: false, message: "Code is required" };
+    }
+
+    try {
+      // Task 3: use typed apiClient instead of raw fetch
+      const data = await apiClient.validatePromo(clean, subtotal);
+
+      if (data.valid) {
+        setAppliedPromo({
+          code: clean,
+          percent: data.discountPercent,
+          freeDelivery: data.freeDelivery,
+          description: data.description ?? '',
+        });
+        showToast(`Promo ${clean} applied! ${data.description}`, "success");
+        return { success: true, message: data.description ?? '' };
+      } else {
+        showToast(data.reason || "Invalid promo code.", "warning");
+        return { success: false, message: data.reason || "Invalid promo code" };
+      }
+    } catch {
+      // Local fallback when API is unreachable
+      if (clean === "BOBA10" || clean === "MITEA10" || clean === "WELCOME10" || clean === "GUILD10") {
+        setAppliedPromo({
+          code: clean,
+          percent: 10,
+          description: "10% off your entire order",
+        });
+        showToast(`Promo ${clean} applied! 10% discount added.`, "success");
+        return { success: true, message: "10% off applied!" };
+      } else if (clean === "FIRSTORDER") {
+        setAppliedPromo({
+          code: clean,
+          percent: 15,
+          freeDelivery: true,
+          description: "15% off and free delivery on your first order over $15",
+        });
+        showToast(`Promo ${clean} applied! 15% discount & free delivery added.`, "success");
+        return { success: true, message: "15% off and free delivery applied!" };
+      } else {
+        showToast("Invalid promo code. Try 'MITEA10' or 'GUILD10'.", "warning");
+        return { success: false, message: "Invalid code" };
+      }
     }
   };
 
@@ -370,7 +510,9 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   const taxableAmount = Math.max(0, subtotal - discount);
   const tax = Number((taxableAmount * 0.08875).toFixed(2)); // Minnesota 8.875% tax
 
-  const total = Number((taxableAmount + deliveryFee + tax + (selectedTip || 0)).toFixed(2));
+  const total = cart.length === 0
+    ? 0
+    : Number((taxableAmount + deliveryFee + tax + (selectedTip || 0)).toFixed(2));
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -427,7 +569,17 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         isMobileNavOpen,
         openMobileNav,
         closeMobileNav,
+        isAuthModalOpen,
+        openAuthModal,
+        closeAuthModal,
+        isOrderHistoryOpen,
+        openOrderHistoryModal,
+        closeOrderHistoryModal,
+        currentUser,
+        setCurrentUser,
+        logout,
         loyaltyStamps,
+        setLoyaltyStamps,
         addLoyaltyStamp,
         appliedPromo,
         applyPromo,

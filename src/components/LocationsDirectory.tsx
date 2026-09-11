@@ -2,7 +2,8 @@
 
 import React from "react";
 import { useOrder } from "@/context/OrderContext";
-import { MENU_DATA, StoreLocation } from "@/data/menu-data";
+import { StoreLocation } from "@/data/menu-data";
+import { useStores } from "@/hooks/useStores";
 import {
   MapPin,
   Clock,
@@ -18,7 +19,8 @@ import {
 
 export default function LocationsDirectory() {
   const { setSelectedStore, setOrderType, showToast } = useOrder();
-  const store = MENU_DATA.stores[0];
+  const { stores } = useStores();
+  const store = stores[0];
 
   const handleSelectStore = (selectedStore: StoreLocation) => {
     setSelectedStore(selectedStore);

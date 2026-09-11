@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { useOrder } from "@/context/OrderContext";
+import { apiClient } from '@/lib/api-client';
 import { MENU_DATA, MenuItem } from "@/data/menu-data";
 import {
   X,
@@ -47,6 +48,7 @@ export default function CateringModal() {
   const [activeTab, setActiveTab] = useState<"builder" | "packages">("packages");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedRequestNumber, setSubmittedRequestNumber] = useState<string>("#MTC-9482");
 
   // ── Package tab quantities ──
   const [packageQuantities, setPackageQuantities] = useState<Record<string, number>>({
@@ -56,8 +58,29 @@ export default function CateringModal() {
     "catering-party-tea-jug": 1,
   });
 
-  // ── Custom Builder State ──
+  // Task 7: live catering packages from API with static fallback
+  const [cateringPackages, setCateringPackages] = useState<MenuItem[]>(() =>
+    MENU_DATA.items.filter((i) => i.category === "catering")
+  );
+
+  React.useEffect(() => {
+    let mounted = true;
+    apiClient
+      .get<{ packages: MenuItem[] }>("/api/catering/packages")
+      .then((res) => {
+        if (mounted && res?.packages?.length) {
+          setCateringPackages(res.packages);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // ── Custom Builder State (Starts completely empty, saved in localStorage) ──
   const [formatType, setFormatType] = useState<"cups" | "jugs">("cups");
+  const [isLoadedFromStorage, setIsLoadedFromStorage] = useState(false);
 
   // Popular customizable drinks for catering
   const cateringDrinkCandidates = useMemo(() => {
@@ -67,40 +90,22 @@ export default function CateringModal() {
   }, []);
 
   // Drink selections: item.id -> { item, quantity, sugar, milk }
-  const [drinkSelections, setDrinkSelections] = useState<Record<string, CustomDrinkSelection>>({
-    "brown-sugar-boba-milk": {
-      item: MENU_DATA.items.find((i) => i.id === "brown-sugar-boba-milk") || MENU_DATA.items[0],
-      quantity: 10,
-      sugar: "50% Sweet",
-      milk: "Fresh Whole Milk",
-    },
-    "uji-matcha-latte": {
-      item: MENU_DATA.items.find((i) => i.id === "uji-matcha-latte") || MENU_DATA.items[1],
-      quantity: 8,
-      sugar: "50% Sweet",
-      milk: "Organic Oat Milk",
-    },
-    "roasted-oolong-milk-tea": {
-      item: MENU_DATA.items.find((i) => i.id === "roasted-oolong-milk-tea") || MENU_DATA.items[2],
-      quantity: 7,
-      sugar: "50% Sweet",
-      milk: "Fresh Whole Milk",
-    },
-  });
+  // Starts empty on project open; saved and loaded from localStorage
+  const [drinkSelections, setDrinkSelections] = useState<Record<string, CustomDrinkSelection>>({});
 
-  // Topping selections
+  // Topping selections: all default to 0 quantity on project open
   const [toppingsSelection, setToppingsSelection] = useState<Record<string, CustomToppingSelection>>({
     "slow-cooked-boba": {
       id: "slow-cooked-boba",
       name: "Slow-Cooked Kokuto Boba (Portions)",
       price: 0.65,
-      quantity: 20,
+      quantity: 0,
     },
     "lychee-jelly": {
       id: "lychee-jelly",
       name: "Lychee Coconut Jelly (Portions)",
       price: 0.65,
-      quantity: 15,
+      quantity: 0,
     },
     "mango-popping": {
       id: "mango-popping",
@@ -116,7 +121,7 @@ export default function CateringModal() {
     },
   });
 
-  // Bakery selections
+  // Bakery selections: all default to 0 quantity on project open
   const [bakerySelection, setBakerySelection] = useState<Record<string, CustomBakerySelection>>({
     "donut-12": {
       id: "donut-12",
@@ -124,7 +129,7 @@ export default function CateringModal() {
       desc: "Assorted Matcha, Black Sesame, Strawberry & Kokuto glazes",
       price: 34.0,
       image: "https://images.unsplash.com/photo-1527515862127-a4fc05baf7a5?auto=format&fit=crop&w=400&q=80",
-      quantity: 1,
+      quantity: 0,
     },
     "donut-24": {
       id: "donut-24",
@@ -144,6 +149,80 @@ export default function CateringModal() {
     },
   });
 
+  // ── Load from LocalStorage on mount ──
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem("mitea_catering_builder_state");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.drinkSelections && typeof parsed.drinkSelections === "object") {
+          setDrinkSelections(parsed.drinkSelections);
+        }
+        if (parsed.toppingsSelection && typeof parsed.toppingsSelection === "object") {
+          setToppingsSelection((prev) => {
+            const next = { ...prev };
+            for (const key of Object.keys(parsed.toppingsSelection)) {
+              if (next[key]) {
+                next[key] = {
+                  ...next[key],
+                  quantity: Number(parsed.toppingsSelection[key].quantity) || 0,
+                };
+              }
+            }
+            return next;
+          });
+        }
+        if (parsed.bakerySelection && typeof parsed.bakerySelection === "object") {
+          setBakerySelection((prev) => {
+            const next = { ...prev };
+            for (const key of Object.keys(parsed.bakerySelection)) {
+              if (next[key]) {
+                next[key] = {
+                  ...next[key],
+                  quantity: Number(parsed.bakerySelection[key].quantity) || 0,
+                };
+              }
+            }
+            return next;
+          });
+        }
+        if (parsed.formatType === "cups" || parsed.formatType === "jugs") {
+          setFormatType(parsed.formatType);
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to load catering builder from localStorage:", e);
+    } finally {
+      setIsLoadedFromStorage(true);
+    }
+  }, []);
+
+  // ── Sync to LocalStorage whenever custom selections change ──
+  React.useEffect(() => {
+    if (!isLoadedFromStorage) return;
+    try {
+      const hasAnyDrink = Object.values(drinkSelections).some((d) => (d.quantity || 0) > 0);
+      const hasAnyTopping = Object.values(toppingsSelection).some((t) => (t.quantity || 0) > 0);
+      const hasAnyBakery = Object.values(bakerySelection).some((b) => (b.quantity || 0) > 0);
+
+      if (hasAnyDrink || hasAnyTopping || hasAnyBakery) {
+        localStorage.setItem(
+          "mitea_catering_builder_state",
+          JSON.stringify({
+            drinkSelections,
+            toppingsSelection,
+            bakerySelection,
+            formatType,
+          })
+        );
+      } else {
+        localStorage.removeItem("mitea_catering_builder_state");
+      }
+    } catch (e) {
+      // Ignore quota errors
+    }
+  }, [drinkSelections, toppingsSelection, bakerySelection, formatType, isLoadedFromStorage]);
+
   // Custom Form state
   const [eventType, setEventType] = useState("Corporate Gathering");
   const [guestCount, setGuestCount] = useState("35–50 guests");
@@ -159,7 +238,7 @@ export default function CateringModal() {
 
   if (!isCateringOpen) return null;
 
-  const cateringItems = MENU_DATA.items.filter((i) => i.category === "catering");
+  const cateringItems = cateringPackages;
 
   // ── Calculation helpers ──
   const totalDrinksCount = Object.values(drinkSelections).reduce(
@@ -347,19 +426,101 @@ export default function CateringModal() {
     openCartDrawer();
   };
 
-  const handleSubmitCustom = (e: React.FormEvent) => {
+  const handleSubmitCustom = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim() || !eventDate.trim()) {
       showToast("Please fill in your name, email, and event date.", "warning");
       return;
     }
 
+    const activeDrinks = Object.values(drinkSelections).filter((d) => d.quantity > 0);
+    if (activeDrinks.length === 0) {
+      showToast("Please select at least 1 drink item for your catering request.", "warning");
+      return;
+    }
+
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const payload = {
+        orderDetails: {
+          mode: "custom",
+          drinks: activeDrinks.map((d) => ({
+            itemId: d.item.id,
+            name: d.item.name,
+            quantity: d.quantity,
+            sugar: d.sugar,
+            milk: d.milk,
+            unitPrice: d.item.price,
+            format: formatType,
+          })),
+          toppings: Object.values(toppingsSelection)
+            .filter((t) => t.quantity > 0)
+            .map((t) => ({
+              id: t.id,
+              name: t.name,
+              quantity: t.quantity,
+              unitPrice: t.price,
+            })),
+          bakery: Object.values(bakerySelection)
+            .filter((b) => b.quantity > 0)
+            .map((b) => ({
+              id: b.id,
+              name: b.name,
+              quantity: b.quantity,
+              unitPrice: b.price,
+            })),
+          formatType,
+        },
+        eventType,
+        guestCount,
+        eventDate,
+        eventTime: eventTime || undefined,
+        serviceStyle,
+        fullName: fullName.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        company: company.trim() || undefined,
+        address: address.trim() || undefined,
+        notes: notes.trim() || undefined,
+      };
+
+      const data = await apiClient.post<{ request?: { request_number?: string } }>("/api/catering/requests", payload);
+      if (!data) {
+        throw new Error('Failed to submit catering request');
+      }
+
+      if (data.request?.request_number) {
+        setSubmittedRequestNumber(data.request.request_number);
+      }
       setIsSubmitted(true);
       showToast("Catering inquiry submitted! We'll follow up within 2 hours.", "success");
-    }, 1200);
+    } catch (err: any) {
+      showToast(err.message || "Failed to submit request. Please try again.", "warning");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClearBuilder = () => {
+    setDrinkSelections({});
+    setToppingsSelection((prev) => {
+      const cleared = { ...prev };
+      for (const key of Object.keys(cleared)) {
+        cleared[key] = { ...cleared[key], quantity: 0 };
+      }
+      return cleared;
+    });
+    setBakerySelection((prev) => {
+      const cleared = { ...prev };
+      for (const key of Object.keys(cleared)) {
+        cleared[key] = { ...cleared[key], quantity: 0 };
+      }
+      return cleared;
+    });
+    try {
+      localStorage.removeItem("mitea_catering_builder_state");
+    } catch {}
+    showToast("Custom catering builder cleared.", "info");
   };
 
   const handleReset = () => {
@@ -735,9 +896,22 @@ export default function CateringModal() {
               <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-md border-2 border-[#F8847F]/30 text-gray-900">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 border-b border-gray-100 pb-3">
                   <div>
-                    <span className="text-[10px] font-heading font-extrabold uppercase tracking-widest text-[#F8847F] block">
-                      Live Catering Estimate
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-heading font-extrabold uppercase tracking-widest text-[#F8847F] block">
+                        Live Catering Estimate
+                      </span>
+                      {(totalDrinksCount > 0 ||
+                        Object.values(toppingsSelection).some((t) => t.quantity > 0) ||
+                        Object.values(bakerySelection).some((b) => b.quantity > 0)) && (
+                        <button
+                          type="button"
+                          onClick={handleClearBuilder}
+                          className="text-[10px] text-gray-400 hover:text-rose-600 font-semibold underline transition-colors cursor-pointer"
+                        >
+                          Clear All
+                        </button>
+                      )}
+                    </div>
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-600 mt-0.5">
                       <span className="font-bold text-gray-900">
                         {totalDrinksCount} {formatType === "jugs" ? "Jugs" : "Drinks"}
@@ -1013,11 +1187,99 @@ export default function CateringModal() {
           {/* TAB 2: PRE-SET PARTY PACKAGES */}
           {activeTab === "packages" && (
             <div className="space-y-6">
-              {/* 3 Signature Experience Packages */}
-              <div className="space-y-3">
+              {/* Primary Catering Packages Grid (Removed 'Platters & Tea Jugs' header) */}
+              {cateringPackages.length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-heading font-extrabold uppercase tracking-widest text-gray-900">
+                      Packages
+                    </span>
+                    <span className="text-[11px] text-gray-500">Order directly to cart</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {cateringPackages.map((pkg) => {
+                      const qty = packageQuantities[pkg.id] || 1;
+                      return (
+                        <div
+                          key={pkg.id}
+                          className="bg-white border-2 border-warm-200 hover:border-[#F8847F] rounded-2xl p-4 transition-all shadow-xs flex flex-col justify-between"
+                        >
+                          <div>
+                            <div className="relative h-28 rounded-xl overflow-hidden mb-3 bg-warm-200">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={pkg.image}
+                                alt={pkg.name}
+                                className="w-full h-full object-cover"
+                              />
+                              {pkg.badge && (
+                                <span className="absolute top-2 left-2 bg-black/80 backdrop-blur-md text-[#DF9749] font-heading font-bold text-[9px] uppercase px-2 py-0.5 rounded-md">
+                                  {pkg.badge}
+                                </span>
+                              )}
+                              <span className="absolute bottom-2 right-2 bg-white/95 text-gray-900 font-editorial font-bold text-sm px-2 py-0.5 rounded-lg shadow-xs">
+                                ${(pkg.price * qty).toFixed(2)}
+                              </span>
+                            </div>
+                            <h4 className="font-heading font-bold text-sm text-gray-900">
+                              {pkg.name}
+                            </h4>
+                            <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                              {pkg.description}
+                            </p>
+                          </div>
+
+                          <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between">
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setPackageQuantities((prev) => ({
+                                    ...prev,
+                                    [pkg.id]: Math.max(1, (prev[pkg.id] || 1) - 1),
+                                  }))
+                                }
+                                className="w-6 h-6 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center justify-center transition-colors cursor-pointer"
+                              >
+                                <Minus className="w-3 h-3" />
+                              </button>
+                              <span className="w-5 text-center font-bold text-xs font-mono">{qty}</span>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setPackageQuantities((prev) => ({
+                                    ...prev,
+                                    [pkg.id]: (prev[pkg.id] || 1) + 1,
+                                  }))
+                                }
+                                className="w-6 h-6 rounded-lg bg-[#F8847F] hover:bg-[#F56B65] text-white flex items-center justify-center transition-colors cursor-pointer"
+                              >
+                                <Plus className="w-3 h-3" />
+                              </button>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => handleAddPackageWithQty(pkg)}
+                              className="inline-flex items-center gap-1.5 bg-[#F8847F] hover:bg-[#F56B65] text-white font-heading font-bold text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-xs transition-all cursor-pointer"
+                            >
+                              <ShoppingBag className="w-3.5 h-3.5" />
+                              <span>Add To Cart</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Secondary: Full-Service Experience Options */}
+              <div className="space-y-3 pt-4 border-t border-gray-100">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-heading font-extrabold uppercase tracking-widest text-gray-900">
-                    Featured Event Packages
+                    Full-Service Event Experiences
                   </span>
                   <span className="text-[11px] text-gray-500">Pick a size &amp; experience</span>
                 </div>
@@ -1133,8 +1395,6 @@ export default function CateringModal() {
                 </div>
               </div>
 
-
-
               {/* Need custom headcount banner */}
               <div className="border-t border-warm-200 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
                 <div>
@@ -1172,7 +1432,7 @@ export default function CateringModal() {
               <div className="bg-white border border-warm-300 rounded-2xl p-4 max-w-sm mx-auto text-left text-xs space-y-2">
                 <div className="flex justify-between border-b border-warm-200 pb-1.5">
                   <span className="text-gray-500">Inquiry ID:</span>
-                  <span className="font-mono font-bold text-gray-900">#MTC-9482</span>
+                  <span className="font-mono font-bold text-gray-900">{submittedRequestNumber}</span>
                 </div>
                 <div className="flex justify-between border-b border-warm-200 pb-1.5">
                   <span className="text-gray-500">Event Type:</span>

@@ -3,6 +3,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useOrder, PlacedOrder } from "@/context/OrderContext";
+import { useCreateOrder } from "@/lib/hooks/useOrders";
+import { usePayWithCash } from "@/lib/hooks/usePayments";
+import { useGiftCardBalance, useRedeemGiftCard } from "@/lib/hooks/useGiftCards";
+import { StripePaymentForm, StripePaymentFormRef } from "./StripePaymentForm";
 import {
   X,
   CreditCard,
@@ -31,24 +35,71 @@ export default function CheckoutModal() {
     total,
     selectedTip,
     openConfirmationModal,
-    showToast
+    showToast,
+    appliedPromo,
+    currentUser,
+    addLoyaltyStamp,
   } = useOrder();
 
-  const [customerName, setCustomerName] = useState("Sarah Jenkins");
-  const [customerPhone, setCustomerPhone] = useState("(612) 555-0199");
-  const [customerEmail, setCustomerEmail] = useState("sarah.j@example.com");
+  // Typed API hooks — replacing raw fetch()
+  const { createOrder } = useCreateOrder();
+  const { payCash } = usePayWithCash();
+  const { getBalance } = useGiftCardBalance();
+  const { redeemGiftCard } = useRedeemGiftCard();
+
+  const stripeFormRef = React.useRef<StripePaymentFormRef>(null);
+
+  const [customerName, setCustomerName] = useState(currentUser?.name || "");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerEmail, setCustomerEmail] = useState(currentUser?.email || "");
+
+  // Pre-fill if logged in
+  React.useEffect(() => {
+    if (currentUser) {
+      if (currentUser.name) setCustomerName(currentUser.name);
+      if (currentUser.email) setCustomerEmail(currentUser.email);
+    }
+  }, [currentUser]);
 
   const [paymentMethod, setPaymentMethod] = useState<"card" | "express" | "cash">("card");
-  const [cardNumber, setCardNumber] = useState("•••• •••• •••• 4242");
-  const [cardExpiry, setCardExpiry] = useState("08/28");
-  const [cardCvc, setCardCvc] = useState("789");
-  const [cardZip, setCardZip] = useState("55427");
+
+  // Gift Card State
+  const [giftCardCode, setGiftCardCode] = useState("");
+  const [appliedGiftCard, setAppliedGiftCard] = useState<{ code: string; balance: number } | null>(null);
+  const [isApplyingGiftCard, setIsApplyingGiftCard] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isCheckoutModalOpen) return null;
 
-  const handleSubmitOrder = (e: React.FormEvent) => {
+  const giftCardDeduction = appliedGiftCard
+    ? Math.min(appliedGiftCard.balance, total)
+    : 0;
+  const finalTotal = Math.max(0, total - giftCardDeduction);
+
+  const handleApplyGiftCard = async () => {
+    if (!giftCardCode.trim()) return;
+    setIsApplyingGiftCard(true);
+    try {
+      // Task 2: use typed useGiftCardBalance hook instead of raw fetch
+      const data = await getBalance(giftCardCode.trim());
+      if (data.isRedeemed || data.balance <= 0) {
+        showToast("This gift card has already been fully redeemed.", "warning");
+        return;
+      }
+      setAppliedGiftCard({
+        code: data.code,
+        balance: Number(data.balance),
+      });
+      showToast(`Gift card applied! $${Number(data.balance).toFixed(2)} balance available. 🎁`, "success");
+    } catch (err: any) {
+      showToast(err?.message || "Could not verify gift card. Please try again.", "warning");
+    } finally {
+      setIsApplyingGiftCard(false);
+    }
+  };
+
+  const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!customerName.trim() || !customerPhone.trim()) {
@@ -56,38 +107,91 @@ export default function CheckoutModal() {
       return;
     }
 
+    if (orderType === "delivery" && (!deliveryAddress?.street || !deliveryAddress.street.trim())) {
+      showToast("Please enter your delivery address.", "warning");
+      return;
+    }
+
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      const orderId = "MT-" + Math.floor(1000 + Math.random() * 9000);
-      const newOrder: PlacedOrder = {
-        orderId,
-        createdAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    try {
+      // 1. If paying with card or Apple Pay and total > 0, validate card fields with Stripe first
+      if ((paymentMethod === "card" || paymentMethod === "express") && finalTotal > 0) {
+        const isCardValid = await stripeFormRef.current?.validate();
+        if (!isCardValid) {
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      // 2. Create order in backend
+      const data = await createOrder({
+        items: cart.map((item) => ({
+          menuItemId: item.id,
+          name: item.name,
+          size: item.size,
+          sugar: item.sugar,
+          ice: item.ice,
+          toppings: item.toppings,
+          quantity: item.quantity,
+        })),
         orderType,
-        store: selectedStore,
-        deliveryAddress,
-        items: [...cart],
-        subtotal,
-        deliveryFee,
-        discount,
-        tax,
+        storeId: selectedStore.id,
+        customerName,
+        customerPhone,
+        customerEmail: customerEmail || (currentUser?.email ?? "guest@mitea.com"),
+        deliveryAddress: orderType === "delivery" ? deliveryAddress : undefined,
+        promoCode: appliedPromo?.code,
         tip: selectedTip,
-        total,
         paymentMethod:
           paymentMethod === "card"
-            ? "Credit Card ending in 4242"
+            ? "Credit Card (Stripe)"
             : paymentMethod === "express"
             ? "Apple Pay"
             : "Pay at Counter upon Pickup",
-        customerName,
-        customerPhone
-      };
+      });
 
+      if (!data || !data.orderId) {
+        throw new Error("Order creation failed on server.");
+      }
+
+      // 3. Redeem gift card balance if applied
+      if (appliedGiftCard && giftCardDeduction > 0) {
+        try {
+          await redeemGiftCard(appliedGiftCard.code, giftCardDeduction);
+        } catch (giftErr) {
+          console.warn('[Checkout] Gift card redemption error:', giftErr);
+        }
+      }
+
+      // 4. If card or Apple Pay and final total > 0, confirm payment via Stripe Elements
+      if ((paymentMethod === "card" || paymentMethod === "express") && finalTotal > 0) {
+        const payResult = await stripeFormRef.current?.confirm(data.orderId, data.orderNumber);
+        if (!payResult || !payResult.success) {
+          setIsSubmitting(false);
+          showToast(payResult?.error || "Payment failed. Please check your payment details.", "warning");
+          return;
+        }
+      } else if (paymentMethod === "cash") {
+        try {
+          await payCash(data.orderId);
+        } catch (cashErr) {
+          console.warn('[Checkout] Cash payment recording error:', cashErr);
+        }
+      }
+
+      // 5. Complete order
       setIsSubmitting(false);
       clearCart();
-      openConfirmationModal(newOrder);
-      showToast("Order placed successfully! 🍵", "success");
-    }, 1200);
+      openConfirmationModal(data.placedOrder);
+      if (currentUser) addLoyaltyStamp();
+      showToast(`Order ${data.orderNumber} placed successfully! 🍵`, "success");
+      return;
+    } catch (err: any) {
+      console.error('[Checkout] Error placing order:', err);
+      setIsSubmitting(false);
+      showToast(err?.message || "Could not process order. Please try again.", "warning");
+    }
   };
 
   return (
@@ -252,81 +356,15 @@ export default function CheckoutModal() {
                 </button>
               </div>
 
-              {/* Card Inputs if card */}
-              {paymentMethod === "card" && (
-                <div className="bg-warm-100 p-4 rounded-2xl border border-warm-300 space-y-3 animate-modal">
-                  <div>
-                    <label className="block text-xs text-gray-600 font-semibold mb-1">
-                      Card Number
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={cardNumber}
-                        onChange={(e) => setCardNumber(e.target.value)}
-                        className="w-full bg-white border border-warm-300 rounded-xl px-3.5 py-2.5 pl-10 text-xs sm:text-sm font-mono text-gray-900 focus:outline-none focus:border-brand-600"
-                      />
-                      <CreditCard className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                    <div>
-                      <label className="block text-[10px] text-gray-500 font-semibold mb-1 uppercase">
-                        Expiry
-                      </label>
-                      <input
-                        type="text"
-                        value={cardExpiry}
-                        onChange={(e) => setCardExpiry(e.target.value)}
-                        className="w-full bg-white border border-warm-300 rounded-xl px-2.5 py-2 text-xs font-mono text-gray-900 text-center focus:outline-none focus:border-brand-600"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-gray-500 font-semibold mb-1 uppercase">
-                        CVC
-                      </label>
-                      <input
-                        type="text"
-                        value={cardCvc}
-                        onChange={(e) => setCardCvc(e.target.value)}
-                        className="w-full bg-white border border-warm-300 rounded-xl px-2.5 py-2 text-xs font-mono text-gray-900 text-center focus:outline-none focus:border-brand-600"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-gray-500 font-semibold mb-1 uppercase">
-                        ZIP Code
-                      </label>
-                      <input
-                        type="text"
-                        value={cardZip}
-                        onChange={(e) => setCardZip(e.target.value)}
-                        className="w-full bg-white border border-warm-300 rounded-xl px-2.5 py-2 text-xs font-mono text-gray-900 text-center focus:outline-none focus:border-brand-600"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {paymentMethod === "express" && (
-                <div className="bg-warm-100 p-4 rounded-2xl border border-warm-300 space-y-2 text-xs text-gray-700 animate-modal">
-                  <div className="flex items-center gap-2 font-bold text-gray-900">
-                    <ShieldCheck className="w-4 h-4 text-brand-600" />
-                    <span>Instant Apple Pay Checkout</span>
-                  </div>
-                  <p className="text-gray-600 text-[11px]">
-                    Authenticate with Touch ID or Face ID on your device to finalize your in-store pickup order.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleSubmitOrder}
-                    className="w-full bg-black text-white font-bold py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors cursor-pointer"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 1.01-2.87 0-.02 0-.05-.01-.07-.97.04-2.15.65-2.85 1.48-.56.65-.99 1.68-.96 2.73.01.02.01.05.02.07 1.09.08 2.18-.59 2.79-1.34z" />
-                    </svg>
-                    <span>Pay with Apple Pay</span>
-                  </button>
+              {/* Stripe Payment Form for Card and Apple Pay */}
+              {(paymentMethod === "card" || paymentMethod === "express") && (
+                <div className="bg-warm-50 p-4 rounded-2xl border border-warm-300">
+                  <StripePaymentForm
+                    ref={stripeFormRef}
+                    amount={finalTotal}
+                    paymentMethod={paymentMethod}
+                    customerEmail={customerEmail || (currentUser?.email ?? undefined)}
+                  />
                 </div>
               )}
 
@@ -379,6 +417,39 @@ export default function CheckoutModal() {
                 ))}
               </div>
 
+              {/* Gift Card Input */}
+              <div className="mt-3 pt-3 border-t border-warm-300">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Gift card code (MTEA-...)"
+                    value={giftCardCode}
+                    onChange={(e) => setGiftCardCode(e.target.value.toUpperCase())}
+                    className="flex-1 bg-white border border-warm-300 rounded-xl px-3 py-1.5 text-xs uppercase font-mono text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-brand-600"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyGiftCard}
+                    disabled={isApplyingGiftCard || !giftCardCode.trim()}
+                    className="bg-brand-50 text-brand-800 border border-brand-200 hover:bg-brand-100 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    {isApplyingGiftCard ? '...' : 'Apply'}
+                  </button>
+                </div>
+                {appliedGiftCard && (
+                  <p className="text-[11px] text-emerald-700 mt-1 flex items-center justify-between">
+                    <span>✓ Card {appliedGiftCard.code} applied</span>
+                    <button
+                      type="button"
+                      onClick={() => { setAppliedGiftCard(null); setGiftCardCode(''); }}
+                      className="text-red-500 hover:underline text-[10px]"
+                    >
+                      Remove
+                    </button>
+                  </p>
+                )}
+              </div>
+
               {/* Cost calculations */}
               <div className="mt-4 pt-4 border-t border-warm-300 space-y-2 text-xs text-gray-600">
                 <div className="flex justify-between">
@@ -401,9 +472,15 @@ export default function CheckoutModal() {
                     <span className="font-medium text-gray-900">${selectedTip.toFixed(2)}</span>
                   </div>
                 )}
+                {appliedGiftCard && giftCardDeduction > 0 && (
+                  <div className="flex justify-between text-purple-700 font-medium">
+                    <span>Gift Card ({appliedGiftCard.code})</span>
+                    <span>-${giftCardDeduction.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="pt-2 border-t border-warm-300 flex justify-between text-base font-heading font-extrabold text-gray-900">
                   <span>Total Amount</span>
-                  <span className="text-brand-700 text-lg">${total.toFixed(2)}</span>
+                  <span className="text-brand-700 text-lg">${finalTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -423,7 +500,7 @@ export default function CheckoutModal() {
                 ) : (
                   <>
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>Place Order • ${total.toFixed(2)}</span>
+                    <span>Place Order • ${finalTotal.toFixed(2)}</span>
                   </>
                 )}
               </button>

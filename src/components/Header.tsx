@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useOrder } from "@/context/OrderContext";
+import NotificationsPanel from "@/components/NotificationsPanel";
 import {
   Search,
   ShoppingBag,
@@ -12,6 +14,11 @@ import {
   Award,
   MapPin,
   PartyPopper,
+  User,
+  LogOut,
+  Receipt,
+  ChevronDown,
+  ShieldCheck,
 } from "lucide-react";
 
 export default function Header() {
@@ -28,6 +35,10 @@ export default function Header() {
     searchQuery,
     setSearchQuery,
     showToast,
+    currentUser,
+    openAuthModal,
+    logout,
+    openOrderHistoryModal,
   } = useOrder();
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -36,124 +47,176 @@ export default function Header() {
     <>
       {/* ── Sticky Header ── */}
       <header className="sticky top-0 z-40 glass-nav border-b border-warm-300 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[80px] sm:h-[84px] flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[72px] flex items-center justify-between gap-3">
 
-          {/* Left: hamburger + brand */}
-          <div className="flex items-center gap-3">
+          {/* ── LEFT: Hamburger (mobile) + Logo ── */}
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={openMobileNav}
-              className="md:hidden w-10 h-10 rounded-full bg-white border border-warm-300 flex items-center justify-center text-gray-800 hover:bg-warm-100 transition-colors cursor-pointer shadow-2xs"
-              aria-label="Open mobile menu"
+              className="md:hidden w-9 h-9 rounded-full bg-white border border-warm-300 flex items-center justify-center text-gray-700 hover:bg-warm-100 transition-colors cursor-pointer"
+              aria-label="Open menu"
             >
-              <MenuIcon className="w-5 h-5" />
+              <MenuIcon className="w-4.5 h-4.5" />
             </button>
 
-            <a href="#" className="flex items-center gap-2 group shrink-0">
-              {/* Logo mark - Much bigger and prominent */}
-              <div className="flex items-center gap-3 bg-white/95 hover:bg-white border border-warm-300 hover:border-brand-400 px-3 py-1.5 rounded-2xl shadow-xs transition-all">
-                <div className="relative w-11 h-11 sm:w-14 sm:h-14 rounded-xl overflow-hidden shrink-0">
-                  <Image
-                    src="/images/logo.jpeg"
-                    alt="MiTea Logo"
-                    fill
-                    sizes="56px"
-                    className="object-contain"
-                    priority
-                  />
-                </div>
-                <div className="flex flex-col leading-none pr-1">
-                  <span className="font-heading font-extrabold text-lg sm:text-2xl tracking-tight text-gray-900">
-                    MiTea
-                  </span>
-                  <span className="text-[9px] sm:text-[10px] font-bold tracking-[0.16em] uppercase text-brand-500 mt-1">
-                    Tea &amp; Mochi
-                  </span>
-                </div>
+            {/* Logo */}
+            <a href="/" className="flex items-center gap-2.5 bg-white/90 hover:bg-white border border-warm-300 hover:border-brand-400 pl-1.5 pr-3 py-1.5 rounded-2xl shadow-xs transition-all">
+              <div className="relative w-9 h-9 rounded-xl overflow-hidden shrink-0">
+                <Image
+                  src="/images/logo.jpeg"
+                  alt="MiTea Logo"
+                  fill
+                  sizes="36px"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="font-heading font-extrabold text-[17px] tracking-tight text-gray-900 leading-none">
+                  MiTea
+                </span>
+                <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-brand-500 mt-0.5">
+                  Tea &amp; Mochi
+                </span>
               </div>
             </a>
           </div>
 
-          {/* Center nav (desktop) */}
-          <nav className="hidden md:flex items-center gap-6 text-[13px] font-semibold">
+          {/* ── CENTER: Desktop Nav ── */}
+          <nav className="hidden md:flex items-center gap-1 text-[13px] font-semibold flex-1 justify-center">
             <a
               href="#menu-sections"
-              className="text-brand-600 border-b-2 border-brand-500 pb-0.5 leading-none"
+              className="px-3 py-1.5 rounded-lg text-brand-600 bg-brand-50 font-bold transition-colors"
             >
               Menu
             </a>
-            <a href="#locations" className="text-gray-800 hover:text-brand-600 transition-colors">
+            <a
+              href="#locations"
+              className="px-3 py-1.5 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-warm-100 transition-colors"
+            >
               Locations
             </a>
-            <a href="#our-story" className="text-gray-800 hover:text-brand-600 transition-colors">
+            <a
+              href="#our-story"
+              className="px-3 py-1.5 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-warm-100 transition-colors"
+            >
               Our Story
             </a>
+
+            {/* Divider */}
+            <span className="w-px h-4 bg-warm-300 mx-1" />
+
             <button
               type="button"
               onClick={openCateringModal}
-              className="flex items-center gap-1.5 text-gray-800 hover:text-brand-600 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-warm-100 transition-colors cursor-pointer"
             >
-              <PartyPopper className="w-3.5 h-3.5 text-accent-amber" />
+              <PartyPopper className="w-3.5 h-3.5 text-amber-500 shrink-0" />
               <span>Catering</span>
-              <span className="bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="bg-amber-100 text-amber-800 border border-amber-200 text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider leading-none">
                 Events
               </span>
             </button>
+
             <button
               type="button"
               onClick={openSendGiftModal}
-              className="flex items-center gap-1.5 text-gray-800 hover:text-brand-600 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-warm-100 transition-colors cursor-pointer"
             >
-              <Gift className="w-3.5 h-3.5 text-accent-amber" />
-              <span>Send a Drink</span>
+              <Gift className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <span>Gift</span>
             </button>
+
             <button
               type="button"
               onClick={openRewardsModal}
-              className="flex items-center gap-1.5 text-gray-800 hover:text-brand-600 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-warm-100 transition-colors cursor-pointer"
             >
-              <Award className="w-3.5 h-3.5 text-accent-amber" />
-              <span>VIP Club</span>
+              <Award className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <span>VIP</span>
             </button>
+
+            {currentUser && (
+              <button
+                type="button"
+                onClick={openOrderHistoryModal}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-700 hover:text-brand-600 hover:bg-warm-100 transition-colors cursor-pointer"
+              >
+                <Receipt className="w-3.5 h-3.5 text-brand-500 shrink-0" />
+                <span>Orders</span>
+              </button>
+            )}
           </nav>
 
-          {/* Right: search, cart, order */}
-          <div className="flex items-center gap-2.5">
+          {/* ── RIGHT: Icon actions + CTA ── */}
+          <div className="flex items-center gap-1.5 shrink-0">
+
+            {/* Search */}
             <button
               type="button"
               onClick={() => setIsSearchOpen((p) => !p)}
-              className="w-10 h-10 rounded-full bg-white border border-warm-300 flex items-center justify-center text-gray-800 hover:bg-warm-100 transition-colors cursor-pointer shadow-2xs"
+              className="w-9 h-9 rounded-full bg-white border border-warm-300 flex items-center justify-center text-gray-600 hover:text-brand-600 hover:bg-warm-100 transition-colors cursor-pointer"
               aria-label="Search"
             >
-              <Search className="w-4.5 h-4.5" />
+              <Search className="w-4 h-4" />
             </button>
 
+            {/* Notifications */}
+            <NotificationsPanel />
+
+            {/* Cart */}
             <button
               type="button"
               onClick={openCartDrawer}
-              className="w-10 h-10 rounded-full bg-white border border-warm-300 flex items-center justify-center text-gray-800 hover:bg-warm-100 transition-colors relative cursor-pointer shadow-2xs"
+              className="w-9 h-9 rounded-full bg-white border border-warm-300 flex items-center justify-center text-gray-600 hover:text-brand-600 hover:bg-warm-100 transition-colors relative cursor-pointer"
               aria-label="Cart"
             >
-              <ShoppingBag className="w-4.5 h-4.5" />
+              <ShoppingBag className="w-4 h-4" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brand-500 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-xs">
-                  {totalItems}
+                <span className="absolute -top-1 -right-1 bg-brand-500 text-white font-bold text-[9px] w-[18px] h-[18px] rounded-full flex items-center justify-center shadow-xs">
+                  {totalItems > 9 ? "9+" : totalItems}
                 </span>
               )}
             </button>
 
-            <button
-              type="button"
-              onClick={() => openLocationModal()}
-              className="hidden sm:inline-flex items-center gap-2 bg-[#F8847F] hover:bg-[#F56B65] text-white font-heading font-bold text-[12px] tracking-[0.06em] uppercase px-6 py-3 rounded-full shadow-md shadow-[#F8847F]/25 btn-press transition-all cursor-pointer"
-            >
-              <MapPin className="w-3.5 h-3.5 text-white" />
-              Order Online
-            </button>
+            {/* Separator */}
+            <span className="hidden sm:block w-px h-5 bg-warm-300 mx-0.5" />
+
+            {/* User account */}
+            {currentUser ? (
+              <div className="hidden sm:flex items-center gap-1.5 bg-white border border-warm-300 rounded-full pl-1.5 pr-2.5 py-1 shadow-xs">
+                <div className="w-6 h-6 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold text-[11px] shrink-0">
+                  {(currentUser.name?.split(" ")[0]?.[0] || currentUser.email[0]).toUpperCase()}
+                </div>
+                <span className="text-[12px] font-bold text-gray-800">
+                  {currentUser.name?.split(" ")[0] || currentUser.email.split("@")[0]}
+                </span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  title="Sign Out"
+                  className="text-gray-400 hover:text-rose-500 transition-colors ml-0.5 cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={openAuthModal}
+                className="hidden sm:inline-flex items-center gap-1.5 bg-white border border-warm-300 rounded-full px-3 py-1.5 text-[12px] font-bold text-gray-700 hover:bg-warm-100 hover:text-brand-600 transition-colors cursor-pointer"
+              >
+                <User className="w-3.5 h-3.5 text-brand-500" />
+                Sign In
+              </button>
+            )}
+
+
           </div>
         </div>
 
-        {/* Expandable search bar */}
+        {/* ── Search Bar (drop-down) ── */}
         {isSearchOpen && (
           <div className="border-t border-warm-200 bg-white/98 px-4 sm:px-6 py-3 animate-modal">
             <div className="max-w-3xl mx-auto flex items-center gap-3">
@@ -195,37 +258,65 @@ export default function Header() {
           <div className="fixed inset-y-0 left-0 max-w-[300px] w-full bg-[#FFF6F2] shadow-2xl flex flex-col justify-between border-r border-warm-300 animate-drawer-left p-6">
             {/* Brand */}
             <div>
-              <div className="flex items-center justify-between pb-6 border-b border-warm-300">
+              <div className="flex items-center justify-between pb-5 border-b border-warm-300 mb-5">
                 <div className="flex items-center gap-3">
-                  <div className="relative w-12 h-12 rounded-2xl overflow-hidden border border-warm-300 shrink-0 bg-white shadow-xs">
+                  <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-warm-300 shrink-0 bg-white">
                     <Image
                       src="/images/logo.jpeg"
                       alt="MiTea Logo"
                       fill
-                      sizes="48px"
+                      sizes="40px"
                       className="object-contain"
                     />
                   </div>
                   <div className="flex flex-col leading-none">
-                    <span className="font-heading font-extrabold text-2xl tracking-tight text-gray-900">
-                      MiTea
-                    </span>
-                    <span className="text-[10px] font-bold tracking-[0.16em] uppercase text-brand-500 mt-1">
-                      Tea &amp; Mochi
-                    </span>
+                    <span className="font-heading font-extrabold text-xl tracking-tight text-gray-900">MiTea</span>
+                    <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-brand-500 mt-0.5">Tea &amp; Mochi</span>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={closeMobileNav}
-                  className="w-9 h-9 rounded-full bg-white border border-warm-300 flex items-center justify-center text-gray-700 hover:bg-warm-100 transition-colors cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-white border border-warm-300 flex items-center justify-center text-gray-600 hover:bg-warm-100 transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Nav links */}
-              <nav className="py-8 space-y-5">
+              {/* User Info / Auth */}
+              {currentUser ? (
+                <div className="flex items-center justify-between p-3 rounded-2xl bg-warm-100 border border-warm-200 mb-5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold text-sm">
+                      {(currentUser.name?.split(" ")[0]?.[0] || currentUser.email[0]).toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-gray-900">{currentUser.name?.split(" ")[0] || currentUser.email.split("@")[0]}</div>
+                      <div className="text-[10px] text-brand-600 font-semibold">{currentUser.role === "ADMIN" ? "Administrator" : "VIP Member"}</div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { closeMobileNav(); logout(); }}
+                    className="text-xs font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Out
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => { closeMobileNav(); openAuthModal(); }}
+                  className="flex items-center justify-center gap-2 w-full font-heading font-bold text-xs tracking-[0.08em] uppercase text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 py-3 rounded-2xl transition-colors cursor-pointer mb-5"
+                >
+                  <User className="w-4 h-4 text-brand-600" />
+                  Sign In / Create Account
+                </button>
+              )}
+
+              {/* Nav Links */}
+              <nav className="space-y-1">
                 {[
                   { label: "Home & Menu", href: "#menu-sections" },
                   { label: "Locations", href: "#locations" },
@@ -235,7 +326,7 @@ export default function Header() {
                     key={link.label}
                     href={link.href}
                     onClick={closeMobileNav}
-                    className="block font-heading font-bold text-sm tracking-[0.08em] uppercase text-gray-900 hover:text-brand-600 transition-colors border-b border-warm-200 pb-4"
+                    className="flex items-center justify-between font-semibold text-sm text-gray-800 hover:text-brand-600 hover:bg-warm-100 px-3 py-2.5 rounded-xl transition-colors"
                   >
                     {link.label}
                   </a>
@@ -244,53 +335,69 @@ export default function Header() {
                 <button
                   type="button"
                   onClick={() => { closeMobileNav(); openCateringModal(); }}
-                  className="flex items-center justify-between w-full font-heading font-bold text-sm tracking-[0.08em] uppercase text-gray-900 hover:text-brand-600 transition-colors border-b border-warm-200 pb-4 cursor-pointer"
+                  className="flex items-center justify-between w-full font-semibold text-sm text-gray-800 hover:text-brand-600 hover:bg-warm-100 px-3 py-2.5 rounded-xl transition-colors cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
-                    <PartyPopper className="w-4 h-4 text-accent-amber" />
-                    <span>Catering &amp; Events</span>
+                    <PartyPopper className="w-4 h-4 text-amber-500" />
+                    Catering &amp; Events
                   </span>
-                  <span className="bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Party Bars</span>
+                  <span className="bg-amber-100 text-amber-800 border border-amber-200 text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase">Events</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => { closeMobileNav(); openSendGiftModal(); }}
-                  className="flex items-center justify-between w-full font-heading font-bold text-sm tracking-[0.08em] uppercase text-gray-900 hover:text-brand-600 transition-colors border-b border-warm-200 pb-4 cursor-pointer"
+                  className="flex items-center justify-between w-full font-semibold text-sm text-gray-800 hover:text-brand-600 hover:bg-warm-100 px-3 py-2.5 rounded-xl transition-colors cursor-pointer"
                 >
-                  <span>Send a Drink</span>
-                  <span className="bg-warm-200 text-warm-700 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Gift</span>
+                  <span className="flex items-center gap-2">
+                    <Gift className="w-4 h-4 text-amber-500" />
+                    Send a Gift Drink
+                  </span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => { closeMobileNav(); openRewardsModal(); }}
-                  className="flex items-center justify-between w-full font-heading font-bold text-sm tracking-[0.08em] uppercase text-gray-900 hover:text-brand-600 transition-colors border-b border-warm-200 pb-4 cursor-pointer"
+                  className="flex items-center justify-between w-full font-semibold text-sm text-gray-800 hover:text-brand-600 hover:bg-warm-100 px-3 py-2.5 rounded-xl transition-colors cursor-pointer"
                 >
-                  <span>VIP Club</span>
-                  <span className="bg-warm-200 text-warm-700 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Stamps</span>
+                  <span className="flex items-center gap-2">
+                    <Award className="w-4 h-4 text-amber-500" />
+                    VIP Club &amp; Rewards
+                  </span>
+                  <span className="bg-warm-200 text-warm-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase">Stamps</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => { closeMobileNav(); openLocationModal(); }}
-                  className="w-full bg-[#F8847F] hover:bg-[#F56B65] text-white font-heading font-bold text-[13px] tracking-[0.07em] uppercase py-3.5 rounded-full shadow-md shadow-[#F8847F]/25 transition-all cursor-pointer mt-2"
-                >
-                  Order Pickup
-                </button>
+                {currentUser && (
+                  <button
+                    type="button"
+                    onClick={() => { closeMobileNav(); openOrderHistoryModal(); }}
+                    className="flex items-center justify-between w-full font-semibold text-sm text-gray-800 hover:text-brand-600 hover:bg-warm-100 px-3 py-2.5 rounded-xl transition-colors cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Receipt className="w-4 h-4 text-brand-500" />
+                      Order History
+                    </span>
+                  </button>
+                )}
               </nav>
             </div>
 
-            {/* Footer */}
-            <div className="pt-5 border-t border-warm-300 space-y-3">
-              <div className="flex gap-4 text-[11px] font-semibold uppercase tracking-wider text-warm-500">
+            {/* Bottom CTA + Footer */}
+            <div className="space-y-4">
+              <button
+                type="button"
+                onClick={() => { closeMobileNav(); openLocationModal(); }}
+                className="w-full bg-[#F8847F] hover:bg-[#F56B65] text-white font-heading font-bold text-sm tracking-[0.07em] uppercase py-3.5 rounded-full shadow-md shadow-[#F8847F]/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <MapPin className="w-4 h-4" />
+                Order Pickup
+              </button>
+              <div className="flex gap-4 text-[11px] font-semibold text-warm-500">
                 <a href="#locations" onClick={closeMobileNav} className="hover:text-brand-600">Location</a>
                 <button type="button" onClick={() => showToast("Customer Support: (763) 555-0192", "info")} className="hover:text-brand-600 cursor-pointer">Contact</button>
-                <button type="button" onClick={() => showToast("100% Organic dairy & single-origin teas guarantee.", "info")} className="hover:text-brand-600 cursor-pointer">Guarantee</button>
+                <button type="button" onClick={() => showToast("100% Organic dairy & single-origin teas.", "info")} className="hover:text-brand-600 cursor-pointer">Guarantee</button>
               </div>
-              <p className="text-[10px] text-warm-400">
-                © {new Date().getFullYear()} Mitea Craft Beverage Co.
-              </p>
+              <p className="text-[10px] text-warm-400">© {new Date().getFullYear()} Mitea Craft Beverage Co.</p>
             </div>
           </div>
         </div>

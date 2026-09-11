@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useOrder } from "@/context/OrderContext";
-import { MENU_DATA } from "@/data/menu-data";
+import { useAddressValidation } from "@/lib/hooks/useAddressValidation";
+import { useStores } from "@/hooks/useStores";
 import {
   X,
   Store,
@@ -13,7 +14,8 @@ import {
   Check,
   Coffee,
   Wifi,
-  Car
+  Car,
+  Loader2
 } from "lucide-react";
 
 export default function LocationModal() {
@@ -22,18 +24,45 @@ export default function LocationModal() {
     closeLocationModal,
     setSelectedStore,
     setOrderType,
+    selectedStore,
     showToast
   } = useOrder();
 
+  // Task 4: address validation hook
+  const { validateAddress, loading: isValidating } = useAddressValidation();
+
+  // Live store data from API with static fallback
+  const { stores } = useStores();
+
   if (!isLocationModalOpen) return null;
 
-  const store = MENU_DATA.stores[0];
+  const store = stores[0];
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    // For pickup-only flow, skip address validation
     setSelectedStore(store);
     setOrderType("pickup");
     showToast("Pickup confirmed at Mitea Golden Valley! 🍵", "success");
     closeLocationModal();
+  };
+
+  // Task 4: validate delivery address before accepting it
+  const handleConfirmDelivery = async (addressData: {
+    address: string; city: string; state: string; zip: string;
+  }) => {
+    try {
+      const result = await validateAddress({
+        ...addressData,
+        storeId: selectedStore?.id,
+      });
+      if (!result?.valid) {
+        showToast(result?.reason || "Address not in delivery range.", "warning");
+        return false;
+      }
+    } catch {
+      // Allow fallback if validation service is down
+    }
+    return true;
   };
 
   const amenities = [

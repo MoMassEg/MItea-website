@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { useOrder } from "@/context/OrderContext";
-import { MENU_DATA } from "@/data/menu-data";
+import { useMenu } from "@/hooks/useMenu";
 import {
   Flame,
   Coffee,
@@ -17,6 +17,7 @@ import {
 
 export default function CategoryNav() {
   const { activeCategory, setActiveCategory, openCateringModal } = useOrder();
+  const { categories } = useMenu();
   const navContainerRef = useRef<HTMLDivElement>(null);
   const isClickScrollingRef = useRef(false);
 
@@ -88,7 +89,7 @@ export default function CategoryNav() {
 
   // Scrollspy: update active category as user scrolls through the full menu
   useEffect(() => {
-    const sectionIds = MENU_DATA.categories.map((c) => c.id);
+    const sectionIds = categories.map((c) => c.id);
 
     const handleScroll = () => {
       if (isClickScrollingRef.current) return;
@@ -123,7 +124,7 @@ export default function CategoryNav() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [activeCategory, setActiveCategory]);
+  }, [activeCategory, setActiveCategory, categories]);
 
   return (
     <div
@@ -135,7 +136,7 @@ export default function CategoryNav() {
           ref={navContainerRef}
           className="flex overflow-x-auto no-scrollbar gap-2.5 pb-1 items-center"
         >
-          {MENU_DATA.categories.map((cat) => {
+          {categories.map((cat) => {
             const isActive = activeCategory === cat.id;
             const isCatering = cat.id === "catering";
 

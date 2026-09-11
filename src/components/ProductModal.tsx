@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useOrder } from "@/context/OrderContext";
 import { MENU_DATA, MenuItem, CartItem, ToppingOption } from "@/data/menu-data";
+import { useCustomizations } from "@/lib/hooks/useCustomizations";
+import { apiClient } from "@/lib/api-client";
 import { X, Check, Plus, Minus } from "lucide-react";
 
 export default function ProductModal() {
@@ -22,7 +24,7 @@ export default function ProductModal() {
 }
 
 function ProductModalDialog({
-  product,
+  product: initialProduct,
   onClose,
   onAddToCart,
 }: {
@@ -30,7 +32,18 @@ function ProductModalDialog({
   onClose: () => void;
   onAddToCart: (item: Omit<CartItem, "uid" | "totalPrice">) => void;
 }) {
-  const presets = MENU_DATA.customizationPresets;
+  // Task 5: live customization presets from API with static fallback
+  const { presets } = useCustomizations();
+
+  // Task 9: live menu item details from API with static fallback
+  const [product, setProduct] = useState<MenuItem>(initialProduct);
+  useEffect(() => {
+    let mounted = true;
+    apiClient.getMenuItem(initialProduct.id)
+      .then((res) => { if (mounted && res.item) setProduct(res.item as MenuItem); })
+      .catch(() => {}); // keep static fallback
+    return () => { mounted = false; };
+  }, [initialProduct.id]);
 
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>("regular");

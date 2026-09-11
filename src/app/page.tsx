@@ -2,7 +2,8 @@
 
 import React, { useMemo } from "react";
 import { useOrder } from "@/context/OrderContext";
-import { MENU_DATA, MenuItem } from "@/data/menu-data";
+import { MenuItem } from "@/data/menu-data";
+import { useMenu } from "@/hooks/useMenu";
 
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -24,6 +25,8 @@ import SendGiftModal from "@/components/SendGiftModal";
 import RewardsModal from "@/components/RewardsModal";
 import CateringModal from "@/components/CateringModal";
 import FloatingGuildButton from "@/components/FloatingGuildButton";
+import AuthModal from "@/components/AuthModal";
+import OrderHistoryModal from "@/components/OrderHistoryModal";
 import {
   Search,
   XCircle,
@@ -41,9 +44,12 @@ export default function HomePage() {
     openCateringModal
   } = useOrder();
 
+  // Live menu data from API with static MENU_DATA fallback
+  const { categories, items } = useMenu();
+
   const cateringSection = useMemo(() => {
-    const cateringCat = MENU_DATA.categories.find((cat) => cat.id === "catering");
-    const cateringItems = MENU_DATA.items.filter((item) => item.category === "catering");
+    const cateringCat = categories.find((cat) => cat.id === "catering");
+    const cateringItems = items.filter((item) => item.category === "catering");
     if (!cateringCat || cateringItems.length === 0) return null;
     return {
       id: "catering",
@@ -51,14 +57,14 @@ export default function HomePage() {
       description: getCategoryDescription("catering"),
       items: cateringItems
     };
-  }, []);
+  }, [categories, items]);
 
   const filteredSections = useMemo(() => {
-    let items = MENU_DATA.items;
+    let menuItems = items;
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
-      items = items.filter(
+      menuItems = menuItems.filter(
         (item) =>
           item.name.toLowerCase().includes(q) ||
           item.description.toLowerCase().includes(q) ||
@@ -70,34 +76,41 @@ export default function HomePage() {
         {
           id: "search-results",
           name: `Search Results for "${searchQuery}"`,
-          description: `Found ${items.length} delicious item${items.length !== 1 ? "s" : ""}`,
-          items: items
+          description: `Found ${menuItems.length} delicious item${menuItems.length !== 1 ? "s" : ""}`,
+          items: menuItems
         }
       ];
     }
 
-    const normalSections = MENU_DATA.categories
+    const normalSections = categories
       .filter((cat) => cat.id !== "all" && cat.id !== "catering")
       .map((cat) => ({
         id: cat.id,
         name: cat.name,
         description: getCategoryDescription(cat.id),
-        items: items.filter((item) => item.category === cat.id)
+        items: menuItems.filter((item) => item.category === cat.id)
       }))
       .filter((sec) => sec.items.length > 0);
 
-    const popularItems = items.filter((item) => item.popular && item.category !== "catering");
+    const popularItems = menuItems.filter((item) => item.popular && item.category !== "catering");
 
-    return [
-      {
+    const sections = [];
+    if (popularItems.length > 0) {
+      sections.push({
         id: "all",
         name: "Most Popular & House Specialties",
         description: "Our customer-favorite handcrafted milk teas, fruit blends, and mochi",
         items: popularItems
-      },
-      ...normalSections
-    ];
-  }, [searchQuery]);
+      });
+    }
+    sections.push(...normalSections);
+    return sections;
+  }, [searchQuery, categories, items]);
+
+  const totalFilteredItems = useMemo(
+    () => filteredSections.reduce((acc, s) => acc + s.items.length, 0),
+    [filteredSections]
+  );
 
   function getCategoryDescription(catId: string): string {
     switch (catId) {
@@ -177,7 +190,7 @@ export default function HomePage() {
             </div>
           )}
 
-          {filteredSections.length === 0 || filteredSections[0].items.length === 0 ? (
+          {filteredSections.length === 0 || totalFilteredItems === 0 ? (
             <div className="py-20 text-center bg-white rounded-3xl border border-warm-300 p-8 shadow-xs">
               <div className="w-16 h-16 rounded-full bg-warm-200 mx-auto flex items-center justify-center text-gray-400 mb-4">
                 <Search className="w-8 h-8" />
@@ -429,22 +442,6 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-
-              {/* À La Carte Catering Items Grid */}
-              <div className="relative z-10">
-                <div className="flex items-center gap-2 mb-6">
-                  <span className="text-[11px] font-heading font-bold tracking-[0.14em] uppercase text-gray-500">
-                    À La Carte Platters &amp; Gallon Jugs
-                  </span>
-                  <span className="h-px flex-grow bg-warm-200" />
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {cateringSection.items.map((item: MenuItem) => (
-                    <ProductCard key={item.id} item={item} />
-                  ))}
-                </div>
-              </div>
             </section>
           </div>
         )}
@@ -478,6 +475,8 @@ export default function HomePage() {
       <RewardsModal />
       <CateringModal />
       <NewsletterModal />
+      <AuthModal />
+      <OrderHistoryModal />
       <MobileCartBar />
       <ToastContainer />
     </div>

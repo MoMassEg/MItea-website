@@ -67,7 +67,10 @@ export default function RootLayout({
       lang="en"
       className={`${plusJakartaSans.variable} ${dmSans.variable} ${cormorantGaramond.variable} scroll-smooth`}
     >
-      <body className="bg-[#FFF8F6] text-gray-900 font-body min-h-screen flex flex-col antialiased">
+      <body
+        suppressHydrationWarning
+        className="bg-[#FFF8F6] text-gray-900 font-body min-h-screen flex flex-col antialiased"
+      >
         <OrderProvider>
           {children}
         </OrderProvider>
