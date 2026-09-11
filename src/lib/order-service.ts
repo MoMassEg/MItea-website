@@ -6,7 +6,12 @@ import { CreateOrderInput, OrderStatus, PaymentStatus } from '@/lib/validators/o
 import { sendOrderConfirmation } from '@/lib/email';
 
 // In-memory store for fallback / offline / demo orders
-const inMemoryOrders = new Map<string, any>();
+// Use globalThis so the same map survives hot-reloads in dev and is shared within the same process
+const globalForOrders = globalThis as unknown as { _inMemoryOrders?: Map<string, any> };
+if (!globalForOrders._inMemoryOrders) {
+  globalForOrders._inMemoryOrders = new Map<string, any>();
+}
+const inMemoryOrders = globalForOrders._inMemoryOrders;
 
 function generateOrderNumber(): string {
   const now = new Date();
@@ -301,7 +306,9 @@ export async function processOrderCreation(
         special_instructions: specialInstructions || null,
       });
 
-      if (!orderError) {
+      if (orderError) {
+        console.error('[OrderService] ❌ DB insert order failed:', orderError.message, orderError);
+      } else {
         // Insert order items
         const orderItemRows = recalculatedItems.map((item) => ({
           order_id: orderId,
@@ -319,10 +326,14 @@ export async function processOrderCreation(
           total_price: item.totalPrice,
         }));
 
-        await dbClient.from('order_items').insert(orderItemRows);
+        const { error: itemsError } = await dbClient.from('order_items').insert(orderItemRows);
+        if (itemsError) {
+          console.error('[OrderService] ❌ DB insert order_items failed:', itemsError.message);
+        }
       }
-    } catch {
-      // If DB insert fails, fallback memory keeps order functional
+    } catch (dbErr: any) {
+      console.error('[OrderService] ❌ DB insert threw exception:', dbErr?.message);
+      // Fallback memory keeps order functional
     }
   }
 
@@ -720,15 +731,28 @@ export async function getAllOrdersForAdmin(filters?: AdminOrderFilters) {
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
+      if (error) {
+        console.error('[OrderService] ❌ Admin orders DB query failed:', error.message);
+      }
+
       if (!error && data) {
+        // Merge with any in-memory orders not yet in DB (e.g. created in the same serverless instance)
+        const dbIds = new Set(data.map((o: any) => o.id));
+        const memOrders = Array.from(inMemoryOrders.values()).filter(
+          (o, idx, self) =>
+            self.findIndex((s) => s.id === o.id) === idx && !dbIds.has(o.id)
+        );
+        const merged = [...memOrders, ...data];
+        merged.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
         return {
-          orders: data,
-          total: count ?? data.length,
+          orders: merged.slice(offset, offset + limit),
+          total: (count ?? data.length) + memOrders.length,
           limit,
           offset,
         };
       }
-    } catch {
+    } catch (dbErr: any) {
+      console.error('[OrderService] ❌ Admin orders query threw:', dbErr?.message);
       // Fallback to in-memory
     }
   }
