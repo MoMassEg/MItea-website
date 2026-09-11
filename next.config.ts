@@ -15,6 +15,22 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "lbtpharhwsoaiifbvfzf.supabase.co",
       },
+      {
+        protocol: "https",
+        hostname: "152864630.cdn6.editmysite.com",
+      },
+      {
+        protocol: "http",
+        hostname: "152864630.cdn6.editmysite.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.editmysite.com",
+      },
+      {
+        protocol: "http",
+        hostname: "**.editmysite.com",
+      },
     ],
   },
   async headers() {

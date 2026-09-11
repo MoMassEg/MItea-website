@@ -11,7 +11,7 @@ export const menuQuerySchema = z.object({
     .optional()
     .transform((val) => (val === undefined ? undefined : val === 'true')),
   q: z.string().optional(),
-  limit: z.coerce.number().min(1).max(100).default(50),
+  limit: z.coerce.number().min(1).max(200).default(200),
   offset: z.coerce.number().min(0).default(0),
 });
 

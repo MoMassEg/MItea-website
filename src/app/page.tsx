@@ -120,18 +120,34 @@ export default function HomePage() {
         return "Whole loose leaf teas infused with fresh organic dairy, coconut milk, and oat milk";
       case "fruit-tea":
         return "Shaken with real crushed fruits, premium jasmine green, and spring oolong teas";
+      case "tea":
       case "fresh-tea":
-        return "Unsweetened single-origin mountain teas brewed to golden perfection";
+        return "Freshly brewed premium-grade loose leaf teas sweetened with pure honey or cane sugar";
+      case "latte":
+        return "Crafted with ceremonial grade matcha, rich espresso, and premium Straus Family organic dairy";
+      case "signature":
+        return "House specialty layered beverages with warm slow-cooked brown sugar boba and brulee'd cream";
+      case "brown-sugar":
+        return "Generously coated with housemade brown sugar syrup, caramelized tiger drizzle, and warm boba";
+      case "chizu":
+        return "Handcrafted teas and lattes crowned with our velvety salted sweet cream cheese foam";
       case "energy":
-        return "Naturally invigorating blends enriched with green coffee, matcha, and electrolytes";
+        return "Naturally invigorating blends infused with Red Bull® energy, lemonade, and vibrant fruits";
       case "no-caffeine":
         return "Creamy decaf and herbal fruit sensations suitable for any hour";
+      case "smoothies":
+        return "Thick, creamy blends of real fruits and sweet milk chilled to frosty perfection";
+      case "mochi-dough":
       case "desserts":
-        return "Chewy Pon de Ring mochi donuts and artisanal Japanese rice cakes handcrafted daily";
-      case "snacks":
-        return "Authentic street food favorites tossed with fresh basil and Taiwanese 5-spice";
+        return "Handcrafted chewy Japanese Pon de Ring mochi donuts in assorted signature glazes";
+      case "korean-egg-drop":
+        return "Korean-style street toasts and sliders with fluffy soft-scrambled eggs and MOMO signature sauce";
+      case "banh-mi":
+        return "Crispy French baguettes filled with savory meats, homemade mayonnaise, cilantro, and pickled vegetables";
+      case "soft-drinks":
+        return "Chilled refreshments and canned sodas";
       default:
-        return "Handcrafted beverages and delicacies";
+        return "Handcrafted beverages and artisanal delicacies";
     }
   }
 
