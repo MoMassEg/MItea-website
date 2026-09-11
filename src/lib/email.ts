@@ -46,6 +46,58 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
   }
 }
 
+// ─── Password Reset Email ──────────────────────────────────────────────────────
+
+export async function sendPasswordResetEmail(to: string, resetUrl: string): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Reset Your MiTea Password</title></head>
+<body style="margin:0;padding:0;background:#FFF6F2;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFF6F2;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <tr><td style="background:linear-gradient(135deg,#F8847F 0%,#f56b65 100%);padding:36px 40px;text-align:center;">
+          <div style="font-size:36px;font-weight:900;color:#fff;letter-spacing:-1px;">🧋 MiTea</div>
+          <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);letter-spacing:3px;text-transform:uppercase;margin-top:4px;">Artisanal Boba &amp; Mochi</div>
+        </td></tr>
+        <tr><td style="padding:40px;">
+          <div style="text-align:center;margin-bottom:24px;">
+            <div style="display:inline-block;background:#FFF6F2;border-radius:50%;width:64px;height:64px;line-height:64px;font-size:32px;">🔐</div>
+          </div>
+          <h1 style="margin:0 0 8px;font-size:26px;font-weight:800;color:#1a1a1a;text-align:center;">Reset Your Password</h1>
+          <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;text-align:center;">
+            We received a request to reset your MiTea account password. Click the button below to choose a new one.
+          </p>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+            <tr><td align="center">
+              <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#F8847F,#f56b65);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:16px 40px;border-radius:50px;box-shadow:0 4px 14px rgba(248,132,127,0.4);">
+                Reset My Password
+              </a>
+            </td></tr>
+          </table>
+          <p style="margin:0 0 8px;font-size:13px;color:#888;text-align:center;">
+            This link expires in <strong>1 hour</strong>. If you didn't request a password reset, you can safely ignore this email.
+          </p>
+          <hr style="border:none;border-top:1px solid #f0e8e0;margin:28px 0;" />
+          <p style="margin:0;font-size:11px;color:#aaa;text-align:center;">
+            Or copy and paste this URL into your browser:<br/>
+            <a href="${resetUrl}" style="color:#F8847F;word-break:break-all;">${resetUrl}</a>
+          </p>
+        </td></tr>
+        <tr><td style="background:#FFF6F2;padding:20px 40px;text-align:center;">
+          <p style="margin:0;font-size:12px;color:#aaa;">© ${new Date().getFullYear()} MiTea · Artisanal Boba &amp; Mochi · <a href="${appUrl}" style="color:#F8847F;text-decoration:none;">mitea.com</a></p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  await sendEmail(to, 'Reset your MiTea password 🔐', html);
+}
+
 // ─── Welcome Email ────────────────────────────────────────────────────────────
 
 export async function sendWelcomeEmail(to: string, name: string): Promise<void> {
