@@ -804,8 +804,20 @@ export async function getOrderStatsForAdmin() {
         .from('orders')
         .select('id, total, status, created_at');
 
+      if (error) {
+        console.error('[OrderService] ❌ Admin stats DB query failed:', error.message);
+      }
+
       if (!error && allOrders) {
-        const todayOrders = allOrders.filter((o) => o.created_at >= todayIso);
+        // Also include any in-memory orders not yet in DB
+        const dbIds = new Set(allOrders.map((o: any) => o.id));
+        const memOrders = Array.from(inMemoryOrders.values()).filter(
+          (o, idx, self) =>
+            self.findIndex((s) => s.id === o.id) === idx && !dbIds.has(o.id)
+        );
+        const combined = [...allOrders, ...memOrders];
+
+        const todayOrders = combined.filter((o) => o.created_at >= todayIso);
         const todayRevenue = todayOrders
           .filter((o) => o.status !== 'CANCELLED')
           .reduce((sum, o) => sum + (Number(o.total) || 0), 0);
@@ -821,7 +833,7 @@ export async function getOrderStatsForAdmin() {
           CANCELLED: 0,
         };
 
-        allOrders.forEach((o) => {
+        combined.forEach((o) => {
           const s = o.status?.toUpperCase() || 'PENDING';
           statusBreakdown[s] = (statusBreakdown[s] || 0) + 1;
         });
@@ -830,12 +842,13 @@ export async function getOrderStatsForAdmin() {
           todayOrders: todayOrders.length,
           todayRevenue: Number(todayRevenue.toFixed(2)),
           averageOrderValue,
-          totalOrders: allOrders.length,
+          totalOrders: combined.length,
           statusBreakdown,
         };
       }
-    } catch {
-      // Fallback
+    } catch (dbErr: any) {
+      console.error('[OrderService] ❌ Admin stats query threw:', dbErr?.message);
+      // Fallback to in-memory
     }
   }
 

@@ -13,30 +13,47 @@ import {
   Clock,
   ArrowRight,
   Sparkles,
-  CheckCircle2,
-  AlertCircle,
   RefreshCw,
   UtensilsCrossed,
+  AlertCircle,
 } from "lucide-react";
 
 interface AdminOverviewProps {
   onNavigate: (tab: AdminTab) => void;
 }
 
+function StatSkeleton() {
+  return (
+    <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between animate-pulse">
+      <div className="space-y-2">
+        <div className="h-3 w-28 bg-gray-200 rounded-full" />
+        <div className="h-7 w-20 bg-gray-200 rounded-full" />
+        <div className="h-2.5 w-24 bg-gray-100 rounded-full" />
+      </div>
+      <div className="w-12 h-12 rounded-2xl bg-gray-100" />
+    </div>
+  );
+}
+
 export default function AdminOverview({ onNavigate }: AdminOverviewProps) {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const loadStats = async () => {
     try {
       setRefreshing(true);
+      setError(null);
       const res = await apiClient.adminGetStats();
       if (res.success && res.stats) {
         setStats(res.stats);
+      } else {
+        setError("Stats loaded but returned no data.");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to load admin stats:", err);
+      setError(err?.message || "Failed to load dashboard stats.");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -45,6 +62,9 @@ export default function AdminOverview({ onNavigate }: AdminOverviewProps) {
 
   useEffect(() => {
     loadStats();
+    // Auto-refresh every 30s
+    const interval = setInterval(loadStats, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const todayRevenue = stats?.todayRevenue ?? 0;
@@ -97,95 +117,131 @@ export default function AdminOverview({ onNavigate }: AdminOverviewProps) {
         </div>
       </div>
 
+      {/* Error banner */}
+      {error && !loading && (
+        <div className="flex items-start gap-3 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700">
+          <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="font-bold text-sm">Dashboard Error</p>
+            <p className="text-xs mt-0.5">{error}</p>
+          </div>
+          <button
+            onClick={loadStats}
+            className="text-xs font-bold underline hover:no-underline"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Today's Sales */}
-        <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Today's Revenue</p>
-            <h3 className="text-2xl font-heading font-black text-gray-900 mt-1">
-              ${todayRevenue.toFixed(2)}
-            </h3>
-            <p className="text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1">
-              <TrendingUp className="w-3 h-3" />
-              <span>{todayOrders} orders processed</span>
-            </p>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-            <DollarSign className="w-6 h-6" />
-          </div>
-        </div>
+        {loading ? (
+          <>
+            <StatSkeleton />
+            <StatSkeleton />
+            <StatSkeleton />
+            <StatSkeleton />
+          </>
+        ) : (
+          <>
+            {/* Today's Revenue */}
+            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Today's Revenue</p>
+                <h3 className="text-2xl font-heading font-black text-gray-900 mt-1">
+                  ${todayRevenue.toFixed(2)}
+                </h3>
+                <p className="text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3" />
+                  <span>{todayOrders} orders processed</span>
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <DollarSign className="w-6 h-6" />
+              </div>
+            </div>
 
-        {/* Active Orders */}
-        <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Pending & In Prep</p>
-            <h3 className="text-2xl font-heading font-black text-brand-600 mt-1">
-              {(breakdown.PENDING || 0) + (breakdown.CONFIRMED || 0) + (breakdown.PREPARING || 0)}
-            </h3>
-            <p className="text-[11px] text-gray-500 mt-1">
-              {breakdown.PENDING || 0} waiting confirmation
-            </p>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center">
-            <ShoppingBag className="w-6 h-6" />
-          </div>
-        </div>
+            {/* Active Orders */}
+            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Pending & In Prep</p>
+                <h3 className="text-2xl font-heading font-black text-brand-600 mt-1">
+                  {(breakdown.PENDING || 0) + (breakdown.CONFIRMED || 0) + (breakdown.PREPARING || 0)}
+                </h3>
+                <p className="text-[11px] text-gray-500 mt-1">
+                  {breakdown.PENDING || 0} waiting confirmation
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center">
+                <ShoppingBag className="w-6 h-6" />
+              </div>
+            </div>
 
-        {/* Average Order Value */}
-        <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Order Value</p>
-            <h3 className="text-2xl font-heading font-black text-gray-900 mt-1">
-              ${avgOrderValue.toFixed(2)}
-            </h3>
-            <p className="text-[11px] text-gray-500 mt-1">Per transaction today</p>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
-            <TrendingUp className="w-6 h-6" />
-          </div>
-        </div>
+            {/* Average Order Value */}
+            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Order Value</p>
+                <h3 className="text-2xl font-heading font-black text-gray-900 mt-1">
+                  ${avgOrderValue.toFixed(2)}
+                </h3>
+                <p className="text-[11px] text-gray-500 mt-1">Per transaction today</p>
+              </div>
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6" />
+              </div>
+            </div>
 
-        {/* Lifetime Total Orders */}
-        <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Lifetime Orders</p>
-            <h3 className="text-2xl font-heading font-black text-gray-900 mt-1">
-              {totalOrders}
-            </h3>
-            <p className="text-[11px] text-gray-500 mt-1">All time registered</p>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
-            <Sparkles className="w-6 h-6" />
-          </div>
-        </div>
+            {/* Lifetime Total Orders */}
+            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Lifetime Orders</p>
+                <h3 className="text-2xl font-heading font-black text-gray-900 mt-1">
+                  {totalOrders}
+                </h3>
+                <p className="text-[11px] text-gray-500 mt-1">All time registered</p>
+              </div>
+              <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                <Sparkles className="w-6 h-6" />
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Order Pipeline Status Pill Strip */}
       <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs space-y-3">
         <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider">Live Kitchen Pipeline</h4>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <div className="bg-amber-50/80 border border-amber-200/80 rounded-xl p-3 text-center">
-            <p className="text-[11px] font-semibold text-amber-700">Pending</p>
-            <p className="text-xl font-heading font-bold text-amber-900 mt-0.5">{breakdown.PENDING || 0}</p>
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 animate-pulse">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="bg-gray-100 rounded-xl p-3 h-16" />
+            ))}
           </div>
-          <div className="bg-blue-50/80 border border-blue-200/80 rounded-xl p-3 text-center">
-            <p className="text-[11px] font-semibold text-blue-700">Confirmed</p>
-            <p className="text-xl font-heading font-bold text-blue-900 mt-0.5">{breakdown.CONFIRMED || 0}</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <div className="bg-amber-50/80 border border-amber-200/80 rounded-xl p-3 text-center">
+              <p className="text-[11px] font-semibold text-amber-700">Pending</p>
+              <p className="text-xl font-heading font-bold text-amber-900 mt-0.5">{breakdown.PENDING || 0}</p>
+            </div>
+            <div className="bg-blue-50/80 border border-blue-200/80 rounded-xl p-3 text-center">
+              <p className="text-[11px] font-semibold text-blue-700">Confirmed</p>
+              <p className="text-xl font-heading font-bold text-blue-900 mt-0.5">{breakdown.CONFIRMED || 0}</p>
+            </div>
+            <div className="bg-purple-50/80 border border-purple-200/80 rounded-xl p-3 text-center">
+              <p className="text-[11px] font-semibold text-purple-700">In Prep</p>
+              <p className="text-xl font-heading font-bold text-purple-900 mt-0.5">{breakdown.PREPARING || 0}</p>
+            </div>
+            <div className="bg-teal-50/80 border border-teal-200/80 rounded-xl p-3 text-center">
+              <p className="text-[11px] font-semibold text-teal-700">Ready</p>
+              <p className="text-xl font-heading font-bold text-teal-900 mt-0.5">{breakdown.READY || 0}</p>
+            </div>
+            <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-xl p-3 text-center">
+              <p className="text-[11px] font-semibold text-emerald-700">Completed</p>
+              <p className="text-xl font-heading font-bold text-emerald-900 mt-0.5">{breakdown.COMPLETED || 0}</p>
+            </div>
           </div>
-          <div className="bg-purple-50/80 border border-purple-200/80 rounded-xl p-3 text-center">
-            <p className="text-[11px] font-semibold text-purple-700">In Prep</p>
-            <p className="text-xl font-heading font-bold text-purple-900 mt-0.5">{breakdown.PREPARING || 0}</p>
-          </div>
-          <div className="bg-teal-50/80 border border-teal-200/80 rounded-xl p-3 text-center">
-            <p className="text-[11px] font-semibold text-teal-700">Ready</p>
-            <p className="text-xl font-heading font-bold text-teal-900 mt-0.5">{breakdown.READY || 0}</p>
-          </div>
-          <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-xl p-3 text-center">
-            <p className="text-[11px] font-semibold text-emerald-700">Completed</p>
-            <p className="text-xl font-heading font-bold text-emerald-900 mt-0.5">{breakdown.COMPLETED || 0}</p>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Quick Action Navigation Tiles */}
