@@ -55,7 +55,7 @@ export async function processOrderCreation(
   // 1. Resolve Store
   let resolvedStoreId: string = '5ad5e69f-b811-40e8-983a-dde710039af2';
   let resolvedStore: StoreLocation = MENU_DATA.stores[0];
-  let defaultMenuItemId: string | null = null;
+  let defaultMenuItemId: string = '7b9efbcf-285e-4535-8c3f-c32c422302fa';
 
   if (dbClient) {
     try {
@@ -382,21 +382,21 @@ export async function processOrderCreation(
         // Insert order items
         const orderItemRows = recalculatedItems.map((item) => ({
           order_id: orderId,
-          menu_item_id: item.menuItemId || defaultMenuItemId,
+          menu_item_id: (item.menuItemId || defaultMenuItemId) as string,
           name: item.name,
           image_url: item.imageUrl || '',
           size: item.size || 'Regular',
           size_price: item.sizePrice || 0,
           sugar_level: item.sugar || '',
           ice_level: item.ice || '',
-          toppings: item.toppings || [],
+          toppings: (item.toppings || []) as any,
           base_price: item.basePrice || 0,
           unit_price: item.unitPrice || 0,
           quantity: item.quantity || 1,
           total_price: item.totalPrice || 0,
         }));
 
-        const { error: itemsError } = await dbClient.from('order_items').insert(orderItemRows);
+        const { error: itemsError } = await dbClient.from('order_items').insert(orderItemRows as any);
         if (itemsError) {
           console.error('[OrderService] ❌ DB insert order_items failed:', itemsError.message, itemsError);
         } else {
