@@ -1,0 +1,792 @@
+[
+  {
+    "id": "coconut-milk-tea",
+    "name": "Coconut Milk Tea",
+    "category": "milk-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/RY7D5GZCS4FR6SVAWAC3EHGS.jpeg?width=1280&dpr=1",
+    "filename": "coconut-milk-tea.jpeg",
+    "localPath": "/images/menu/coconut-milk-tea.jpeg",
+    "status": "skipped",
+    "bytes": 22268
+  },
+  {
+    "id": "pure-honey-jasmine-green-tea",
+    "name": "Pure Honey Jasmine Green Tea",
+    "category": "tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/AT6GQ6KSIOCIARJUQH4WO6RR.jpeg?width=1280&dpr=1",
+    "filename": "pure-honey-jasmine-green-tea.jpeg",
+    "localPath": "/images/menu/pure-honey-jasmine-green-tea.jpeg",
+    "status": "skipped",
+    "bytes": 25402
+  },
+  {
+    "id": "jasmine-milk-tea",
+    "name": "Jasmine Milk Tea",
+    "category": "milk-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/QUIQMLWBCS3QMRUXU7Q6PHJG.jpeg?width=1280&dpr=1",
+    "filename": "jasmine-milk-tea.jpeg",
+    "localPath": "/images/menu/jasmine-milk-tea.jpeg",
+    "status": "skipped",
+    "bytes": 21882
+  },
+  {
+    "id": "gangnam-double-cheese-slider",
+    "name": "Gangnam Double Cheese SLIDER",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/XCXQS7KU42WVGY26YAQARKQG.png?width=1280&dpr=1",
+    "filename": "gangnam-double-cheese-slider.png",
+    "localPath": "/images/menu/gangnam-double-cheese-slider.png",
+    "status": "skipped",
+    "bytes": 273486
+  },
+  {
+    "id": "mochi-donuts-box-3",
+    "name": "🍩 Box of 3 Mochi Donuts - U PICK FLAVORS",
+    "category": "mochi-dough",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/63VU2FQBG4ZJF5CU3ZGQB6RX.jpeg?width=1280&dpr=1",
+    "filename": "mochi-donuts-box-3.jpeg",
+    "localPath": "/images/menu/mochi-donuts-box-3.jpeg",
+    "status": "skipped",
+    "bytes": 263294
+  },
+  {
+    "id": "mochi-donuts-box-6",
+    "name": "🍩 Box of 6 - U PICK FLAVORS",
+    "category": "mochi-dough",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/J7ZH4CZYLPC4SBVUEY7GJB7L.jpeg?width=1280&dpr=1",
+    "filename": "mochi-donuts-box-6.jpeg",
+    "localPath": "/images/menu/mochi-donuts-box-6.jpeg",
+    "status": "skipped",
+    "bytes": 254820
+  },
+  {
+    "id": "mochi-donuts-box-12",
+    "name": "🍩 Box of 12 Donuts - U PICK FLAVORS",
+    "category": "mochi-dough",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/L4P4ASE6J7UDZJP5JNFIQLPP.jpeg?width=1280&dpr=1",
+    "filename": "mochi-donuts-box-12.jpeg",
+    "localPath": "/images/menu/mochi-donuts-box-12.jpeg",
+    "status": "skipped",
+    "bytes": 237926
+  },
+  {
+    "id": "single-mochi-donut",
+    "name": "🍩 Single Mochi Donut",
+    "category": "mochi-dough",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/45Q2EKU2DR4AG4554ZYBU7AS.png?width=1280&dpr=1",
+    "filename": "single-mochi-donut.png",
+    "localPath": "/images/menu/single-mochi-donut.png",
+    "status": "skipped",
+    "bytes": 16020
+  },
+  {
+    "id": "strawberry-matcha-latte",
+    "name": "Strawberry Matcha Latte",
+    "category": "latte",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/CJRHW2H5R3VMWVZZDPR4QJSV.jpeg?width=1280&dpr=1",
+    "filename": "strawberry-matcha-latte.jpeg",
+    "localPath": "/images/menu/strawberry-matcha-latte.jpeg",
+    "status": "skipped",
+    "bytes": 122820
+  },
+  {
+    "id": "matcha-latte",
+    "name": "Matcha Latte",
+    "category": "latte",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/ECDULCDVQH6VL6G5VM7GH3T4.png?width=1280&dpr=1",
+    "filename": "matcha-latte.png",
+    "localPath": "/images/menu/matcha-latte.png",
+    "status": "skipped",
+    "bytes": 208818
+  },
+  {
+    "id": "thai-tea-latte",
+    "name": "THAI Tea Latte",
+    "category": "latte",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/5JQFCGCF7JSQVO4MF7YJLIUO.jpeg?width=1280&dpr=1",
+    "filename": "thai-tea-latte.jpeg",
+    "localPath": "/images/menu/thai-tea-latte.jpeg",
+    "status": "skipped",
+    "bytes": 44820
+  },
+  {
+    "id": "hot-matcha-latte",
+    "name": "HOT MATCHA LATTE",
+    "category": "latte",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/FE5CWVKT57HBSNZV7QPWZXDF.jpeg?width=1280&dpr=1",
+    "filename": "hot-matcha-latte.jpeg",
+    "localPath": "/images/menu/hot-matcha-latte.jpeg",
+    "status": "skipped",
+    "bytes": 50532
+  },
+  {
+    "id": "blue-raspberry-infusion",
+    "name": "Blue Raspberry Infusion",
+    "category": "energy",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/MEQJDLMVB44YOGG4KHRYNZYH.jpeg?width=1280&dpr=1",
+    "filename": "blue-raspberry-infusion.jpeg",
+    "localPath": "/images/menu/blue-raspberry-infusion.jpeg",
+    "status": "skipped",
+    "bytes": 135590
+  },
+  {
+    "id": "strawberry-infusion",
+    "name": "Strawberry Infusion",
+    "category": "energy",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/6YENOOON5WH27FHTT2TRIAAB.jpeg?width=1280&dpr=1",
+    "filename": "strawberry-infusion.jpeg",
+    "localPath": "/images/menu/strawberry-infusion.jpeg",
+    "status": "skipped",
+    "bytes": 122146
+  },
+  {
+    "id": "caramel-apple-infusion",
+    "name": "Caramel Apple Infusion",
+    "category": "energy",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/GRPXKBN3X3NMZ2ZMZX7QB3DF.jpeg?width=1280&dpr=1",
+    "filename": "caramel-apple-infusion.jpeg",
+    "localPath": "/images/menu/caramel-apple-infusion.jpeg",
+    "status": "skipped",
+    "bytes": 112006
+  },
+  {
+    "id": "strawberry-smoothie",
+    "name": "Strawberry Smoothie",
+    "category": "smoothies",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/BYN2TH3VZZSUUS3I7ACPBJBD.jpeg?width=1280&dpr=1",
+    "filename": "strawberry-smoothie.jpeg",
+    "localPath": "/images/menu/strawberry-smoothie.jpeg",
+    "status": "skipped",
+    "bytes": 173310
+  },
+  {
+    "id": "mango-smoothie",
+    "name": "Mango Smoothie",
+    "category": "smoothies",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/NBNMZYQYIPXVNGILOJZIFMMN.jpeg?width=1280&dpr=1",
+    "filename": "mango-smoothie.jpeg",
+    "localPath": "/images/menu/mango-smoothie.jpeg",
+    "status": "skipped",
+    "bytes": 51976
+  },
+  {
+    "id": "coconut-smoothie",
+    "name": "Coconut Smoothie",
+    "category": "smoothies",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/XJ4PE7DJPXTPFJWFPWQQU3TA.jpeg?width=1280&dpr=1",
+    "filename": "coconut-smoothie.jpeg",
+    "localPath": "/images/menu/coconut-smoothie.jpeg",
+    "status": "skipped",
+    "bytes": 105672
+  },
+  {
+    "id": "taro-tornado",
+    "name": "Taro Torndao",
+    "category": "smoothies",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/P4MFRE2NKIUGDX35SOSK64SH.jpeg?width=1280&dpr=1",
+    "filename": "taro-tornado.jpeg",
+    "localPath": "/images/menu/taro-tornado.jpeg",
+    "status": "skipped",
+    "bytes": 131036
+  },
+  {
+    "id": "hot-chocolate",
+    "name": "HOT CHOCOLATE",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/ITMMAHIAZAYC3ALYQA4SGCOQ.jpeg?width=1280&dpr=1",
+    "filename": "hot-chocolate.jpeg",
+    "localPath": "/images/menu/hot-chocolate.jpeg",
+    "status": "skipped",
+    "bytes": 49990
+  },
+  {
+    "id": "black-sesame-latte",
+    "name": "Black Sesame Latte",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/TNZFJV2PQGEJJVKQRCAEWY6G.png?width=1280&dpr=1",
+    "filename": "black-sesame-latte.png",
+    "localPath": "/images/menu/black-sesame-latte.png",
+    "status": "skipped",
+    "bytes": 247488
+  },
+  {
+    "id": "chizu-taro-latte",
+    "name": "Chizu Taro Latte",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/OWVUDWTBGQSDWB747M5YGSPY.jpeg?width=1280&dpr=1",
+    "filename": "chizu-taro-latte.jpeg",
+    "localPath": "/images/menu/chizu-taro-latte.jpeg",
+    "status": "skipped",
+    "bytes": 10156
+  },
+  {
+    "id": "mango-milk",
+    "name": "Mango Milk",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/ZMHAAW2C2AV5KXC26T5NKYA4.jpeg?width=1280&dpr=1",
+    "filename": "mango-milk.jpeg",
+    "localPath": "/images/menu/mango-milk.jpeg",
+    "status": "skipped",
+    "bytes": 88610
+  },
+  {
+    "id": "mung-bean-pandan-latte",
+    "name": "Mung Bean Pandan Latte",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/TMWIG2KA4KOB6F4SI3J46UTD.png?width=1280&dpr=1",
+    "filename": "mung-bean-pandan-latte.png",
+    "localPath": "/images/menu/mung-bean-pandan-latte.png",
+    "status": "skipped",
+    "bytes": 207576
+  },
+  {
+    "id": "mung-bean-with-glass-jelly",
+    "name": "Mung bean with glass jelly",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/ZJG3CKPSORZOCZQWLJ227MZE.jpeg?width=1280&dpr=1",
+    "filename": "mung-bean-with-glass-jelly.jpeg",
+    "localPath": "/images/menu/mung-bean-with-glass-jelly.jpeg",
+    "status": "skipped",
+    "bytes": 51616
+  },
+  {
+    "id": "strawberry-milk",
+    "name": "Strawberry Milk",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/MRUOBQIXZ6EN4PH3C6N4HT5G.jpeg?width=1280&dpr=1",
+    "filename": "strawberry-milk.jpeg",
+    "localPath": "/images/menu/strawberry-milk.jpeg",
+    "status": "skipped",
+    "bytes": 94646
+  },
+  {
+    "id": "taro-latte",
+    "name": "Taro Latte",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/Y5KKXYF5PTV646QBJ265UR6S.png?width=1280&dpr=1",
+    "filename": "taro-latte.png",
+    "localPath": "/images/menu/taro-latte.png",
+    "status": "skipped",
+    "bytes": 164420
+  },
+  {
+    "id": "winter-melon-milk-tea",
+    "name": "Winter Melon Milk Tea",
+    "category": "milk-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/IR2YSHDJZX5ZLHGDDMFFGXX3.png?width=1280&dpr=1",
+    "filename": "winter-melon-milk-tea.png",
+    "localPath": "/images/menu/winter-melon-milk-tea.png",
+    "status": "skipped",
+    "bytes": 148104
+  },
+  {
+    "id": "lemonade",
+    "name": "Lemonade",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/5WXZZRRP4WOGZJEEQSXKV6R3.png?width=1280&dpr=1",
+    "filename": "lemonade.png",
+    "localPath": "/images/menu/lemonade.png",
+    "status": "skipped",
+    "bytes": 225822
+  },
+  {
+    "id": "strawberry-lemonade",
+    "name": "Strawberry Lemonade",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/3R6UPG3Z5IONV7F52KTYC67Z.png?width=1280&dpr=1",
+    "filename": "strawberry-lemonade.png",
+    "localPath": "/images/menu/strawberry-lemonade.png",
+    "status": "skipped",
+    "bytes": 201956
+  },
+  {
+    "id": "blue-raspberry-lemonade",
+    "name": "Blue Raspberry Lemonade",
+    "category": "no-caffeine",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/MEQJDLMVB44YOGG4KHRYNZYH.jpeg?width=1280&dpr=1",
+    "filename": "blue-raspberry-lemonade.jpeg",
+    "localPath": "/images/menu/blue-raspberry-lemonade.jpeg",
+    "status": "skipped",
+    "bytes": 135590
+  },
+  {
+    "id": "signature-tri-color",
+    "name": "The Signature Tri-Color",
+    "category": "signature",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/ZS3JLI7U55XYIDC3FNMH5BOI.jpeg?width=1280&dpr=1",
+    "filename": "signature-tri-color.jpeg",
+    "localPath": "/images/menu/signature-tri-color.jpeg",
+    "status": "skipped",
+    "bytes": 75402
+  },
+  {
+    "id": "signature-milk-tea",
+    "name": "The Signature Milk Tea",
+    "category": "signature",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/7ANLZNR4ZVSCPRFD2WC4CL3Z.png?width=1280&dpr=1",
+    "filename": "signature-milk-tea.png",
+    "localPath": "/images/menu/signature-milk-tea.png",
+    "status": "skipped",
+    "bytes": 173968
+  },
+  {
+    "id": "brown-sugar-matcha-latte",
+    "name": "Brown Sugar Matcha Latte",
+    "category": "brown-sugar",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/PK2FOXZAELZQDCFSQQRLVDY3.jpeg?width=1280&dpr=1",
+    "filename": "brown-sugar-matcha-latte.jpeg",
+    "localPath": "/images/menu/brown-sugar-matcha-latte.jpeg",
+    "status": "skipped",
+    "bytes": 24126
+  },
+  {
+    "id": "brown-sugar-cookies-cream",
+    "name": "Brown Sugar Cookies & Cream",
+    "category": "brown-sugar",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/36RFNP7DQRLO4VB4SRGSH2XL.png?width=1280&dpr=1",
+    "filename": "brown-sugar-cookies-cream.png",
+    "localPath": "/images/menu/brown-sugar-cookies-cream.png",
+    "status": "skipped",
+    "bytes": 188080
+  },
+  {
+    "id": "brown-sugar-creme-brulee-milk-tea",
+    "name": "Brown Sugar Creme Brûlée Milk Tea",
+    "category": "brown-sugar",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/GI44CFH7U3HXCKBRR3RLGOFY.jpeg?width=1280&dpr=1",
+    "filename": "brown-sugar-creme-brulee-milk-tea.jpeg",
+    "localPath": "/images/menu/brown-sugar-creme-brulee-milk-tea.jpeg",
+    "status": "skipped",
+    "bytes": 18334
+  },
+  {
+    "id": "brown-sugar-milk-tea",
+    "name": "Brown Sugar Milk Tea",
+    "category": "brown-sugar",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/WSGONX7XNC45VDB3XIMZFCUI.jpeg?width=1280&dpr=1",
+    "filename": "brown-sugar-milk-tea.jpeg",
+    "localPath": "/images/menu/brown-sugar-milk-tea.jpeg",
+    "status": "skipped",
+    "bytes": 28378
+  },
+  {
+    "id": "brown-sugar-roasted-oolong-milk-tea",
+    "name": "Brown Sugar Roasted Oolong Milk Tea",
+    "category": "brown-sugar",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/EA7OHQZICOROOH7YBCZ4YS4I.jpeg?width=1280&dpr=1",
+    "filename": "brown-sugar-roasted-oolong-milk-tea.jpeg",
+    "localPath": "/images/menu/brown-sugar-roasted-oolong-milk-tea.jpeg",
+    "status": "skipped",
+    "bytes": 46692
+  },
+  {
+    "id": "chizu-strawberry-green-tea",
+    "name": "Chizu Strawberry Green Tea",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/U47HL24GMK6UIMTGSTQ6DF2U.png?width=1280&dpr=1",
+    "filename": "chizu-strawberry-green-tea.png",
+    "localPath": "/images/menu/chizu-strawberry-green-tea.png",
+    "status": "skipped",
+    "bytes": 176864
+  },
+  {
+    "id": "chizu-pink-pear-green-tea",
+    "name": "Chizu Pink Pear Green Tea",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/QPIYBBI66QN5NY7FBDNKM2OJ.png?width=1280&dpr=1",
+    "filename": "chizu-pink-pear-green-tea.png",
+    "localPath": "/images/menu/chizu-pink-pear-green-tea.png",
+    "status": "skipped",
+    "bytes": 241966
+  },
+  {
+    "id": "chizu-pineapple-green-tea",
+    "name": "Chizu Pineapple Green Tea",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/TF2IFWBLXJGMUPILAJOQLVNH.png?width=1280&dpr=1",
+    "filename": "chizu-pineapple-green-tea.png",
+    "localPath": "/images/menu/chizu-pineapple-green-tea.png",
+    "status": "skipped",
+    "bytes": 272752
+  },
+  {
+    "id": "chizu-matcha-latte",
+    "name": "Chizu Matcha Latte",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/VN5UFLAALRDMTD3LQTUKJEKL.jpeg?width=1280&dpr=1",
+    "filename": "chizu-matcha-latte.jpeg",
+    "localPath": "/images/menu/chizu-matcha-latte.jpeg",
+    "status": "skipped",
+    "bytes": 23354
+  },
+  {
+    "id": "thai-tea-creme-brulee",
+    "name": "Thai Tea Creme Brulee",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/N54YB6C4XJKAJ2IJBORM7IEC.jpeg?width=1280&dpr=1",
+    "filename": "thai-tea-creme-brulee.jpeg",
+    "localPath": "/images/menu/thai-tea-creme-brulee.jpeg",
+    "status": "skipped",
+    "bytes": 222678
+  },
+  {
+    "id": "chizu-milk-tea",
+    "name": "Chizu Milk Tea",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/2AZCTQX6XAHVZDEBVZHW4GK3.jpeg?width=1280&dpr=1",
+    "filename": "chizu-milk-tea.jpeg",
+    "localPath": "/images/menu/chizu-milk-tea.jpeg",
+    "status": "skipped",
+    "bytes": 14852
+  },
+  {
+    "id": "chizu-kungfu-black-tea",
+    "name": "Chizu KungFu Black Tea",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/IEY2YH425N6UTLJOIKIYUPJA.png?width=1280&dpr=1",
+    "filename": "chizu-kungfu-black-tea.png",
+    "localPath": "/images/menu/chizu-kungfu-black-tea.png",
+    "status": "skipped",
+    "bytes": 163358
+  },
+  {
+    "id": "chizu-strawberry-pineapple-green-tea",
+    "name": "Chizu Strawberry Pineapple Green Tea",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/OAH7TUZZV5WLYITFY3LEMBAI.jpeg?width=1280&dpr=1",
+    "filename": "chizu-strawberry-pineapple-green-tea.jpeg",
+    "localPath": "/images/menu/chizu-strawberry-pineapple-green-tea.jpeg",
+    "status": "skipped",
+    "bytes": 176914
+  },
+  {
+    "id": "chizu-mango-green-tea",
+    "name": "Chizu Mango Green Tea",
+    "category": "chizu",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/7HBXK6WN6KRO4UJBREVJ6YPC.png?width=1280&dpr=1",
+    "filename": "chizu-mango-green-tea.png",
+    "localPath": "/images/menu/chizu-mango-green-tea.png",
+    "status": "skipped",
+    "bytes": 226888
+  },
+  {
+    "id": "supreme-mango-green-tea",
+    "name": "Supreme Mango Green Tea",
+    "category": "fruit-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/PUNTAUZPDR4QMY7Z4CZKL2VS.jpeg?width=1280&dpr=1",
+    "filename": "supreme-mango-green-tea.jpeg",
+    "localPath": "/images/menu/supreme-mango-green-tea.jpeg",
+    "status": "skipped",
+    "bytes": 15826
+  },
+  {
+    "id": "supreme-strawberry-pineapple-green-tea",
+    "name": "Supreme Strawberry Pineapple Green Tea",
+    "category": "fruit-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/OAH7TUZZV5WLYITFY3LEMBAI.jpeg?width=1280&dpr=1",
+    "filename": "supreme-strawberry-pineapple-green-tea.jpeg",
+    "localPath": "/images/menu/supreme-strawberry-pineapple-green-tea.jpeg",
+    "status": "skipped",
+    "bytes": 176914
+  },
+  {
+    "id": "supreme-pink-pear-green-tea",
+    "name": "Supreme Pink Pear Green Tea",
+    "category": "fruit-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/SLRTN4QZBOY6XQ6J5KDSYJOW.png?width=1280&dpr=1",
+    "filename": "supreme-pink-pear-green-tea.png",
+    "localPath": "/images/menu/supreme-pink-pear-green-tea.png",
+    "status": "skipped",
+    "bytes": 232122
+  },
+  {
+    "id": "supreme-pineapple-green-tea",
+    "name": "Supreme Pineapple Green Tea",
+    "category": "fruit-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/5WXZZRRP4WOGZJEEQSXKV6R3.png?width=1280&dpr=1",
+    "filename": "supreme-pineapple-green-tea.png",
+    "localPath": "/images/menu/supreme-pineapple-green-tea.png",
+    "status": "skipped",
+    "bytes": 225822
+  },
+  {
+    "id": "supreme-strawberry-green-tea",
+    "name": "Supreme Strawberry Green Tea",
+    "category": "fruit-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/3R6UPG3Z5IONV7F52KTYC67Z.png?width=1280&dpr=1",
+    "filename": "supreme-strawberry-green-tea.png",
+    "localPath": "/images/menu/supreme-strawberry-green-tea.png",
+    "status": "skipped",
+    "bytes": 201956
+  },
+  {
+    "id": "tropical-green-tea",
+    "name": "Tropical Green Tea",
+    "category": "fruit-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/VTCECXLA3S7DG4YAEV5J3FY4.jpeg?width=1280&dpr=1",
+    "filename": "tropical-green-tea.jpeg",
+    "localPath": "/images/menu/tropical-green-tea.jpeg",
+    "status": "skipped",
+    "bytes": 140082
+  },
+  {
+    "id": "strawberry-mango",
+    "name": "Strawberry Mango",
+    "category": "fruit-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/VTCECXLA3S7DG4YAEV5J3FY4.jpeg?width=1280&dpr=1",
+    "filename": "strawberry-mango.jpeg",
+    "localPath": "/images/menu/strawberry-mango.jpeg",
+    "status": "skipped",
+    "bytes": 140082
+  },
+  {
+    "id": "classic-milk-tea",
+    "name": "Classic Milk Tea",
+    "category": "milk-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/XNFHYWFETIEL6A6HO3EJMKDV.jpeg?width=1280&dpr=1",
+    "filename": "classic-milk-tea.jpeg",
+    "localPath": "/images/menu/classic-milk-tea.jpeg",
+    "status": "skipped",
+    "bytes": 24354
+  },
+  {
+    "id": "roasted-oolong-milk-tea",
+    "name": "Roasted Oolong Milk Tea",
+    "category": "milk-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/5YXPQ4FGRQDVIRPN5RCKVVTH.jpeg?width=1280&dpr=1",
+    "filename": "roasted-oolong-milk-tea.jpeg",
+    "localPath": "/images/menu/roasted-oolong-milk-tea.jpeg",
+    "status": "skipped",
+    "bytes": 51836
+  },
+  {
+    "id": "hazelnut-milk-tea",
+    "name": "Hazelnut Milk Tea",
+    "category": "milk-tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/RY7D5GZCS4FR6SVAWAC3EHGS.jpeg?width=1280&dpr=1",
+    "filename": "hazelnut-milk-tea.jpeg",
+    "localPath": "/images/menu/hazelnut-milk-tea.jpeg",
+    "status": "skipped",
+    "bytes": 22268
+  },
+  {
+    "id": "kungfu-black-tea",
+    "name": "KungFu Black Tea",
+    "category": "tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/EOCGKE76B5PUJLBQ25HJLHP2.jpeg?width=1280&dpr=1",
+    "filename": "kungfu-black-tea.jpeg",
+    "localPath": "/images/menu/kungfu-black-tea.jpeg",
+    "status": "skipped",
+    "bytes": 26344
+  },
+  {
+    "id": "jasmine-green-tea",
+    "name": "Jasmine Green Tea",
+    "category": "tea",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/ZAOCQNJSA4V6SVKGELPCNIQU.jpeg?width=1280&dpr=1",
+    "filename": "jasmine-green-tea.jpeg",
+    "localPath": "/images/menu/jasmine-green-tea.jpeg",
+    "status": "skipped",
+    "bytes": 24586
+  },
+  {
+    "id": "coke",
+    "name": "Coke",
+    "category": "soft-drinks",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/CRWNEYCNM27NWHGDJSGWTRF5.jpeg?width=1280&dpr=1",
+    "filename": "coke.jpeg",
+    "localPath": "/images/menu/coke.jpeg",
+    "status": "skipped",
+    "bytes": 119440
+  },
+  {
+    "id": "diet-coke",
+    "name": "Diet Coke",
+    "category": "soft-drinks",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/AWNGFA4TT4W6QSHRQDDS3BQK.jpeg?width=1280&dpr=1",
+    "filename": "diet-coke.jpeg",
+    "localPath": "/images/menu/diet-coke.jpeg",
+    "status": "skipped",
+    "bytes": 98438
+  },
+  {
+    "id": "sprite",
+    "name": "Sprite",
+    "category": "soft-drinks",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/7P3M7KLNKZGUKNNGCCXQK53K.jpeg?width=1280&dpr=1",
+    "filename": "sprite.jpeg",
+    "localPath": "/images/menu/sprite.jpeg",
+    "status": "skipped",
+    "bytes": 117410
+  },
+  {
+    "id": "dasani-water",
+    "name": "Dasani Water",
+    "category": "soft-drinks",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/S42PVFQZZMFWSHUNUEFS46AF.jpeg?width=1280&dpr=1",
+    "filename": "dasani-water.jpeg",
+    "localPath": "/images/menu/dasani-water.jpeg",
+    "status": "skipped",
+    "bytes": 155980
+  },
+  {
+    "id": "red-bull",
+    "name": "Red Bull®",
+    "category": "soft-drinks",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/ZH2DMMQCKW6VBZQI3MTOWKZQ.jpeg?width=1280&dpr=1",
+    "filename": "red-bull.jpeg",
+    "localPath": "/images/menu/red-bull.jpeg",
+    "status": "skipped",
+    "bytes": 168746
+  },
+  {
+    "id": "beef-bulgogi-slider",
+    "name": "Beef Bulgogi SLIDER",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/NGRVN4DLSKX34F3VCBEF5HIR.png?width=1280&dpr=1",
+    "filename": "beef-bulgogi-slider.png",
+    "localPath": "/images/menu/beef-bulgogi-slider.png",
+    "status": "skipped",
+    "bytes": 241786
+  },
+  {
+    "id": "beef-bulgogi-sandwich",
+    "name": "BEEF BULGOGI SANDWICH",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/NE6OSY4QOZLSQLV4R7SA66FX.png?width=1280&dpr=1",
+    "filename": "beef-bulgogi-sandwich.png",
+    "localPath": "/images/menu/beef-bulgogi-sandwich.png",
+    "status": "skipped",
+    "bytes": 245024
+  },
+  {
+    "id": "gangnam-double-cheese-sandwich",
+    "name": "GANGNAM DOUBLE CHEESE SANDWICH",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/5BP3JYAPEZVZN7OCLISORXBU.png?width=1280&dpr=1",
+    "filename": "gangnam-double-cheese-sandwich.png",
+    "localPath": "/images/menu/gangnam-double-cheese-sandwich.png",
+    "status": "skipped",
+    "bytes": 246366
+  },
+  {
+    "id": "gwangju-bacon-sandwich",
+    "name": "GWANGJU BACON SANDWICH",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/MKLETGNAIMN6XN3F3PEN5EW7.png?width=1280&dpr=1",
+    "filename": "gwangju-bacon-sandwich.png",
+    "localPath": "/images/menu/gwangju-bacon-sandwich.png",
+    "status": "skipped",
+    "bytes": 264504
+  },
+  {
+    "id": "jeju-ham-avocado-sandwich",
+    "name": "JEJU HAM & AVOCADO SANDWICH",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/K2ADBIJ36FPD4NQITZGSEECL.png?width=1280&dpr=1",
+    "filename": "jeju-ham-avocado-sandwich.png",
+    "localPath": "/images/menu/jeju-ham-avocado-sandwich.png",
+    "status": "skipped",
+    "bytes": 280864
+  },
+  {
+    "id": "seoul-spam-sandwich",
+    "name": "SEOUL SPAM SANDWICH",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/FQEE7UIA7ECUGI7K3HXQ5DKK.png?width=1280&dpr=1",
+    "filename": "seoul-spam-sandwich.png",
+    "localPath": "/images/menu/seoul-spam-sandwich.png",
+    "status": "skipped",
+    "bytes": 263226
+  },
+  {
+    "id": "spicy-pork-sandwich",
+    "name": "SPICY PORK SANDWICH",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/XH2ESUBN6XBP47BMS5VMDQ3F.png?width=1280&dpr=1",
+    "filename": "spicy-pork-sandwich.png",
+    "localPath": "/images/menu/spicy-pork-sandwich.png",
+    "status": "skipped",
+    "bytes": 275404
+  },
+  {
+    "id": "gwangju-bacon-slider",
+    "name": "Gwangju Bacon SLIDER",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/VZYHQ57SAZRGJAQMNX22SMLN.png?width=1280&dpr=1",
+    "filename": "gwangju-bacon-slider.png",
+    "localPath": "/images/menu/gwangju-bacon-slider.png",
+    "status": "skipped",
+    "bytes": 245592
+  },
+  {
+    "id": "jeju-ham-avocado-slider",
+    "name": "Jeju Ham & Avocado SLIDER",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/IDCGEFSOKOQQEOH4OKWIXLLT.png?width=1280&dpr=1",
+    "filename": "jeju-ham-avocado-slider.png",
+    "localPath": "/images/menu/jeju-ham-avocado-slider.png",
+    "status": "skipped",
+    "bytes": 272134
+  },
+  {
+    "id": "seoul-spam-slider",
+    "name": "Seoul Spam SLIDER",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/TZFEWLKXA4EQOW2JQ32CZ6RD.png?width=1280&dpr=1",
+    "filename": "seoul-spam-slider.png",
+    "localPath": "/images/menu/seoul-spam-slider.png",
+    "status": "skipped",
+    "bytes": 254196
+  },
+  {
+    "id": "spicy-pork-slider",
+    "name": "Spicy Pork SLIDER",
+    "category": "korean-egg-drop",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/XFTWKVQJU5ESL25WWIM7YOUH.png?width=1280&dpr=1",
+    "filename": "spicy-pork-slider.png",
+    "localPath": "/images/menu/spicy-pork-slider.png",
+    "status": "skipped",
+    "bytes": 254468
+  },
+  {
+    "id": "vietnamese-banh-mi-garlic-chicken",
+    "name": "Garlic Chicken Banh Mi",
+    "category": "banh-mi",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/5OUFV6D6I6KKFLQ73OW2SIV7.jpeg?width=1280&dpr=1",
+    "filename": "vietnamese-banh-mi-garlic-chicken.jpeg",
+    "localPath": "/images/menu/vietnamese-banh-mi-garlic-chicken.jpeg",
+    "status": "skipped",
+    "bytes": 157288
+  },
+  {
+    "id": "vietnamese-banh-mi-beef",
+    "name": "Beef Banh Mi",
+    "category": "banh-mi",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/5OUFV6D6I6KKFLQ73OW2SIV7.jpeg?width=1280&dpr=1",
+    "filename": "vietnamese-banh-mi-beef.jpeg",
+    "localPath": "/images/menu/vietnamese-banh-mi-beef.jpeg",
+    "status": "skipped",
+    "bytes": 157288
+  },
+  {
+    "id": "vietnamese-banh-mi-pork",
+    "name": "Pork Banh Mi",
+    "category": "banh-mi",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/7THQI3WHBTW7MDG5NDFHKZJV.jpeg?width=1280&dpr=1",
+    "filename": "vietnamese-banh-mi-pork.jpeg",
+    "localPath": "/images/menu/vietnamese-banh-mi-pork.jpeg",
+    "status": "skipped",
+    "bytes": 91440
+  },
+  {
+    "id": "vietnamese-banh-mi-traditional-cold-ham",
+    "name": "Traditional Cold Ham Banh Mi",
+    "category": "banh-mi",
+    "url": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/5OUFV6D6I6KKFLQ73OW2SIV7.jpeg?width=1280&dpr=1",
+    "filename": "vietnamese-banh-mi-traditional-cold-ham.jpeg",
+    "localPath": "/images/menu/vietnamese-banh-mi-traditional-cold-ham.jpeg",
+    "status": "skipped",
+    "bytes": 157288
+  }
+]
