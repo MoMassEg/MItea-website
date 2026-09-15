@@ -47,18 +47,6 @@ export default function HomePage() {
   // Live menu data from API with static MENU_DATA fallback
   const { categories, items } = useMenu();
 
-  const cateringSection = useMemo(() => {
-    const cateringCat = categories.find((cat) => cat.id === "catering");
-    const cateringItems = items.filter((item) => item.category === "catering");
-    if (!cateringCat || cateringItems.length === 0) return null;
-    return {
-      id: "catering",
-      name: cateringCat.name,
-      description: getCategoryDescription("catering"),
-      items: cateringItems
-    };
-  }, [categories, items]);
-
   const filteredSections = useMemo(() => {
     let menuItems = items;
 
@@ -165,9 +153,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-0 flex justify-center">
           <button
             type="button"
-            onClick={() =>
-              document.getElementById("catering")?.scrollIntoView({ behavior: "smooth", block: "start" })
-            }
+            onClick={() => {
+              // Scroll to the 3 catering packages; fall back to the section top
+              const target =
+                document.getElementById("catering-packages") ||
+                document.getElementById("catering");
+              target?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
             className="group inline-flex items-center gap-3 bg-[#FFF4F3] hover:bg-[#FFE8E6] border border-[#F8847F]/30 hover:border-[#F8847F]/60 rounded-2xl px-4 py-2.5 transition-all hover:shadow-sm cursor-pointer"
           >
             <div className="w-7 h-7 rounded-lg bg-[#F8847F]/15 flex items-center justify-center shrink-0">
@@ -256,10 +248,11 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* Catering & Events — placed right before the editorial hero */}
-        {cateringSection && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-            <section
+        {/* Catering & Events — placed right before the editorial hero.
+            Always rendered: the 3 package cards below are static content,
+            so the "Plan Your Event" banner can always scroll to them. */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+          <section
               id="catering"
               className="scroll-mt-36 bg-white border-2 border-brand-200/90 rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden text-gray-900"
             >
@@ -293,7 +286,7 @@ export default function HomePage() {
               </div>
 
               {/* ── PACKAGES SECTION (User Requested 3 Options) ── */}
-              <div className="relative z-10 mb-12">
+              <div id="catering-packages" className="relative z-10 mb-12 scroll-mt-36">
                 <div className="flex items-center gap-2 mb-6">
                   <span className="text-[11px] font-heading font-bold tracking-[0.14em] uppercase text-[#F8847F]">
                     Packages
@@ -459,8 +452,7 @@ export default function HomePage() {
                 </div>
               </div>
             </section>
-          </div>
-        )}
+        </div>
 
         {/* Brand Editorial & Craft Feature (Centered After Menu) */}
         <Hero />
