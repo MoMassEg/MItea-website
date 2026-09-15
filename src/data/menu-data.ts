@@ -553,6 +553,20 @@ export const MENU_DATA = {
         "customizable": true
     },
     {
+        "id": "chizu-taro-latte-no-caffeine",
+        "name": "Chizu Taro Latte",
+        "category": "no-caffeine",
+        "price": 7.25,
+        "description": "Your favorite taro latte with our housemade sweet cream. **Contains milk** **Contains no caffeine**",
+        "image": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/OWVUDWTBGQSDWB747M5YGSPY.jpeg?width=1280&dpr=1",
+        "popular": false,
+        "badge": "Caffeine-Free",
+        "caffeine": "None",
+        "calories": "380 kcal",
+        "available": true,
+        "customizable": true
+    },
+    {
         "id": "chizu-taro-latte",
         "name": "Chizu Taro Latte",
         "category": "chizu",
@@ -1004,7 +1018,7 @@ export const MENU_DATA = {
         "id": "strawberry-mango",
         "name": "Strawberry Mango",
         "category": "fruit-tea",
-        "price": 8.25,
+        "price": 7.25,
         "description": "***Ice quantity cannot be adjusted*** **Sweetness Level Can Not Be Adjusted**",
         "image": "https://152864630.cdn6.editmysite.com/uploads/1/5/2/8/152864630/VTCECXLA3S7DG4YAEV5J3FY4.jpeg?width=1280&dpr=1",
         "popular": false,
