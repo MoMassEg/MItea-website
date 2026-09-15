@@ -6,7 +6,6 @@ import { apiClient } from '@/lib/api-client';
 import { MENU_DATA, MenuItem } from "@/data/menu-data";
 import {
   X,
-  Sparkles,
   Users,
   CheckCircle2,
   Plus,
@@ -15,8 +14,7 @@ import {
   PartyPopper,
   Send,
   ShieldCheck,
-  Percent,
-  Sliders
+  Percent
 } from "lucide-react";
 
 interface CustomDrinkSelection {
@@ -45,38 +43,11 @@ interface CustomBakerySelection {
 export default function CateringModal() {
   const { isCateringOpen, closeCateringModal, addToCart, openCartDrawer, showToast } = useOrder();
 
-  const [activeTab, setActiveTab] = useState<"builder" | "packages">("packages");
+  // Single combined flow: no tabs. Step 1 pick an experience, then build, then quote.
+  const [selectedExperience, setSelectedExperience] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedRequestNumber, setSubmittedRequestNumber] = useState<string>("#MTC-9482");
-
-  // ── Package tab quantities ──
-  const [packageQuantities, setPackageQuantities] = useState<Record<string, number>>({
-    "catering-artisan-boba-bar": 1,
-    "catering-grand-celebration-bar": 1,
-    "catering-mochi-donut-platter": 1,
-    "catering-party-tea-jug": 1,
-  });
-
-  // Task 7: live catering packages from API with static fallback
-  const [cateringPackages, setCateringPackages] = useState<MenuItem[]>(() =>
-    MENU_DATA.items.filter((i) => i.category === "catering")
-  );
-
-  React.useEffect(() => {
-    let mounted = true;
-    apiClient
-      .get<{ packages: MenuItem[] }>("/api/catering/packages")
-      .then((res) => {
-        if (mounted && res?.packages?.length) {
-          setCateringPackages(res.packages);
-        }
-      })
-      .catch(() => {});
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   // ── Custom Builder State (Starts completely empty, saved in localStorage) ──
   const [formatType, setFormatType] = useState<"cups" | "jugs">("cups");
@@ -238,8 +209,6 @@ export default function CateringModal() {
 
   if (!isCateringOpen) return null;
 
-  const cateringItems = cateringPackages;
-
   // ── Calculation helpers ──
   const totalDrinksCount = Object.values(drinkSelections).reduce(
     (sum, d) => sum + (d.quantity || 0),
@@ -269,6 +238,32 @@ export default function CateringModal() {
   const customTotal = Math.max(0, rawSubtotal - discountAmount);
 
   // ── Handlers for Custom Builder ──
+
+  // Step 1: select one of the 3 experience packages (click again to deselect)
+  const handleSelectExperience = (
+    id: string,
+    guest: string,
+    style: "delivery" | "setup" | "barista",
+    label: string
+  ) => {
+    const isSelected = selectedExperience === id;
+    setSelectedExperience(isSelected ? null : id);
+    setGuestCount(guest);
+    setServiceStyle(style);
+    setNotes(isSelected ? "" : `Selected Experience Package: ${label}`);
+    showToast(
+      isSelected
+        ? "Experience deselected."
+        : `Selected ${label}! Customize your order below, then fill in your event details.`,
+      "info"
+    );
+    if (!isSelected) {
+      setTimeout(() => {
+        document.getElementById("catering-step-drinks")?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  };
+
   const handleUpdateDrinkQty = (itemId: string, item: MenuItem, delta: number) => {
     setDrinkSelections((prev) => {
       const current = prev[itemId] || {
@@ -405,27 +400,6 @@ export default function CateringModal() {
     openCartDrawer();
   };
 
-  // Add Pre-set Package with quantity
-  const handleAddPackageWithQty = (item: (typeof cateringItems)[0]) => {
-    const qty = packageQuantities[item.id] || 1;
-    addToCart({
-      id: item.id,
-      name: item.name,
-      image: item.image,
-      size: "Catering Pack",
-      sizePrice: 0,
-      sugar: "Regular Sweet (50%)",
-      ice: "Chilled with Ice Station",
-      toppings: [{ id: "boba-pack", name: "Slow-Cooked Kokuto Boba Included", price: 0 }],
-      basePrice: item.price,
-      unitPrice: item.price,
-      quantity: qty,
-    });
-    showToast(`Added ${qty}x ${item.name} to cart! 🧋`, "success");
-    closeCateringModal();
-    openCartDrawer();
-  };
-
   const handleSubmitCustom = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim() || !eventDate.trim()) {
@@ -434,8 +408,11 @@ export default function CateringModal() {
     }
 
     const activeDrinks = Object.values(drinkSelections).filter((d) => d.quantity > 0);
-    if (activeDrinks.length === 0) {
-      showToast("Please select at least 1 drink item for your catering request.", "warning");
+    if (!selectedExperience && activeDrinks.length === 0) {
+      showToast(
+        "Please pick an experience package above, or select at least 1 drink for a custom order.",
+        "warning"
+      );
       return;
     }
 
@@ -562,46 +539,139 @@ export default function CateringModal() {
           </button>
         </div>
 
-        {/* ── 2 Tabs Switcher: Combined Build & Quote + Packages ── */}
-        <div className="flex border-b border-gray-200 bg-gray-50/80 px-2 sm:px-6 pt-2 sm:pt-3 gap-1 sm:gap-3">
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab("builder");
-              setIsSubmitted(false);
-            }}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 sm:px-5 py-2.5 text-xs sm:text-sm font-heading font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
-              activeTab === "builder"
-                ? "border-[#F8847F] text-gray-900 bg-white rounded-t-xl shadow-xs"
-                : "border-transparent text-gray-500 hover:text-gray-900"
-            }`}
-          >
-            <Sliders className="w-3.5 h-3.5 text-[#DF9749] shrink-0" />
-            <span>Build &amp; Quote</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab("packages");
-              setIsSubmitted(false);
-            }}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 sm:px-5 py-2.5 text-xs sm:text-sm font-heading font-extrabold uppercase tracking-wider border-b-2 transition-all cursor-pointer ${
-              activeTab === "packages"
-                ? "border-[#F8847F] text-gray-900 bg-white rounded-t-xl shadow-xs"
-                : "border-transparent text-gray-500 hover:text-gray-900"
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#F8847F] shrink-0" />
-            <span>Packages</span>
-          </button>
-        </div>
-
-        {/* ── Modal Body (Scrollable) ── */}
+        {/* ── Modal Body (Scrollable, Single Combined Flow) ── */}
         <div className="p-3 sm:p-6 overflow-y-auto space-y-5 sm:space-y-6 flex-grow">
-          {/* TAB 1: COMBINED CUSTOM CATERING BUILDER & QUOTE REQUEST */}
-          {activeTab === "builder" && !isSubmitted && (
+          {/* COMBINED: PICK EXPERIENCE → BUILD & QUOTE */}
+          {!isSubmitted && (
             <div className="space-y-5 sm:space-y-6">
+              {/* ── STEP 1: Choose Your Experience (3 Packages) ── */}
+              <div>
+                <div className="flex items-center justify-between mb-3 border-b border-warm-200 pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-[#F8847F] text-white font-bold text-xs flex items-center justify-center">
+                      1
+                    </span>
+                    <h4 className="font-heading font-extrabold text-sm sm:text-base text-gray-900">
+                      Choose Your Experience
+                    </h4>
+                  </div>
+                  <span className="text-[11px] text-gray-500">Pick a size &amp; experience</span>
+                </div>
+
+                <div className="space-y-3">
+              {/* Option 1: The Drop-Off */}
+              <div className={`bg-white border-2 rounded-2xl p-4 transition-all shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                selectedExperience === "drop-off"
+                  ? "border-[#F8847F] ring-2 ring-[#F8847F]/30 bg-[#FFF8F6]"
+                  : "border-warm-200 hover:border-[#E35843]"
+              }`}>
+                <div className="space-y-1 max-w-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] font-heading font-extrabold uppercase tracking-wider text-[#E35843] bg-[#E35843]/10 px-2 py-0.5 rounded-full">
+                      First Option · Pick a size
+                    </span>
+                    <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
+                      <Users className="w-3 h-3" /> 10 - 25 people
+                    </span>
+                  </div>
+                  <h4 className="font-heading font-extrabold text-base text-gray-900">
+                    The Drop-Off
+                  </h4>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    A tray of pre-made drinks in your pick of four flavours, plus two dozen mochi donuts. Delivered cold and ready.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSelectExperience("drop-off", "15–30 guests", "delivery", "The Drop-Off (10 - 25 people)")
+                  }
+                  className={`shrink-0 text-xs font-heading font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center ${
+                    selectedExperience === "drop-off"
+                      ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                      : "bg-[#F8847F] hover:bg-[#F56B65] text-white"
+                  }`}
+                >
+                  {selectedExperience === "drop-off" ? "✓ Selected" : "Plan The Drop-Off"}
+                </button>
+              </div>
+
+              {/* Option 2: The MiTea Bar */}
+              <div className={`bg-white border-2 rounded-2xl p-4 transition-all shadow-sm relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                selectedExperience === "mitea-bar"
+                  ? "border-[#DF9749] ring-2 ring-[#DF9749]/40 bg-[#FFFBF5]"
+                  : "border-[#DF9749]"
+              }`}>
+                <div className="space-y-1 max-w-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] font-heading font-extrabold uppercase tracking-wider text-black bg-gradient-to-r from-[#DF9749] to-amber-400 px-2 py-0.5 rounded-full font-bold">
+                      Second Option · Most Popular
+                    </span>
+                    <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
+                      <Users className="w-3 h-3" /> 25 - 75 people
+                    </span>
+                  </div>
+                  <h4 className="font-heading font-extrabold text-base text-gray-900">
+                    The MiTea Bar
+                  </h4>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    We set up on site and make drinks to order with sugar, ice and toppings chosen by each guest, same as in the shop.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSelectExperience("mitea-bar", "35–50 guests", "barista", "The MiTea Bar (25 - 75 people)")
+                  }
+                  className={`shrink-0 text-xs font-heading font-extrabold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center ${
+                    selectedExperience === "mitea-bar"
+                      ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                      : "bg-gradient-to-r from-[#DF9749] to-amber-400 hover:brightness-105 text-black"
+                  }`}
+                >
+                  {selectedExperience === "mitea-bar" ? "✓ Selected" : "Plan The MiTea Bar"}
+                </button>
+              </div>
+
+              {/* Option 3: The Whole Thing */}
+              <div className={`bg-white border-2 rounded-2xl p-4 transition-all shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                selectedExperience === "whole-thing"
+                  ? "border-[#F8847F] ring-2 ring-[#F8847F]/30 bg-[#FFF8F6]"
+                  : "border-warm-200 hover:border-[#F8847F]"
+              }`}>
+                <div className="space-y-1 max-w-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] font-heading font-extrabold uppercase tracking-wider text-[#F8847F] bg-[#F8847F]/10 px-2 py-0.5 rounded-full">
+                      3rd Option · Full Service
+                    </span>
+                    <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
+                      <Users className="w-3 h-3" /> 75+ people
+                    </span>
+                  </div>
+                  <h4 className="font-heading font-extrabold text-base text-gray-900">
+                    The Whole Thing
+                  </h4>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    Full bar service, a donut tower, and staff for the length of your event. Tell us the room and we&apos;ll plan it.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSelectExperience("whole-thing", "55–100 guests", "setup", "The Whole Thing (75+ people)")
+                  }
+                  className={`shrink-0 text-xs font-heading font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center ${
+                    selectedExperience === "whole-thing"
+                      ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                      : "bg-[#F8847F] hover:bg-[#F56B65] text-white"
+                  }`}
+                >
+                  {selectedExperience === "whole-thing" ? "✓ Selected" : "Plan The Whole Thing"}
+                </button>
+              </div>
+                </div>
+              </div>
+
               {/* Serving format & discounts banner */}
               <div className="bg-gradient-to-r from-amber-50 to-orange-50/50 border border-[#DF9749]/30 rounded-2xl p-3 sm:p-4">
                 <div className="flex items-start gap-3 mb-3">
@@ -641,12 +711,12 @@ export default function CateringModal() {
                 </div>
               </div>
 
-              {/* ── STEP 1: Choose Your Drinks & Quantities ── */}
-              <div>
+              {/* ── STEP 2: Choose Your Drinks & Quantities ── */}
+              <div id="catering-step-drinks" className="scroll-mt-4">
                 <div className="flex items-center justify-between mb-3 border-b border-warm-200 pb-2">
                   <div className="flex items-center gap-2">
                     <span className="w-6 h-6 rounded-full bg-[#F8847F] text-white font-bold text-xs flex items-center justify-center">
-                      1
+                      2
                     </span>
                     <h4 className="font-heading font-extrabold text-sm sm:text-base text-gray-900">
                       Select Drinks &amp; How Many
@@ -769,12 +839,12 @@ export default function CateringModal() {
                 </div>
               </div>
 
-              {/* ── STEP 2: Choose Toppings & Mix-ins ── */}
+              {/* ── STEP 3: Choose Toppings & Mix-ins ── */}
               <div>
                 <div className="flex items-center justify-between mb-3 border-b border-warm-200 pb-2">
                   <div className="flex items-center gap-2">
                     <span className="w-6 h-6 rounded-full bg-[#F8847F] text-white font-bold text-xs flex items-center justify-center">
-                      2
+                      3
                     </span>
                     <h4 className="font-heading font-extrabold text-sm sm:text-base text-gray-900">
                       Add Toppings &amp; Pearls
@@ -827,12 +897,12 @@ export default function CateringModal() {
                 </div>
               </div>
 
-              {/* ── STEP 3: Mochi Donut Platters & Bakery ── */}
+              {/* ── STEP 4: Mochi Donut Platters & Bakery ── */}
               <div>
                 <div className="flex items-center justify-between mb-3 border-b border-warm-200 pb-2">
                   <div className="flex items-center gap-2">
                     <span className="w-6 h-6 rounded-full bg-[#F8847F] text-white font-bold text-xs flex items-center justify-center">
-                      3
+                      4
                     </span>
                     <h4 className="font-heading font-extrabold text-sm sm:text-base text-gray-900">
                       Add Mochi Donuts &amp; Bakery Platters
@@ -964,12 +1034,12 @@ export default function CateringModal() {
                 </div>
               </div>
 
-              {/* ── STEP 4: EVENT DETAILS & OFFICIAL QUOTE REQUEST (COMBINED IN ONE TAB) ── */}
+              {/* ── STEP 5: EVENT DETAILS & OFFICIAL QUOTE REQUEST ── */}
               <div id="catering-quote-form" className="scroll-mt-4 pt-4 border-t-2 border-gray-100">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span className="w-6 h-6 rounded-full bg-[#DF9749] text-black font-bold text-xs flex items-center justify-center">
-                      4
+                      5
                     </span>
                     <h4 className="font-heading font-extrabold text-sm sm:text-base text-gray-900">
                       Event Details &amp; Official Quote Request
@@ -1180,238 +1250,6 @@ export default function CateringModal() {
                     )}
                   </button>
                 </form>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: PRE-SET PARTY PACKAGES */}
-          {activeTab === "packages" && (
-            <div className="space-y-6">
-              {/* Primary Catering Packages Grid (Removed 'Platters & Tea Jugs' header) */}
-              {cateringPackages.length > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-heading font-extrabold uppercase tracking-widest text-gray-900">
-                      Packages
-                    </span>
-                    <span className="text-[11px] text-gray-500">Order directly to cart</span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    {cateringPackages.map((pkg) => {
-                      const qty = packageQuantities[pkg.id] || 1;
-                      return (
-                        <div
-                          key={pkg.id}
-                          className="bg-white border-2 border-warm-200 hover:border-[#F8847F] rounded-2xl p-4 transition-all shadow-xs flex flex-col justify-between"
-                        >
-                          <div>
-                            <div className="relative h-28 rounded-xl overflow-hidden mb-3 bg-warm-200">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={pkg.image}
-                                alt={pkg.name}
-                                className="w-full h-full object-cover"
-                              />
-                              {pkg.badge && (
-                                <span className="absolute top-2 left-2 bg-black/80 backdrop-blur-md text-[#DF9749] font-heading font-bold text-[9px] uppercase px-2 py-0.5 rounded-md">
-                                  {pkg.badge}
-                                </span>
-                              )}
-                              <span className="absolute bottom-2 right-2 bg-white/95 text-gray-900 font-editorial font-bold text-sm px-2 py-0.5 rounded-lg shadow-xs">
-                                ${(pkg.price * qty).toFixed(2)}
-                              </span>
-                            </div>
-                            <h4 className="font-heading font-bold text-sm text-gray-900">
-                              {pkg.name}
-                            </h4>
-                            <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                              {pkg.description}
-                            </p>
-                          </div>
-
-                          <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between">
-                            <div className="flex items-center gap-1.5">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setPackageQuantities((prev) => ({
-                                    ...prev,
-                                    [pkg.id]: Math.max(1, (prev[pkg.id] || 1) - 1),
-                                  }))
-                                }
-                                className="w-6 h-6 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center justify-center transition-colors cursor-pointer"
-                              >
-                                <Minus className="w-3 h-3" />
-                              </button>
-                              <span className="w-5 text-center font-bold text-xs font-mono">{qty}</span>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setPackageQuantities((prev) => ({
-                                    ...prev,
-                                    [pkg.id]: (prev[pkg.id] || 1) + 1,
-                                  }))
-                                }
-                                className="w-6 h-6 rounded-lg bg-[#F8847F] hover:bg-[#F56B65] text-white flex items-center justify-center transition-colors cursor-pointer"
-                              >
-                                <Plus className="w-3 h-3" />
-                              </button>
-                            </div>
-
-                            <button
-                              type="button"
-                              onClick={() => handleAddPackageWithQty(pkg)}
-                              className="inline-flex items-center gap-1.5 bg-[#F8847F] hover:bg-[#F56B65] text-white font-heading font-bold text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-xs transition-all cursor-pointer"
-                            >
-                              <ShoppingBag className="w-3.5 h-3.5" />
-                              <span>Add To Cart</span>
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Secondary: Full-Service Experience Options */}
-              <div className="space-y-3 pt-4 border-t border-gray-100">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-heading font-extrabold uppercase tracking-widest text-gray-900">
-                    Full-Service Event Experiences
-                  </span>
-                  <span className="text-[11px] text-gray-500">Pick a size &amp; experience</span>
-                </div>
-
-                <div className="grid grid-cols-1 gap-3.5">
-                  {/* Option 1: The Drop-Off */}
-                  <div className="bg-white border-2 border-warm-200 hover:border-[#E35843] rounded-2xl p-4 transition-all shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-1 max-w-lg">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-heading font-extrabold uppercase tracking-wider text-[#E35843] bg-[#E35843]/10 px-2 py-0.5 rounded-full">
-                          First Option · Pick a size
-                        </span>
-                        <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
-                          <Users className="w-3 h-3" /> 10 - 25 people
-                        </span>
-                      </div>
-                      <h4 className="font-heading font-extrabold text-base text-gray-900">
-                        The Drop-Off
-                      </h4>
-                      <p className="text-xs text-gray-600 leading-relaxed">
-                        A tray of pre-made drinks in your pick of four flavours, plus two dozen mochi donuts. Delivered cold and ready.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setGuestCount("15–30 guests");
-                        setServiceStyle("delivery");
-                        setNotes("Selected Experience Package: The Drop-Off (10 - 25 people)");
-                        setActiveTab("builder");
-                        showToast("Selected The Drop-Off! Complete your event details below.", "info");
-                        setTimeout(() => {
-                          document.getElementById("catering-quote-form")?.scrollIntoView({ behavior: "smooth" });
-                        }, 100);
-                      }}
-                      className="shrink-0 bg-[#F8847F] hover:bg-[#F56B65] text-white text-xs font-heading font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center"
-                    >
-                      Plan The Drop-Off
-                    </button>
-                  </div>
-
-                  {/* Option 2: The MiTea Bar */}
-                  <div className="bg-white border-2 border-[#DF9749] rounded-2xl p-4 transition-all shadow-sm relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-1 max-w-lg">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-heading font-extrabold uppercase tracking-wider text-black bg-gradient-to-r from-[#DF9749] to-amber-400 px-2 py-0.5 rounded-full font-bold">
-                          Second Option · Most Popular
-                        </span>
-                        <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
-                          <Users className="w-3 h-3" /> 25 - 75 people
-                        </span>
-                      </div>
-                      <h4 className="font-heading font-extrabold text-base text-gray-900">
-                        The MiTea Bar
-                      </h4>
-                      <p className="text-xs text-gray-600 leading-relaxed">
-                        We set up on site and make drinks to order with sugar, ice and toppings chosen by each guest, same as in the shop.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setGuestCount("35–50 guests");
-                        setServiceStyle("barista");
-                        setNotes("Selected Experience Package: The MiTea Bar (25 - 75 people)");
-                        setActiveTab("builder");
-                        showToast("Selected The MiTea Bar! Complete your event details below.", "info");
-                        setTimeout(() => {
-                          document.getElementById("catering-quote-form")?.scrollIntoView({ behavior: "smooth" });
-                        }, 100);
-                      }}
-                      className="shrink-0 bg-gradient-to-r from-[#DF9749] to-amber-400 hover:brightness-105 text-black text-xs font-heading font-extrabold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center"
-                    >
-                      Plan The MiTea Bar
-                    </button>
-                  </div>
-
-                  {/* Option 3: The Whole Thing */}
-                  <div className="bg-white border-2 border-warm-200 hover:border-[#F8847F] rounded-2xl p-4 transition-all shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-1 max-w-lg">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-heading font-extrabold uppercase tracking-wider text-[#F8847F] bg-[#F8847F]/10 px-2 py-0.5 rounded-full">
-                          3rd Option · Full Service
-                        </span>
-                        <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
-                          <Users className="w-3 h-3" /> 75+ people
-                        </span>
-                      </div>
-                      <h4 className="font-heading font-extrabold text-base text-gray-900">
-                        The Whole Thing
-                      </h4>
-                      <p className="text-xs text-gray-600 leading-relaxed">
-                        Full bar service, a donut tower, and staff for the length of your event. Tell us the room and we&apos;ll plan it.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setGuestCount("55–100 guests");
-                        setServiceStyle("setup");
-                        setNotes("Selected Experience Package: The Whole Thing (75+ people)");
-                        setActiveTab("builder");
-                        showToast("Selected The Whole Thing! Complete your event details below.", "info");
-                        setTimeout(() => {
-                          document.getElementById("catering-quote-form")?.scrollIntoView({ behavior: "smooth" });
-                        }, 100);
-                      }}
-                      className="shrink-0 bg-[#F8847F] hover:bg-[#F56B65] text-white text-xs font-heading font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center"
-                    >
-                      Plan The Whole Thing
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Need custom headcount banner */}
-              <div className="border-t border-warm-200 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-                <div>
-                  <h5 className="font-heading font-bold text-xs text-gray-900 uppercase tracking-wide">
-                    Want to customize every single tea flavor and topping?
-                  </h5>
-                  <p className="text-xs text-gray-600">
-                    Use our live Custom Order &amp; Quote Builder to select exact items and quantities.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("builder")}
-                  className="shrink-0 text-xs font-bold text-[#DF9749] hover:underline cursor-pointer"
-                >
-                  Open Custom Builder &amp; Quote →
-                </button>
               </div>
             </div>
           )}
