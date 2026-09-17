@@ -132,7 +132,7 @@ export default function AdminStoreSettings() {
                 <span>Physical Store Open</span>
               </div>
               <p className="text-xs text-gray-500 mt-0.5">
-                Displays "Open Now" or "Closed" badge across the customer storefront.
+                Displays &quot;Open Now&quot; or &quot;Closed&quot; badge across the customer storefront.
               </p>
             </div>
             <button

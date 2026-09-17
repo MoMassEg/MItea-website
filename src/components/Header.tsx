@@ -59,7 +59,7 @@ export default function Header() {
             </button>
 
             {/* Logo */}
-            <a href="/" className="flex items-center gap-2.5 bg-white/90 hover:bg-white border border-warm-300 hover:border-brand-400 pl-1.5 pr-3 py-1.5 rounded-2xl shadow-xs transition-all">
+            <Link href="/" className="flex items-center gap-2.5 bg-white/90 hover:bg-white border border-warm-300 hover:border-brand-400 pl-1.5 pr-3 py-1.5 rounded-2xl shadow-xs transition-all">
               <div className="relative w-9 h-9 rounded-xl overflow-hidden shrink-0">
                 <Image
                   src="/images/logo.jpeg"
@@ -78,7 +78,7 @@ export default function Header() {
                   Tea &amp; Mochi
                 </span>
               </div>
-            </a>
+            </Link>
           </div>
 
           {/* ── CENTER: Desktop Nav ── */}

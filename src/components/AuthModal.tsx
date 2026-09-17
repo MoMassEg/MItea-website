@@ -167,7 +167,7 @@ export default function AuthModal() {
               </div>
               <h2 className="font-heading font-extrabold text-2xl tracking-tight">Forgot Password?</h2>
               <p className="text-white/80 text-xs mt-1">
-                Enter your email and we'll send you a reset link
+                Enter your email and we&apos;ll send you a reset link
               </p>
             </>
           ) : (
@@ -224,7 +224,7 @@ export default function AuthModal() {
                 </div>
                 <h3 className="font-heading font-bold text-lg text-gray-800">Check Your Email</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">
-                  If <strong>{email}</strong> has an account, we've sent a password reset link.
+                  If <strong>{email}</strong> has an account, we&apos;ve sent a password reset link.
                   Check your inbox (and spam folder) within a few minutes.
                 </p>
                 <button
@@ -411,7 +411,7 @@ export default function AuthModal() {
 
             <div className="text-center pt-2">
               <p className="text-[11px] text-gray-500">
-                By continuing, you agree to MiTea's Terms of Service and Privacy Policy.
+                By continuing, you agree to MiTea&apos;s Terms of Service and Privacy Policy.
               </p>
             </div>
           </form>

@@ -148,7 +148,7 @@ export default function AdminOverview({ onNavigate }: AdminOverviewProps) {
             {/* Today's Revenue */}
             <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs flex items-center justify-between">
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Today's Revenue</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Today&apos;s Revenue</p>
                 <h3 className="text-2xl font-heading font-black text-gray-900 mt-1">
                   ${todayRevenue.toFixed(2)}
                 </h3>

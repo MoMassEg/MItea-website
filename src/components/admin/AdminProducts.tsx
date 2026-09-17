@@ -566,7 +566,7 @@ export default function AdminProducts({ onProductChanged }: AdminProductsProps) 
                     onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
                     className="w-4 h-4 rounded text-brand-600 focus:ring-brand-500"
                   />
-                  <span>Mark as "Best Seller"</span>
+                  <span>Mark as &quot;Best Seller&quot;</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer font-medium text-gray-700">
@@ -615,10 +615,10 @@ export default function AdminProducts({ onProductChanged }: AdminProductsProps) 
             </div>
             <div>
               <h3 className="font-heading font-extrabold text-lg text-gray-900">
-                Delete "{deletingItem.name}"?
+                Delete &quot;{deletingItem.name}&quot;?
               </h3>
               <p className="text-xs text-gray-500 mt-1">
-                You can either mark it as <strong>Sold Out</strong> (customers won't be able to buy it, but history remains) or <strong>Permanently Delete</strong> it completely.
+                You can either mark it as <strong>Sold Out</strong> (customers won&apos;t be able to buy it, but history remains) or <strong>Permanently Delete</strong> it completely.
               </p>
             </div>
 

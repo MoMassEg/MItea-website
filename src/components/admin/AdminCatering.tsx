@@ -323,7 +323,7 @@ export default function AdminCatering() {
                           {req.request_number || req.id.slice(0, 8)}
                         </span>
                         <p className="text-[10px] text-gray-400 mt-1">
-                          {new Date(req.created_at || Date.now()).toLocaleDateString("en-US", {
+                          {new Date(req.created_at || 0).toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
                             hour: "2-digit",
