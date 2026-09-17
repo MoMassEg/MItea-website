@@ -391,12 +391,15 @@ export default function AdminOrders() {
                         {item.quantity}x {item.name || item.item_name}
                       </div>
                       <div className="text-[11px] text-gray-500 mt-0.5">
-                        {item.size && <span>Size: {item.size} • </span>}
-                        {item.sugar !== undefined && <span>Sugar: {item.sugar}% • </span>}
-                        {item.ice !== undefined && <span>Ice: {item.ice}</span>}
+                        {item.size && <span>Size: {item.size}</span>}
                         {Array.isArray(item.toppings) && item.toppings.length > 0 && (
                           <div className="text-brand-700 font-medium">
                             +{item.toppings.join(", ")}
+                          </div>
+                        )}
+                        {item.notes && (
+                          <div className="text-gray-700 italic font-medium mt-0.5">
+                            Notes: {item.notes}
                           </div>
                         )}
                       </div>

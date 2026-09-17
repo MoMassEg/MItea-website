@@ -136,13 +136,14 @@ export default function CategoryNav() {
           ref={navContainerRef}
           className="flex overflow-x-auto no-scrollbar gap-2.5 pb-1 items-center"
         >
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat.id;
-            const isCatering = cat.id === "catering";
+          {categories
+            .filter((cat) => cat.count > 0)
+            .map((cat) => {
+              const isActive = activeCategory === cat.id;
 
-            return (
-              <React.Fragment key={cat.id}>
+              return (
                 <button
+                  key={cat.id}
                   type="button"
                   data-category-id={cat.id}
                   onClick={() => scrollToCategory(cat.id)}
@@ -166,20 +167,17 @@ export default function CategoryNav() {
                     {cat.count}
                   </span>
                 </button>
+              );
+            })}
 
-                {/* Quick Event Planning Button - text only */}
-                {isCatering && (
-                  <button
-                    type="button"
-                    onClick={openCateringModal}
-                    className="shrink-0 px-4 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-105 rounded-full shadow-2xs transition-all cursor-pointer border border-amber-400/50"
-                  >
-                    Plan Event
-                  </button>
-                )}
-              </React.Fragment>
-            );
-          })}
+          {/* Quick Event Planning Button - text only */}
+          <button
+            type="button"
+            onClick={openCateringModal}
+            className="shrink-0 px-4 py-2 text-[12px] font-heading font-bold tracking-[0.04em] uppercase text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-105 rounded-full shadow-2xs transition-all cursor-pointer border border-amber-400/50"
+          >
+            Plan Event
+          </button>
         </div>
       </div>
     </div>

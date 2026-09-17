@@ -68,6 +68,7 @@ export async function POST(request: Request) {
         item.size,
         item.sugar_level ? `Sugar: ${item.sugar_level}` : undefined,
         item.ice_level ? `Ice: ${item.ice_level}` : undefined,
+        item.notes ? `Notes: ${item.notes}` : undefined,
       ]
         .filter(Boolean)
         .join(' · '),

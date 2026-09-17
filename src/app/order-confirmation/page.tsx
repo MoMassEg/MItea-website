@@ -45,6 +45,7 @@ interface OrderData {
     sugar?: string;
     ice?: string;
     toppings?: string[];
+    notes?: string;
     quantity: number;
     unit_price?: number;
     total_price?: number;
@@ -284,9 +285,8 @@ function OrderConfirmationContent() {
                             <p className="text-xs text-warm-500">
                               {[
                                 item.size && `Size: ${item.size}`,
-                                item.sugar && `Sweetness: ${item.sugar}`,
-                                item.ice && `Ice: ${item.ice}`,
                                 item.toppings && item.toppings.length > 0 && `Toppings: ${item.toppings.join(", ")}`,
+                                (item.notes) && `Notes: ${item.notes}`,
                               ]
                                 .filter(Boolean)
                                 .join(" · ")}

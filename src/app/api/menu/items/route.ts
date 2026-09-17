@@ -94,7 +94,12 @@ export async function GET(request: Request) {
           category: item.categories?.slug || 'all',
           price: Number(item.price),
           description: item.description,
-          image: item.image_url,
+          image: (() => {
+            const staticImage = MENU_DATA.items.find(
+              (staticItem) => staticItem.id === (item.slug || item.id)
+            )?.image;
+            return staticImage?.startsWith('/images/') ? staticImage : item.image_url;
+          })(),
           popular: item.is_popular,
           badge: item.badge || '',
           caffeine: item.caffeine || '',

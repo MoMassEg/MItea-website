@@ -12,7 +12,6 @@ import {
   Menu as MenuIcon,
   Gift,
   Award,
-  MapPin,
   PartyPopper,
   User,
   LogOut,
@@ -25,7 +24,6 @@ export default function Header() {
   const {
     totalItems,
     openCartDrawer,
-    openLocationModal,
     openSendGiftModal,
     openRewardsModal,
     openCateringModal,
@@ -346,17 +344,6 @@ export default function Header() {
 
                 <button
                   type="button"
-                  onClick={() => { closeMobileNav(); openSendGiftModal(); }}
-                  className="flex items-center justify-between w-full font-semibold text-sm text-gray-800 hover:text-brand-600 hover:bg-warm-100 px-3 py-2.5 rounded-xl transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <Gift className="w-4 h-4 text-amber-500" />
-                    Send a Gift Drink
-                  </span>
-                </button>
-
-                <button
-                  type="button"
                   onClick={() => { closeMobileNav(); openRewardsModal(); }}
                   className="flex items-center justify-between w-full font-semibold text-sm text-gray-800 hover:text-brand-600 hover:bg-warm-100 px-3 py-2.5 rounded-xl transition-colors cursor-pointer"
                 >
@@ -384,14 +371,6 @@ export default function Header() {
 
             {/* Bottom CTA + Footer */}
             <div className="space-y-4">
-              <button
-                type="button"
-                onClick={() => { closeMobileNav(); openLocationModal(); }}
-                className="w-full bg-[#F8847F] hover:bg-[#F56B65] text-white font-heading font-bold text-sm tracking-[0.07em] uppercase py-3.5 rounded-full shadow-md shadow-[#F8847F]/25 transition-all cursor-pointer flex items-center justify-center gap-2"
-              >
-                <MapPin className="w-4 h-4" />
-                Order Pickup
-              </button>
               <div className="flex gap-4 text-[11px] font-semibold text-warm-500">
                 <a href="#locations" onClick={closeMobileNav} className="hover:text-brand-600">Location</a>
                 <button type="button" onClick={() => showToast("Customer Support: (763) 555-0192", "info")} className="hover:text-brand-600 cursor-pointer">Contact</button>

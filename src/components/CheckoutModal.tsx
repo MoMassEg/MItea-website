@@ -134,6 +134,7 @@ export default function CheckoutModal() {
           ice: item.ice,
           toppings: item.toppings,
           quantity: item.quantity,
+          notes: item.notes,
         })),
         orderType,
         storeId: selectedStore.id,
@@ -406,8 +407,13 @@ export default function CheckoutModal() {
                           {item.quantity}x {item.name}
                         </span>
                         <span className="text-[10px] text-gray-500 block truncate">
-                          {item.size} • {item.sugar} • {item.ice}
+                          {item.size}
                         </span>
+                        {item.notes && (
+                          <span className="text-[10px] text-gray-600 italic block truncate">
+                            “{item.notes}”
+                          </span>
+                        )}
                       </div>
                     </div>
                     <span className="font-bold text-gray-900 shrink-0">

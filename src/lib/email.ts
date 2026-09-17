@@ -162,6 +162,7 @@ function buildItemsTable(items: any[]): string {
         item.sugar_level ? `Sugar: ${item.sugar_level}` : undefined,
         item.ice_level ? `Ice: ${item.ice_level}` : undefined,
         item.toppings?.length ? `Toppings: ${item.toppings.join(', ')}` : undefined,
+        item.notes ? `Notes: ${item.notes}` : undefined,
         item.special_instructions,
       ]
         .filter(Boolean)

@@ -82,12 +82,11 @@ export default function HomePage() {
 
     const popularItems = menuItems.filter((item) => item.popular && item.category !== "catering");
 
-    const sections = [];
+    const sections: Array<{ id: string; name: string; description?: string; items: MenuItem[] }> = [];
     if (popularItems.length > 0) {
       sections.push({
         id: "all",
         name: "Most Popular & House Specialties",
-        description: "Our customer-favorite handcrafted milk teas, fruit blends, and mochi",
         items: popularItems
       });
     }
@@ -227,9 +226,11 @@ export default function HomePage() {
                       <h2 className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight">
                         {section.name}
                       </h2>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                        {section.description}
-                      </p>
+                      {section.description && (
+                        <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                          {section.description}
+                        </p>
+                      )}
                     </div>
                     <span className="text-xs font-semibold text-warm-600">
                       {section.items.length} item{section.items.length !== 1 ? "s" : ""}

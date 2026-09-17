@@ -118,6 +118,7 @@ export async function processOrderCreation(
     unitPrice: number;
     quantity: number;
     totalPrice: number;
+    notes?: string;
   }> = [];
 
   let subtotal = 0;
@@ -229,6 +230,7 @@ export async function processOrderCreation(
       unitPrice,
       quantity: item.quantity,
       totalPrice: itemTotal,
+      notes: item.notes,
     });
   }
 
@@ -394,6 +396,7 @@ export async function processOrderCreation(
           unit_price: item.unitPrice || 0,
           quantity: item.quantity || 1,
           total_price: item.totalPrice || 0,
+          notes: item.notes || null,
         }));
 
         const { error: itemsError } = await dbClient.from('order_items').insert(orderItemRows as any);
@@ -440,6 +443,7 @@ export async function processOrderCreation(
         toppings: i.toppings?.map((t: any) => t.name || t.id) || [],
         unit_price: i.unitPrice,
         unitPrice: i.unitPrice,
+        notes: i.notes,
       })),
     }).catch((err) => console.warn('[Order] Confirmation email failed:', err?.message));
   }
@@ -465,6 +469,7 @@ export async function processOrderCreation(
       unitPrice: item.unitPrice,
       quantity: item.quantity,
       totalPrice: item.totalPrice,
+      notes: item.notes,
     })) as CartItem[],
     subtotal,
     deliveryFee,

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { MenuItem } from "@/data/menu-data";
 import { useOrder } from "@/context/OrderContext";
-import { Plus, SlidersHorizontal, Flame, Sparkles } from "lucide-react";
+import { Plus, Flame, Sparkles } from "lucide-react";
 
 interface ProductCardProps {
   item: MenuItem;
@@ -28,8 +28,8 @@ export default function ProductCard({ item }: ProductCardProps) {
         image: item.image,
         size: "Catering Pack",
         sizePrice: 0,
-        sugar: "Regular (50%)",
-        ice: "Chilled with Ice Station",
+        sugar: "",
+        ice: "",
         toppings: [{ id: "boba-pack", name: "Slow-Cooked Boba & Supplies Included", price: 0 }],
         basePrice: item.price,
         unitPrice: item.price,
@@ -47,8 +47,8 @@ export default function ProductCard({ item }: ProductCardProps) {
         image: item.image,
         size: "Standard",
         sizePrice: 0,
-        sugar: "Standard",
-        ice: "Standard",
+        sugar: "",
+        ice: "",
         toppings: [],
         basePrice: item.price,
         unitPrice: item.price,
@@ -80,7 +80,7 @@ export default function ProductCard({ item }: ProductCardProps) {
   if (isLoadingDemo) {
     return (
       <div className="bg-white rounded-2xl border border-warm-300 p-4 shadow-sm space-y-4">
-        <div className="skeleton h-44 w-full rounded-xl" />
+        <div className="aspect-square w-full rounded-xl bg-warm-200" />
         <div className="space-y-2">
           <div className="skeleton h-5 w-3/4 rounded" />
           <div className="skeleton h-3.5 w-full rounded" />
@@ -105,7 +105,7 @@ export default function ProductCard({ item }: ProductCardProps) {
 
         <div>
           {/* Catering Image */}
-          <div className="relative h-56 w-full bg-brand-50 img-zoom-container overflow-hidden">
+          <div className="relative aspect-square w-full bg-brand-50 img-zoom-container overflow-hidden">
             <Image
               src={imgError ? fallbackImage : item.image}
               alt={item.name}
@@ -249,7 +249,7 @@ export default function ProductCard({ item }: ProductCardProps) {
       }`}
     >
       {/* Top Image Container */}
-      <div className="relative h-48 w-full bg-warm-200 img-zoom-container overflow-hidden">
+      <div className="relative aspect-square w-full bg-warm-200 img-zoom-container overflow-hidden">
         <Image
           src={imgError ? fallbackImage : item.image}
           alt={item.name}
@@ -290,7 +290,14 @@ export default function ProductCard({ item }: ProductCardProps) {
         <div>
           <div className="flex items-start justify-between gap-2">
             <h3 className="font-heading font-bold text-base sm:text-lg text-gray-900 leading-snug">
-              {item.name}
+              <button
+                type="button"
+                onClick={handleAction}
+                disabled={isUnavailable}
+                className="text-left hover:text-brand-600 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:hover:text-gray-900"
+              >
+                {item.name}
+              </button>
             </h3>
           </div>
 
@@ -326,8 +333,8 @@ export default function ProductCard({ item }: ProductCardProps) {
                   : "bg-[#F8847F] hover:bg-[#F56B65] text-white shadow-md shadow-[#F8847F]/20"
               }`}
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-white" />
-              <span>Customize</span>
+              <Plus className="w-3.5 h-3.5 text-white" />
+              <span>Add to Cart</span>
             </button>
           ) : (
             <button

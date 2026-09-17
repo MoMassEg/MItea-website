@@ -139,11 +139,16 @@ export default function CartDrawer() {
 
                       <div className="text-[11px] text-gray-500 space-y-0.5 mt-0.5">
                         <p>
-                          <span className="font-semibold text-gray-700">{item.size}</span> • {item.sugar} sugar • {item.ice}
+                          <span className="font-semibold text-gray-700">{item.size}</span>
                         </p>
                         {item.toppings && item.toppings.length > 0 && (
                           <p className="text-brand-700 truncate">
                             + {item.toppings.map((t) => t.name).join(", ")}
+                          </p>
+                        )}
+                        {item.notes && (
+                          <p className="text-gray-600 italic truncate">
+                            “{item.notes}”
                           </p>
                         )}
                       </div>

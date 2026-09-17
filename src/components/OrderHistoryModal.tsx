@@ -49,6 +49,7 @@ interface OrderHistoryItem {
     ice?: string;
     toppings?: any;
     image_url?: string;
+    notes?: string;
   }>;
 }
 
@@ -419,8 +420,7 @@ export default function OrderHistoryModal() {
                                     </div>
                                     <div className="text-[11px] text-warm-500 space-x-2">
                                       {item.size && <span>{item.size}</span>}
-                                      {item.sugar && <span>• {item.sugar} Sugar</span>}
-                                      {item.ice && <span>• {item.ice}</span>}
+                                      {item.notes && <span className="italic">• {item.notes}</span>}
                                     </div>
                                     {itemToppings && (
                                       <div className="text-[10px] text-brand-700 font-medium">
