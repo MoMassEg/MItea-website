@@ -4,9 +4,8 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useOrder } from "@/context/OrderContext";
 import { MenuItem, CartItem } from "@/data/menu-data";
-import { useCustomizations } from "@/lib/hooks/useCustomizations";
 import { apiClient } from "@/lib/api-client";
-import { X, Check, Plus, Minus } from "lucide-react";
+import { X, Plus, Minus } from "lucide-react";
 
 export default function ProductModal() {
   const { selectedProduct, closeProductModal, addToCart } = useOrder();
@@ -32,9 +31,6 @@ function ProductModalDialog({
   onClose: () => void;
   onAddToCart: (item: Omit<CartItem, "uid" | "totalPrice">) => void;
 }) {
-  // Task 5: live customization presets from API with static fallback
-  const { presets } = useCustomizations();
-
   // Task 9: live menu item details from API with static fallback
   const [product, setProduct] = useState<MenuItem>(initialProduct);
   useEffect(() => {
@@ -46,13 +42,9 @@ function ProductModalDialog({
   }, [initialProduct.id]);
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState<string>("regular");
   const [notes, setNotes] = useState<string>("");
 
-  const currentSizeObj = presets.sizes.find((s) => s.value === selectedSize) || presets.sizes[0];
-  const sizePrice = currentSizeObj.priceModifier;
-
-  const unitPrice = Number((product.price + sizePrice).toFixed(2));
+  const unitPrice = Number(product.price.toFixed(2));
   const totalPrice = Number((unitPrice * quantity).toFixed(2));
 
   const handleAdd = () => {
@@ -60,8 +52,8 @@ function ProductModalDialog({
       id: product.id,
       name: product.name,
       image: product.image,
-      size: currentSizeObj.label,
-      sizePrice: currentSizeObj.priceModifier,
+      size: "Standard",
+      sizePrice: 0,
       sugar: "",
       ice: "",
       toppings: [],
@@ -120,38 +112,6 @@ function ProductModalDialog({
           <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
             {product.description}
           </p>
-
-          {/* Size Options */}
-          <div>
-            <label className="block font-heading font-bold text-sm text-[#1A1A1A] mb-2.5">
-              Choose Size <span className="text-brand-600 font-semibold text-xs">*Required</span>
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              {presets.sizes.map((s) => {
-                const isChecked = selectedSize === s.value;
-                return (
-                  <button
-                    key={s.value}
-                    type="button"
-                    onClick={() => setSelectedSize(s.value)}
-                    className={`p-3 rounded-xl border-2 text-left transition-all cursor-pointer flex flex-col justify-between ${
-                      isChecked
-                        ? "border-brand-600 bg-brand-50 shadow-xs"
-                        : "border-warm-300 hover:border-warm-400 bg-white"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-heading font-bold text-sm text-gray-900">{s.label}</span>
-                      {isChecked && <Check className="w-4 h-4 text-brand-600" />}
-                    </div>
-                    <span className="text-xs text-gray-500 mt-1">
-                      {s.priceModifier > 0 ? `+$${s.priceModifier.toFixed(2)}` : "Included"}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
 
           {/* Special Instructions (free text) */}
           <div>

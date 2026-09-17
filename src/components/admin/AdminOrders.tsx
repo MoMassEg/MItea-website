@@ -391,7 +391,7 @@ export default function AdminOrders() {
                         {item.quantity}x {item.name || item.item_name}
                       </div>
                       <div className="text-[11px] text-gray-500 mt-0.5">
-                        {item.size && <span>Size: {item.size}</span>}
+                        {item.size && item.size !== "Standard" && <span>Size: {item.size}</span>}
                         {Array.isArray(item.toppings) && item.toppings.length > 0 && (
                           <div className="text-brand-700 font-medium">
                             +{item.toppings.join(", ")}
@@ -411,6 +411,18 @@ export default function AdminOrders() {
                 ))}
               </div>
             </div>
+
+            {/* Special Instructions (order-level, includes per-item customer notes) */}
+            {activeOrder.special_instructions && (
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs">
+                <p className="font-bold text-amber-800 mb-0.5 uppercase tracking-wider">
+                  Special Instructions
+                </p>
+                <p className="text-gray-800 whitespace-pre-wrap">
+                  {activeOrder.special_instructions}
+                </p>
+              </div>
+            )}
 
             {/* Total breakdown */}
             <div className="pt-3 border-t border-gray-100 space-y-1 text-xs text-gray-600">

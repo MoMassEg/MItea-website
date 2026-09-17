@@ -37,7 +37,7 @@ function calcEstimatedTotal(input: SubmitCateringRequestInput): {
   let totalDrinks = 0;
 
   if (input.orderDetails.mode === 'custom') {
-    const { drinks, toppings, bakery } = input.orderDetails;
+    const { drinks, toppings, bakery, packages } = input.orderDetails;
 
     for (const d of drinks) {
       subtotal += d.unitPrice * d.quantity;
@@ -48,6 +48,9 @@ function calcEstimatedTotal(input: SubmitCateringRequestInput): {
     }
     for (const b of bakery ?? []) {
       subtotal += b.unitPrice * b.quantity;
+    }
+    for (const p of packages ?? []) {
+      subtotal += p.unitPrice * p.quantity;
     }
   } else {
     for (const p of input.orderDetails.packages) {

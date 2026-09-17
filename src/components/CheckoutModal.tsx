@@ -406,9 +406,6 @@ export default function CheckoutModal() {
                         <span className="font-semibold text-gray-900 block truncate">
                           {item.quantity}x {item.name}
                         </span>
-                        <span className="text-[10px] text-gray-500 block truncate">
-                          {item.size}
-                        </span>
                         {item.notes && (
                           <span className="text-[10px] text-gray-600 italic block truncate">
                             “{item.notes}”

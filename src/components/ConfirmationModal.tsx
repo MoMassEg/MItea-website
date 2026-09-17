@@ -216,9 +216,6 @@ export default function ConfirmationModal() {
                     <span className="font-bold text-gray-900">
                       {item.quantity}x {item.name}
                     </span>
-                    <p className="text-[11px] text-gray-500">
-                      {item.size}
-                    </p>
                     {item.toppings.length > 0 && (
                       <p className="text-[10px] text-brand-700">
                         + {item.toppings.map((t) => t.name).join(", ")}

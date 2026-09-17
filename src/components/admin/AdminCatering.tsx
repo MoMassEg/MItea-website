@@ -552,6 +552,18 @@ export default function AdminCatering() {
                       </div>
                     ))}
 
+                  {/* Bakery Platters */}
+                  {activeRequest.order_details.bakery &&
+                    activeRequest.order_details.bakery.map((b: any, idx: number) => (
+                      <div key={idx} className="flex justify-between items-center py-1 border-b border-gray-100 last:border-0">
+                        <div>
+                          <span className="font-bold text-gray-900">{b.name}</span>
+                          <span className="text-gray-500 ml-2">× {b.quantity}</span>
+                        </div>
+                        <span className="font-bold text-gray-800">${(b.unitPrice * b.quantity).toFixed(2)}</span>
+                      </div>
+                    ))}
+
                   {/* Summary row */}
                   <div className="pt-2 flex justify-between items-center text-sm font-bold text-gray-900 border-t border-gray-200 mt-2">
                     <span>Estimated Total</span>

@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     const items = (order.items || []).map((item: any) => ({
       name: item.name,
       description: [
-        item.size,
+        item.size && item.size !== 'Standard' ? item.size : undefined,
         item.sugar_level ? `Sugar: ${item.sugar_level}` : undefined,
         item.ice_level ? `Ice: ${item.ice_level}` : undefined,
         item.notes ? `Notes: ${item.notes}` : undefined,

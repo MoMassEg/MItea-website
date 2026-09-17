@@ -419,7 +419,7 @@ export default function OrderHistoryModal() {
                                       {item.quantity}x {itemName}
                                     </div>
                                     <div className="text-[11px] text-warm-500 space-x-2">
-                                      {item.size && <span>{item.size}</span>}
+                                      {item.size && item.size !== "Standard" && <span>{item.size}</span>}
                                       {item.notes && <span className="italic">• {item.notes}</span>}
                                     </div>
                                     {itemToppings && (

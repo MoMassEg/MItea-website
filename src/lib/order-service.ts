@@ -307,6 +307,18 @@ export async function processOrderCreation(
     }
   }
 
+  // Aggregate per-item notes into the order-level special_instructions so they
+  // persist even before the order_items.notes migration is applied.
+  const itemNotesLines = recalculatedItems
+    .filter((i) => i.notes)
+    .map((i) => `${i.name}: ${i.notes}`);
+  const combinedInstructions = [
+    specialInstructions?.trim() || null,
+    itemNotesLines.length ? `Item notes — ${itemNotesLines.join(' | ')}` : null,
+  ]
+    .filter(Boolean)
+    .join(' | ');
+
   // Build full Order Record
   const orderRecord = {
     id: orderId,
@@ -329,7 +341,7 @@ export async function processOrderCreation(
     customer_email: customerEmail,
     delivery_address: orderType === 'DELIVERY' ? formattedDeliveryAddress : null,
     estimated_ready_time: estimatedReadyTime,
-    special_instructions: specialInstructions || null,
+    special_instructions: combinedInstructions || null,
     created_at: now.toISOString(),
     updated_at: now.toISOString(),
     items: recalculatedItems,
@@ -375,7 +387,7 @@ export async function processOrderCreation(
         customer_email: customerEmail || 'guest@mitea.com',
         delivery_address: orderType === 'DELIVERY' ? (formattedDeliveryAddress as any) : null,
         estimated_ready_time: estimatedReadyTime,
-        special_instructions: specialInstructions || null,
+        special_instructions: combinedInstructions || null,
       });
 
       if (orderError) {
@@ -399,7 +411,13 @@ export async function processOrderCreation(
           notes: item.notes || null,
         }));
 
-        const { error: itemsError } = await dbClient.from('order_items').insert(orderItemRows as any);
+        let { error: itemsError } = await dbClient.from('order_items').insert(orderItemRows as any);
+        if (itemsError && /notes/i.test(itemsError.message)) {
+          // Migration 20260917_order_items_notes.sql not applied yet — retry without the notes column
+          console.warn('[OrderService] ⚠️ order_items.notes column missing; retrying insert without notes.');
+          const rowsWithoutNotes = orderItemRows.map(({ notes: _notes, ...rest }) => rest);
+          ({ error: itemsError } = await dbClient.from('order_items').insert(rowsWithoutNotes as any));
+        }
         if (itemsError) {
           console.error('[OrderService] ❌ DB insert order_items failed:', itemsError.message, itemsError);
         } else {

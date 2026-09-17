@@ -138,9 +138,6 @@ export default function CartDrawer() {
                       </div>
 
                       <div className="text-[11px] text-gray-500 space-y-0.5 mt-0.5">
-                        <p>
-                          <span className="font-semibold text-gray-700">{item.size}</span>
-                        </p>
                         {item.toppings && item.toppings.length > 0 && (
                           <p className="text-brand-700 truncate">
                             + {item.toppings.map((t) => t.name).join(", ")}

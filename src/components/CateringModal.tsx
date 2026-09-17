@@ -1,35 +1,18 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useOrder } from "@/context/OrderContext";
 import { apiClient } from '@/lib/api-client';
-import { MENU_DATA, MenuItem } from "@/data/menu-data";
 import {
   X,
   Users,
   CheckCircle2,
   Plus,
   Minus,
-  ShoppingBag,
   PartyPopper,
   Send,
   ShieldCheck,
-  Percent
 } from "lucide-react";
-
-interface CustomDrinkSelection {
-  item: MenuItem;
-  quantity: number;
-  sugar: string;
-  milk: string;
-}
-
-interface CustomToppingSelection {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
 
 interface CustomBakerySelection {
   id: string;
@@ -40,161 +23,100 @@ interface CustomBakerySelection {
   quantity: number;
 }
 
-export default function CateringModal() {
-  const { isCateringOpen, closeCateringModal, addToCart, openCartDrawer, showToast } = useOrder();
+interface CateringPackage {
+  id: string;
+  badge: string;
+  badgeClass: string;
+  people: string;
+  name: string;
+  price: number;
+  description: string;
+  guest: string;
+  style: "delivery" | "setup" | "barista";
+  buttonClass: string;
+}
 
-  // Single combined flow: no tabs. Step 1 pick an experience, then build, then quote.
+const CATERING_PACKAGES: CateringPackage[] = [
+  {
+    id: "drop-off",
+    badge: "First Option · Pick a size",
+    badgeClass: "text-[#E35843] bg-[#E35843]/10",
+    people: "10 - 25 people",
+    name: "The Drop-Off",
+    price: 180,
+    description:
+      "A tray of pre-made drinks in your pick of four flavours, plus two dozen mochi donuts. Delivered cold and ready.",
+    guest: "15–30 guests",
+    style: "delivery",
+    buttonClass: "bg-[#F8847F] hover:bg-[#F56B65] text-white",
+  },
+  {
+    id: "mitea-bar",
+    badge: "Second Option · Most Popular",
+    badgeClass: "text-black bg-gradient-to-r from-[#DF9749] to-amber-400",
+    people: "25 - 75 people",
+    name: "The MiTea Bar",
+    price: 350,
+    description:
+      "We set up on site and make drinks to order with sugar, ice and toppings chosen by each guest, same as in the shop.",
+    guest: "35–50 guests",
+    style: "barista",
+    buttonClass: "bg-gradient-to-r from-[#DF9749] to-amber-400 hover:brightness-105 text-black",
+  },
+  {
+    id: "whole-thing",
+    badge: "3rd Option · Full Service",
+    badgeClass: "text-[#F8847F] bg-[#F8847F]/10",
+    people: "75+ people",
+    name: "The Whole Thing",
+    price: 520,
+    description:
+      "Full bar service, a donut tower, and staff for the length of your event. Tell us the room and we'll plan it.",
+    guest: "55–100 guests",
+    style: "setup",
+    buttonClass: "bg-[#F8847F] hover:bg-[#F56B65] text-white",
+  },
+];
+
+const BAKERY_ITEMS: CustomBakerySelection[] = [
+  {
+    id: "donut-12",
+    name: "Pon de Ring Mochi Donuts (12 Pack)",
+    desc: "Assorted Matcha, Black Sesame, Strawberry & Kokuto glazes",
+    price: 34.0,
+    image: "https://images.unsplash.com/photo-1527515862127-a4fc05baf7a5?auto=format&fit=crop&w=400&q=80",
+    quantity: 0,
+  },
+  {
+    id: "donut-24",
+    name: "Pon de Ring Mochi Donuts (24 Pack)",
+    desc: "Deluxe party tower of 24 pull-apart mochi donuts",
+    price: 68.0,
+    image: "https://images.unsplash.com/photo-1527515862127-a4fc05baf7a5?auto=format&fit=crop&w=400&q=80",
+    quantity: 0,
+  },
+  {
+    id: "daifuku-16",
+    name: "Artisan Daifuku Mochi Platter (16 Pack)",
+    desc: "Soft handmade sweet red bean, mango & kinako mochi",
+    price: 26.0,
+    image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=400&q=80",
+    quantity: 0,
+  },
+];
+
+export default function CateringModal() {
+  const { isCateringOpen, closeCateringModal, showToast } = useOrder();
+
   const [selectedExperience, setSelectedExperience] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedRequestNumber, setSubmittedRequestNumber] = useState<string>("#MTC-9482");
 
-  // ── Custom Builder State (Starts completely empty, saved in localStorage) ──
-  const [formatType, setFormatType] = useState<"cups" | "jugs">("cups");
-  const [isLoadedFromStorage, setIsLoadedFromStorage] = useState(false);
+  // Bakery platter quantities (id -> quantity)
+  const [bakeryQty, setBakeryQty] = useState<Record<string, number>>({});
 
-  // Popular customizable drinks for catering
-  const cateringDrinkCandidates = useMemo(() => {
-    return MENU_DATA.items.filter(
-      (item) => item.category !== "catering" && item.category !== "snacks"
-    );
-  }, []);
-
-  // Drink selections: item.id -> { item, quantity, sugar, milk }
-  // Starts empty on project open; saved and loaded from localStorage
-  const [drinkSelections, setDrinkSelections] = useState<Record<string, CustomDrinkSelection>>({});
-
-  // Topping selections: all default to 0 quantity on project open
-  const [toppingsSelection, setToppingsSelection] = useState<Record<string, CustomToppingSelection>>({
-    "slow-cooked-boba": {
-      id: "slow-cooked-boba",
-      name: "Slow-Cooked Kokuto Boba (Portions)",
-      price: 0.65,
-      quantity: 0,
-    },
-    "lychee-jelly": {
-      id: "lychee-jelly",
-      name: "Lychee Coconut Jelly (Portions)",
-      price: 0.65,
-      quantity: 0,
-    },
-    "mango-popping": {
-      id: "mango-popping",
-      name: "Mango Popping Boba (Portions)",
-      price: 0.75,
-      quantity: 0,
-    },
-    "cheese-foam": {
-      id: "cheese-foam",
-      name: "Salted Cheese Cream Foam (Tub)",
-      price: 12.00,
-      quantity: 0,
-    },
-  });
-
-  // Bakery selections: all default to 0 quantity on project open
-  const [bakerySelection, setBakerySelection] = useState<Record<string, CustomBakerySelection>>({
-    "donut-12": {
-      id: "donut-12",
-      name: "Pon de Ring Mochi Donuts (12 Pack)",
-      desc: "Assorted Matcha, Black Sesame, Strawberry & Kokuto glazes",
-      price: 34.0,
-      image: "https://images.unsplash.com/photo-1527515862127-a4fc05baf7a5?auto=format&fit=crop&w=400&q=80",
-      quantity: 0,
-    },
-    "donut-24": {
-      id: "donut-24",
-      name: "Pon de Ring Mochi Donuts (24 Pack)",
-      desc: "Deluxe party tower of 24 pull-apart mochi donuts",
-      price: 68.0,
-      image: "https://images.unsplash.com/photo-1527515862127-a4fc05baf7a5?auto=format&fit=crop&w=400&q=80",
-      quantity: 0,
-    },
-    "daifuku-16": {
-      id: "daifuku-16",
-      name: "Artisan Daifuku Mochi Platter (16 Pack)",
-      desc: "Soft handmade sweet red bean, mango & kinako mochi",
-      price: 26.0,
-      image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=400&q=80",
-      quantity: 0,
-    },
-  });
-
-  // ── Load from LocalStorage on mount ──
-  React.useEffect(() => {
-    try {
-      const saved = localStorage.getItem("mitea_catering_builder_state");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.drinkSelections && typeof parsed.drinkSelections === "object") {
-          setDrinkSelections(parsed.drinkSelections);
-        }
-        if (parsed.toppingsSelection && typeof parsed.toppingsSelection === "object") {
-          setToppingsSelection((prev) => {
-            const next = { ...prev };
-            for (const key of Object.keys(parsed.toppingsSelection)) {
-              if (next[key]) {
-                next[key] = {
-                  ...next[key],
-                  quantity: Number(parsed.toppingsSelection[key].quantity) || 0,
-                };
-              }
-            }
-            return next;
-          });
-        }
-        if (parsed.bakerySelection && typeof parsed.bakerySelection === "object") {
-          setBakerySelection((prev) => {
-            const next = { ...prev };
-            for (const key of Object.keys(parsed.bakerySelection)) {
-              if (next[key]) {
-                next[key] = {
-                  ...next[key],
-                  quantity: Number(parsed.bakerySelection[key].quantity) || 0,
-                };
-              }
-            }
-            return next;
-          });
-        }
-        if (parsed.formatType === "cups" || parsed.formatType === "jugs") {
-          setFormatType(parsed.formatType);
-        }
-      }
-    } catch (e) {
-      console.warn("Failed to load catering builder from localStorage:", e);
-    } finally {
-      setIsLoadedFromStorage(true);
-    }
-  }, []);
-
-  // ── Sync to LocalStorage whenever custom selections change ──
-  React.useEffect(() => {
-    if (!isLoadedFromStorage) return;
-    try {
-      const hasAnyDrink = Object.values(drinkSelections).some((d) => (d.quantity || 0) > 0);
-      const hasAnyTopping = Object.values(toppingsSelection).some((t) => (t.quantity || 0) > 0);
-      const hasAnyBakery = Object.values(bakerySelection).some((b) => (b.quantity || 0) > 0);
-
-      if (hasAnyDrink || hasAnyTopping || hasAnyBakery) {
-        localStorage.setItem(
-          "mitea_catering_builder_state",
-          JSON.stringify({
-            drinkSelections,
-            toppingsSelection,
-            bakerySelection,
-            formatType,
-          })
-        );
-      } else {
-        localStorage.removeItem("mitea_catering_builder_state");
-      }
-    } catch (e) {
-      // Ignore quota errors
-    }
-  }, [drinkSelections, toppingsSelection, bakerySelection, formatType, isLoadedFromStorage]);
-
-  // Custom Form state
+  // Quote form state
   const [eventType, setEventType] = useState("Corporate Gathering");
   const [guestCount, setGuestCount] = useState("35–50 guests");
   const [eventDate, setEventDate] = useState("");
@@ -209,210 +131,49 @@ export default function CateringModal() {
 
   if (!isCateringOpen) return null;
 
-  // ── Calculation helpers ──
-  const totalDrinksCount = Object.values(drinkSelections).reduce(
-    (sum, d) => sum + (d.quantity || 0),
-    0
-  );
+  const selectedPackage = CATERING_PACKAGES.find((p) => p.id === selectedExperience) || null;
 
-  const drinksSubtotal = Object.values(drinkSelections).reduce(
-    (sum, d) => sum + (d.quantity || 0) * (formatType === "jugs" ? 48.0 : d.item.price),
-    0
-  );
-
-  const toppingsSubtotal = Object.values(toppingsSelection).reduce(
-    (sum, t) => sum + (t.quantity || 0) * t.price,
-    0
-  );
-
-  const bakerySubtotal = Object.values(bakerySelection).reduce(
-    (sum, b) => sum + (b.quantity || 0) * b.price,
-    0
-  );
-
-  const rawSubtotal = drinksSubtotal + toppingsSubtotal + bakerySubtotal;
-
-  // Volume discount: 10% for 20+ drinks, 15% for 40+ drinks
-  const discountPercent = totalDrinksCount >= 40 ? 15 : totalDrinksCount >= 20 ? 10 : 0;
-  const discountAmount = Number(((rawSubtotal * discountPercent) / 100).toFixed(2));
-  const customTotal = Math.max(0, rawSubtotal - discountAmount);
-
-  // ── Handlers for Custom Builder ──
+  // ── Calculations ──
+  const bakeryCount = Object.values(bakeryQty).reduce((sum, q) => sum + (q || 0), 0);
+  const bakerySubtotal = BAKERY_ITEMS.reduce((sum, b) => sum + (bakeryQty[b.id] || 0) * b.price, 0);
+  const estimatedTotal = bakerySubtotal + (selectedPackage ? selectedPackage.price : 0);
+  const itemCount = bakeryCount + (selectedExperience ? 1 : 0);
 
   // Step 1: select one of the 3 experience packages (click again to deselect)
-  const handleSelectExperience = (
-    id: string,
-    guest: string,
-    style: "delivery" | "setup" | "barista",
-    label: string
-  ) => {
-    const isSelected = selectedExperience === id;
-    setSelectedExperience(isSelected ? null : id);
-    setGuestCount(guest);
-    setServiceStyle(style);
-    setNotes(isSelected ? "" : `Selected Experience Package: ${label}`);
+  const handleSelectExperience = (pkg: CateringPackage) => {
+    const isSelected = selectedExperience === pkg.id;
+    setSelectedExperience(isSelected ? null : pkg.id);
+    setGuestCount(pkg.guest);
+    setServiceStyle(pkg.style);
+    setNotes(isSelected ? "" : `Selected Experience Package: ${pkg.name}`);
     showToast(
       isSelected
         ? "Experience deselected."
-        : `Selected ${label}! Customize your order below, then fill in your event details.`,
+        : `Selected ${pkg.name}! Add bakery platters below, then fill in your event details.`,
       "info"
     );
     if (!isSelected) {
       setTimeout(() => {
-        document.getElementById("catering-step-drinks")?.scrollIntoView({ behavior: "smooth" });
+        document.getElementById("catering-step-bakery")?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     }
   };
 
-  const handleUpdateDrinkQty = (itemId: string, item: MenuItem, delta: number) => {
-    setDrinkSelections((prev) => {
-      const current = prev[itemId] || {
-        item,
-        quantity: 0,
-        sugar: "50% Sweet",
-        milk: "Fresh Whole Milk",
-      };
-      const newQty = Math.max(0, current.quantity + delta);
-      if (newQty === 0) {
-        const copy = { ...prev };
-        delete copy[itemId];
-        return copy;
-      }
-      return {
-        ...prev,
-        [itemId]: { ...current, quantity: newQty },
-      };
-    });
-  };
-
-  const handleUpdateDrinkPreference = (
-    itemId: string,
-    field: "sugar" | "milk",
-    val: string
-  ) => {
-    setDrinkSelections((prev) => {
-      if (!prev[itemId]) return prev;
-      return {
-        ...prev,
-        [itemId]: {
-          ...prev[itemId],
-          [field]: val,
-        },
-      };
-    });
-  };
-
-  const handleUpdateToppingQty = (id: string, delta: number) => {
-    setToppingsSelection((prev) => {
-      const current = prev[id];
-      if (!current) return prev;
-      const newQty = Math.max(0, current.quantity + delta);
-      return {
-        ...prev,
-        [id]: { ...current, quantity: newQty },
-      };
-    });
-  };
-
   const handleUpdateBakeryQty = (id: string, delta: number) => {
-    setBakerySelection((prev) => {
-      const current = prev[id];
-      if (!current) return prev;
-      const newQty = Math.max(0, current.quantity + delta);
-      return {
-        ...prev,
-        [id]: { ...current, quantity: newQty },
-      };
-    });
+    setBakeryQty((prev) => ({
+      ...prev,
+      [id]: Math.max(0, (prev[id] || 0) + delta),
+    }));
   };
 
-  // Add Entire Custom Order to Cart
-  const handleAddCustomOrderToCart = () => {
-    if (totalDrinksCount === 0 && bakerySubtotal === 0) {
-      showToast("Please select at least one drink or bakery item.", "warning");
-      return;
-    }
-
-    // Add each selected drink item to the cart
-    Object.values(drinkSelections).forEach((entry) => {
-      if (entry.quantity > 0) {
-        addToCart({
-          id: `catering-custom-${entry.item.id}`,
-          name: `${entry.item.name} (${formatType === "jugs" ? "1-Gal Jug" : "Catering Cup"})`,
-          image: entry.item.image,
-          size: formatType === "jugs" ? "1 Gallon (Serves 10)" : "16 oz Catering Pack",
-          sizePrice: 0,
-          sugar: entry.sugar,
-          ice: "Chilled with Ice Kit",
-          toppings: [
-            { id: "catering-service", name: `${entry.milk} · Straws & Napkins Included`, price: 0 }
-          ],
-          basePrice: formatType === "jugs" ? 48.0 : entry.item.price,
-          unitPrice: formatType === "jugs" ? 48.0 : entry.item.price,
-          quantity: entry.quantity,
-        });
-      }
-    });
-
-    // Add toppings if any selected
-    Object.values(toppingsSelection).forEach((top) => {
-      if (top.quantity > 0) {
-        addToCart({
-          id: `catering-topping-${top.id}`,
-          name: `Catering Topping: ${top.name}`,
-          image: MENU_DATA.items[0].image,
-          size: "Bulk Pack",
-          sizePrice: 0,
-          sugar: "Standard",
-          ice: "None",
-          toppings: [],
-          basePrice: top.price,
-          unitPrice: top.price,
-          quantity: top.quantity,
-        });
-      }
-    });
-
-    // Add bakery if any selected
-    Object.values(bakerySelection).forEach((bakery) => {
-      if (bakery.quantity > 0) {
-        addToCart({
-          id: `catering-bakery-${bakery.id}`,
-          name: bakery.name,
-          image: bakery.image,
-          size: "Bakery Platter",
-          sizePrice: 0,
-          sugar: "Glazed",
-          ice: "None",
-          toppings: [],
-          basePrice: bakery.price,
-          unitPrice: bakery.price,
-          quantity: bakery.quantity,
-        });
-      }
-    });
-
-    showToast(
-      `Added custom catering bundle (${totalDrinksCount} drinks) to your cart! 🧋🎉`,
-      "success"
-    );
-    closeCateringModal();
-    openCartDrawer();
-  };
-
-  const handleSubmitCustom = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim() || !eventDate.trim()) {
       showToast("Please fill in your name, email, and event date.", "warning");
       return;
     }
-
-    const activeDrinks = Object.values(drinkSelections).filter((d) => d.quantity > 0);
-    if (!selectedExperience && activeDrinks.length === 0) {
-      showToast(
-        "Please pick an experience package above, or select at least 1 drink for a custom order.",
-        "warning"
-      );
+    if (!selectedExperience && bakeryCount === 0) {
+      showToast("Please pick an experience package above, or add at least 1 bakery platter.", "warning");
       return;
     }
 
@@ -420,33 +181,25 @@ export default function CateringModal() {
     try {
       const payload = {
         orderDetails: {
-          mode: "custom",
-          drinks: activeDrinks.map((d) => ({
-            itemId: d.item.id,
-            name: d.item.name,
-            quantity: d.quantity,
-            sugar: d.sugar,
-            milk: d.milk,
-            unitPrice: d.item.price,
-            format: formatType,
+          mode: "custom" as const,
+          drinks: [],
+          toppings: [],
+          packages: selectedPackage
+            ? [
+                {
+                  packageId: selectedPackage.id,
+                  name: `${selectedPackage.name} (${selectedPackage.people})`,
+                  quantity: 1,
+                  unitPrice: selectedPackage.price,
+                },
+              ]
+            : [],
+          bakery: BAKERY_ITEMS.filter((b) => (bakeryQty[b.id] || 0) > 0).map((b) => ({
+            id: b.id,
+            name: b.name,
+            quantity: bakeryQty[b.id],
+            unitPrice: b.price,
           })),
-          toppings: Object.values(toppingsSelection)
-            .filter((t) => t.quantity > 0)
-            .map((t) => ({
-              id: t.id,
-              name: t.name,
-              quantity: t.quantity,
-              unitPrice: t.price,
-            })),
-          bakery: Object.values(bakerySelection)
-            .filter((b) => b.quantity > 0)
-            .map((b) => ({
-              id: b.id,
-              name: b.name,
-              quantity: b.quantity,
-              unitPrice: b.price,
-            })),
-          formatType,
         },
         eventType,
         guestCount,
@@ -478,28 +231,6 @@ export default function CateringModal() {
     }
   };
 
-  const handleClearBuilder = () => {
-    setDrinkSelections({});
-    setToppingsSelection((prev) => {
-      const cleared = { ...prev };
-      for (const key of Object.keys(cleared)) {
-        cleared[key] = { ...cleared[key], quantity: 0 };
-      }
-      return cleared;
-    });
-    setBakerySelection((prev) => {
-      const cleared = { ...prev };
-      for (const key of Object.keys(cleared)) {
-        cleared[key] = { ...cleared[key], quantity: 0 };
-      }
-      return cleared;
-    });
-    try {
-      localStorage.removeItem("mitea_catering_builder_state");
-    } catch {}
-    showToast("Custom catering builder cleared.", "info");
-  };
-
   const handleReset = () => {
     setIsSubmitted(false);
     closeCateringModal();
@@ -526,6 +257,12 @@ export default function CateringModal() {
               <PartyPopper className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div className="min-w-0">
+              <h3 className="font-heading font-extrabold text-lg sm:text-xl text-white truncate">
+                Catering &amp; Events
+              </h3>
+              <p className="text-[11px] text-white/85 font-medium">
+                Pick a package, add platters, get your quote
+              </p>
             </div>
           </div>
 
@@ -539,9 +276,8 @@ export default function CateringModal() {
           </button>
         </div>
 
-        {/* ── Modal Body (Scrollable, Single Combined Flow) ── */}
+        {/* ── Modal Body (Scrollable) ── */}
         <div className="p-3 sm:p-6 overflow-y-auto space-y-5 sm:space-y-6 flex-grow">
-          {/* COMBINED: PICK EXPERIENCE → BUILD & QUOTE */}
           {!isSubmitted && (
             <div className="space-y-5 sm:space-y-6">
               {/* ── STEP 1: Choose Your Experience (3 Packages) ── */}
@@ -559,350 +295,61 @@ export default function CateringModal() {
                 </div>
 
                 <div className="space-y-3">
-              {/* Option 1: The Drop-Off */}
-              <div className={`bg-white border-2 rounded-2xl p-4 transition-all shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-                selectedExperience === "drop-off"
-                  ? "border-[#F8847F] ring-2 ring-[#F8847F]/30 bg-[#FFF8F6]"
-                  : "border-warm-200 hover:border-[#E35843]"
-              }`}>
-                <div className="space-y-1 max-w-lg">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] font-heading font-extrabold uppercase tracking-wider text-[#E35843] bg-[#E35843]/10 px-2 py-0.5 rounded-full">
-                      First Option · Pick a size
-                    </span>
-                    <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
-                      <Users className="w-3 h-3" /> 10 - 25 people
-                    </span>
-                  </div>
-                  <h4 className="font-heading font-extrabold text-base text-gray-900">
-                    The Drop-Off
-                  </h4>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    A tray of pre-made drinks in your pick of four flavours, plus two dozen mochi donuts. Delivered cold and ready.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleSelectExperience("drop-off", "15–30 guests", "delivery", "The Drop-Off (10 - 25 people)")
-                  }
-                  className={`shrink-0 text-xs font-heading font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center ${
-                    selectedExperience === "drop-off"
-                      ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                      : "bg-[#F8847F] hover:bg-[#F56B65] text-white"
-                  }`}
-                >
-                  {selectedExperience === "drop-off" ? "✓ Selected" : "Plan The Drop-Off"}
-                </button>
-              </div>
-
-              {/* Option 2: The MiTea Bar */}
-              <div className={`bg-white border-2 rounded-2xl p-4 transition-all shadow-sm relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-                selectedExperience === "mitea-bar"
-                  ? "border-[#DF9749] ring-2 ring-[#DF9749]/40 bg-[#FFFBF5]"
-                  : "border-[#DF9749]"
-              }`}>
-                <div className="space-y-1 max-w-lg">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] font-heading font-extrabold uppercase tracking-wider text-black bg-gradient-to-r from-[#DF9749] to-amber-400 px-2 py-0.5 rounded-full font-bold">
-                      Second Option · Most Popular
-                    </span>
-                    <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
-                      <Users className="w-3 h-3" /> 25 - 75 people
-                    </span>
-                  </div>
-                  <h4 className="font-heading font-extrabold text-base text-gray-900">
-                    The MiTea Bar
-                  </h4>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    We set up on site and make drinks to order with sugar, ice and toppings chosen by each guest, same as in the shop.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleSelectExperience("mitea-bar", "35–50 guests", "barista", "The MiTea Bar (25 - 75 people)")
-                  }
-                  className={`shrink-0 text-xs font-heading font-extrabold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center ${
-                    selectedExperience === "mitea-bar"
-                      ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                      : "bg-gradient-to-r from-[#DF9749] to-amber-400 hover:brightness-105 text-black"
-                  }`}
-                >
-                  {selectedExperience === "mitea-bar" ? "✓ Selected" : "Plan The MiTea Bar"}
-                </button>
-              </div>
-
-              {/* Option 3: The Whole Thing */}
-              <div className={`bg-white border-2 rounded-2xl p-4 transition-all shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-                selectedExperience === "whole-thing"
-                  ? "border-[#F8847F] ring-2 ring-[#F8847F]/30 bg-[#FFF8F6]"
-                  : "border-warm-200 hover:border-[#F8847F]"
-              }`}>
-                <div className="space-y-1 max-w-lg">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] font-heading font-extrabold uppercase tracking-wider text-[#F8847F] bg-[#F8847F]/10 px-2 py-0.5 rounded-full">
-                      3rd Option · Full Service
-                    </span>
-                    <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
-                      <Users className="w-3 h-3" /> 75+ people
-                    </span>
-                  </div>
-                  <h4 className="font-heading font-extrabold text-base text-gray-900">
-                    The Whole Thing
-                  </h4>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    Full bar service, a donut tower, and staff for the length of your event. Tell us the room and we&apos;ll plan it.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleSelectExperience("whole-thing", "55–100 guests", "setup", "The Whole Thing (75+ people)")
-                  }
-                  className={`shrink-0 text-xs font-heading font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center ${
-                    selectedExperience === "whole-thing"
-                      ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                      : "bg-[#F8847F] hover:bg-[#F56B65] text-white"
-                  }`}
-                >
-                  {selectedExperience === "whole-thing" ? "✓ Selected" : "Plan The Whole Thing"}
-                </button>
-              </div>
-                </div>
-              </div>
-
-              {/* Serving format & discounts banner */}
-              <div className="bg-gradient-to-r from-amber-50 to-orange-50/50 border border-[#DF9749]/30 rounded-2xl p-3 sm:p-4">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#DF9749]/15 flex items-center justify-center shrink-0">
-                    <Percent className="w-4 h-4 text-[#DF9749]" />
-                  </div>
-                  <div className="text-xs text-gray-800">
-                    <span className="font-bold block">Bulk Catering Discount:</span>
-                    <span>10% OFF at 20+ drinks · 15% OFF at 40+ drinks. Includes cups, straws &amp; ice kit!</span>
-                  </div>
-                </div>
-
-                {/* Serving Format Switcher — full width on mobile */}
-                <div className="flex items-center bg-white border border-amber-300/80 rounded-xl p-0.5 w-full">
-                  <button
-                    type="button"
-                    onClick={() => setFormatType("cups")}
-                    className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                      formatType === "cups"
-                        ? "bg-[#F8847F] text-white shadow-xs"
-                        : "text-gray-700 hover:text-gray-900"
-                    }`}
-                  >
-                    Individual Cups
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormatType("jugs")}
-                    className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                      formatType === "jugs"
-                        ? "bg-[#F8847F] text-white shadow-xs"
-                        : "text-gray-700 hover:text-gray-900"
-                    }`}
-                  >
-                    1-Gal Jugs (10–12 serv)
-                  </button>
-                </div>
-              </div>
-
-              {/* ── STEP 2: Choose Your Drinks & Quantities ── */}
-              <div id="catering-step-drinks" className="scroll-mt-4">
-                <div className="flex items-center justify-between mb-3 border-b border-warm-200 pb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-[#F8847F] text-white font-bold text-xs flex items-center justify-center">
-                      2
-                    </span>
-                    <h4 className="font-heading font-extrabold text-sm sm:text-base text-gray-900">
-                      Select Drinks &amp; How Many
-                    </h4>
-                  </div>
-                  <span className="text-xs font-bold text-[#DF9749] font-mono">
-                    {totalDrinksCount} {formatType === "jugs" ? "jugs" : "cups"} selected
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 gap-3 max-h-72 sm:max-h-80 overflow-y-auto pr-1">
-                  {cateringDrinkCandidates.map((drink) => {
-                    const sel = drinkSelections[drink.id];
-                    const qty = sel?.quantity || 0;
-                    const price = formatType === "jugs" ? 48.0 : drink.price;
-
+                  {CATERING_PACKAGES.map((pkg) => {
+                    const isSelected = selectedExperience === pkg.id;
                     return (
                       <div
-                        key={drink.id}
-                        className={`p-3 rounded-2xl border transition-all flex flex-col justify-between ${
-                          qty > 0
-                            ? "bg-white border-[#F8847F] shadow-sm ring-1 ring-[#F8847F]/30"
-                            : "bg-white/70 border-gray-200 hover:border-gray-300"
+                        key={pkg.id}
+                        className={`bg-white border-2 rounded-2xl p-4 transition-all shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                          isSelected
+                            ? "border-[#F8847F] ring-2 ring-[#F8847F]/30 bg-[#FFF8F6]"
+                            : "border-warm-200 hover:border-[#E35843]"
                         }`}
                       >
-                        <div className="flex items-start gap-3">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={drink.image}
-                            alt={drink.name}
-                            className="w-14 h-14 rounded-xl object-cover shrink-0 bg-warm-200"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-1">
-                              <h5 className="font-heading font-bold text-xs sm:text-sm text-gray-900 truncate">
-                                {drink.name}
-                              </h5>
-                            </div>
-                            <div className="text-xs font-editorial font-bold text-[#E14E47] mt-0.5">
-                              ${price.toFixed(2)}{" "}
-                              <span className="font-sans font-normal text-[10px] text-gray-500">
-                                {formatType === "jugs" ? "/ gallon" : "/ cup"}
-                              </span>
-                            </div>
-
-                            {/* Preference Dropdowns when selected */}
-                            {qty > 0 && formatType === "cups" && (
-                              <div className="flex items-center gap-1.5 mt-2">
-                                <select
-                                  value={sel?.sugar || "50% Sweet"}
-                                  onChange={(e) =>
-                                    handleUpdateDrinkPreference(drink.id, "sugar", e.target.value)
-                                  }
-                                  className="bg-gray-100 text-[10px] font-medium text-gray-800 border border-gray-200 rounded px-1.5 py-0.5 focus:outline-none"
-                                >
-                                  <option value="50% Sweet">50% Sugar</option>
-                                  <option value="100% Sweet">100% Sugar</option>
-                                  <option value="0% Unsweet">0% Sugar</option>
-                                </select>
-
-                                <select
-                                  value={sel?.milk || "Fresh Whole Milk"}
-                                  onChange={(e) =>
-                                    handleUpdateDrinkPreference(drink.id, "milk", e.target.value)
-                                  }
-                                  className="bg-gray-100 text-[10px] font-medium text-gray-800 border border-gray-200 rounded px-1.5 py-0.5 focus:outline-none"
-                                >
-                                  <option value="Fresh Whole Milk">Whole Milk</option>
-                                  <option value="Organic Oat Milk">Oat Milk</option>
-                                  <option value="Dairy-Free">Dairy-Free</option>
-                                </select>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Quantity Counter */}
-                        <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-100">
-                          <span className="text-[11px] text-gray-500 font-medium">Quantity:</span>
-                          <div className="flex items-center gap-1.5">
-                            {qty > 0 && (
-                              <button
-                                type="button"
-                                onClick={() => handleUpdateDrinkQty(drink.id, drink, -1)}
-                                className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center justify-center transition-colors cursor-pointer"
-                              >
-                                <Minus className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-
+                        <div className="space-y-1 max-w-lg">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span
-                              className={`w-8 text-center font-bold text-xs font-mono ${
-                                qty > 0 ? "text-gray-900 text-sm" : "text-gray-400"
-                              }`}
+                              className={`text-[9px] font-heading font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full ${pkg.badgeClass}`}
                             >
-                              {qty}
+                              {pkg.badge}
                             </span>
-
-                            <button
-                              type="button"
-                              onClick={() => handleUpdateDrinkQty(drink.id, drink, 1)}
-                              className="w-7 h-7 rounded-lg bg-[#F8847F] hover:bg-[#F56B65] text-white flex items-center justify-center transition-colors cursor-pointer shadow-xs"
-                            >
-                              <Plus className="w-3.5 h-3.5" />
-                            </button>
-
-                            {/* Quick +5 button */}
-                            <button
-                              type="button"
-                              onClick={() => handleUpdateDrinkQty(drink.id, drink, 5)}
-                              className="px-2 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-[10px] transition-colors cursor-pointer ml-1"
-                            >
-                              +5
-                            </button>
+                            <span className="text-xs font-bold text-gray-600 flex items-center gap-1">
+                              <Users className="w-3 h-3" /> {pkg.people}
+                            </span>
                           </div>
+                          <div className="flex items-center gap-2.5">
+                            <h4 className="font-heading font-extrabold text-base text-gray-900">
+                              {pkg.name}
+                            </h4>
+                            <span className="font-editorial text-xl font-bold text-[#E14E47]">
+                              ${pkg.price}
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-600 leading-relaxed">{pkg.description}</p>
                         </div>
+                        <button
+                          type="button"
+                          onClick={() => handleSelectExperience(pkg)}
+                          className={`shrink-0 text-xs font-heading font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer text-center ${
+                            isSelected
+                              ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                              : pkg.buttonClass
+                          }`}
+                        >
+                          {isSelected ? "✓ Selected" : `Plan ${pkg.name}`}
+                        </button>
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              {/* ── STEP 3: Choose Toppings & Mix-ins ── */}
-              <div>
+              {/* ── STEP 2: Mochi Donuts & Bakery Platters ── */}
+              <div id="catering-step-bakery" className="scroll-mt-4">
                 <div className="flex items-center justify-between mb-3 border-b border-warm-200 pb-2">
                   <div className="flex items-center gap-2">
                     <span className="w-6 h-6 rounded-full bg-[#F8847F] text-white font-bold text-xs flex items-center justify-center">
-                      3
-                    </span>
-                    <h4 className="font-heading font-extrabold text-sm sm:text-base text-gray-900">
-                      Add Toppings &amp; Pearls
-                    </h4>
-                  </div>
-                  <span className="text-[11px] text-gray-500">Includes serving ladles</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {Object.values(toppingsSelection).map((top) => (
-                    <div
-                      key={top.id}
-                      className="bg-white border border-warm-200 rounded-2xl p-3 flex items-center justify-between hover:border-warm-300 transition-all"
-                    >
-                      <div>
-                        <h5 className="font-heading font-bold text-xs text-gray-900">{top.name}</h5>
-                        <span className="text-xs font-editorial font-bold text-[#DF9749]">
-                          +${top.price.toFixed(2)}{" "}
-                          <span className="font-sans font-normal text-[10px] text-gray-500">ea</span>
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-1.5">
-                        {top.quantity > 0 && (
-                          <button
-                            type="button"
-                            onClick={() => handleUpdateToppingQty(top.id, -5)}
-                            className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center justify-center transition-colors cursor-pointer"
-                          >
-                            <Minus className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                        <span
-                          className={`w-7 text-center font-bold text-xs font-mono ${
-                            top.quantity > 0 ? "text-gray-900" : "text-gray-400"
-                          }`}
-                        >
-                          {top.quantity}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => handleUpdateToppingQty(top.id, 5)}
-                          className="w-7 h-7 rounded-lg bg-[#F8847F] hover:bg-[#F56B65] text-white flex items-center justify-center transition-colors cursor-pointer"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* ── STEP 4: Mochi Donut Platters & Bakery ── */}
-              <div>
-                <div className="flex items-center justify-between mb-3 border-b border-warm-200 pb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-[#F8847F] text-white font-bold text-xs flex items-center justify-center">
-                      4
+                      2
                     </span>
                     <h4 className="font-heading font-extrabold text-sm sm:text-base text-gray-900">
                       Add Mochi Donuts &amp; Bakery Platters
@@ -912,134 +359,63 @@ export default function CateringModal() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {Object.values(bakerySelection).map((bakery) => (
-                    <div
-                      key={bakery.id}
-                      className="bg-white border border-warm-200 rounded-2xl p-3 flex flex-col justify-between hover:border-warm-300 transition-all"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={bakery.image}
-                        alt={bakery.name}
-                        className="w-full h-20 rounded-xl object-cover mb-2 bg-warm-200"
-                      />
-                      <div>
-                        <h5 className="font-heading font-bold text-xs text-gray-900 leading-tight">
-                          {bakery.name}
-                        </h5>
-                        <p className="text-[10px] text-gray-600 mt-0.5 line-clamp-2">{bakery.desc}</p>
-                        <div className="text-xs font-editorial font-bold text-[#E14E47] mt-1">
-                          ${bakery.price.toFixed(2)}
+                  {BAKERY_ITEMS.map((bakery) => {
+                    const qty = bakeryQty[bakery.id] || 0;
+                    return (
+                      <div
+                        key={bakery.id}
+                        className="bg-white border border-warm-200 rounded-2xl p-3 flex flex-col justify-between hover:border-warm-300 transition-all"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={bakery.image}
+                          alt={bakery.name}
+                          className="w-full h-20 rounded-xl object-cover mb-2 bg-warm-200"
+                        />
+                        <div>
+                          <h5 className="font-heading font-bold text-xs text-gray-900 leading-tight">
+                            {bakery.name}
+                          </h5>
+                          <p className="text-[10px] text-gray-600 mt-0.5 line-clamp-2">{bakery.desc}</p>
+                          <div className="text-xs font-editorial font-bold text-[#E14E47] mt-1">
+                            ${bakery.price.toFixed(2)}
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-warm-100">
-                        <span className="text-[10px] text-gray-500 font-medium">Qty:</span>
-                        <div className="flex items-center gap-1">
-                          {bakery.quantity > 0 && (
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-warm-100">
+                          <span className="text-[10px] text-gray-500 font-medium">Qty:</span>
+                          <div className="flex items-center gap-1">
+                            {qty > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateBakeryQty(bakery.id, -1)}
+                                className="w-6 h-6 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center justify-center transition-colors cursor-pointer"
+                              >
+                                <Minus className="w-3 h-3" />
+                              </button>
+                            )}
+                            <span className="w-6 text-center font-bold text-xs font-mono">{qty}</span>
                             <button
                               type="button"
-                              onClick={() => handleUpdateBakeryQty(bakery.id, -1)}
-                              className="w-6 h-6 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center justify-center transition-colors cursor-pointer"
+                              onClick={() => handleUpdateBakeryQty(bakery.id, 1)}
+                              className="w-6 h-6 rounded-md bg-[#F8847F] hover:bg-[#F56B65] text-white flex items-center justify-center transition-colors cursor-pointer"
                             >
-                              <Minus className="w-3 h-3" />
+                              <Plus className="w-3 h-3" />
                             </button>
-                          )}
-                          <span className="w-6 text-center font-bold text-xs font-mono">
-                            {bakery.quantity}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => handleUpdateBakeryQty(bakery.id, 1)}
-                            className="w-6 h-6 rounded-md bg-[#F8847F] hover:bg-[#F56B65] text-white flex items-center justify-center transition-colors cursor-pointer"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* ── LIVE REAL-TIME ESTIMATE SUMMARY & DIRECT ORDER BAR ── */}
-              <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-md border-2 border-[#F8847F]/30 text-gray-900">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 border-b border-gray-100 pb-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-heading font-extrabold uppercase tracking-widest text-[#F8847F] block">
-                        Live Catering Estimate
-                      </span>
-                      {(totalDrinksCount > 0 ||
-                        Object.values(toppingsSelection).some((t) => t.quantity > 0) ||
-                        Object.values(bakerySelection).some((b) => b.quantity > 0)) && (
-                        <button
-                          type="button"
-                          onClick={handleClearBuilder}
-                          className="text-[10px] text-gray-400 hover:text-rose-600 font-semibold underline transition-colors cursor-pointer"
-                        >
-                          Clear All
-                        </button>
-                      )}
-                    </div>
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-600 mt-0.5">
-                      <span className="font-bold text-gray-900">
-                        {totalDrinksCount} {formatType === "jugs" ? "Jugs" : "Drinks"}
-                      </span>
-                      <span className="text-gray-300">·</span>
-                      <span>
-                        {Object.values(toppingsSelection).reduce((s, t) => s + t.quantity, 0)} Toppings
-                      </span>
-                      <span className="text-gray-300">·</span>
-                      <span>
-                        {Object.values(bakerySelection).reduce((s, b) => s + b.quantity, 0)} Platters
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xs text-gray-500 font-medium">Estimated:</span>
-                    <span className="font-editorial text-2xl sm:text-3xl font-bold text-[#E14E47]">
-                      ${customTotal.toFixed(2)}
-                    </span>
-                    {discountAmount > 0 && (
-                      <span className="text-[10px] text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-bold">
-                        -{discountPercent}% Bulk Off
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-2.5">
-                  <button
-                    type="button"
-                    onClick={handleAddCustomOrderToCart}
-                    className="flex-1 flex items-center justify-center gap-2 bg-[#F8847F] hover:bg-[#F56B65] text-white font-heading font-bold text-xs uppercase tracking-wider px-4 py-3 rounded-xl shadow-md transition-all cursor-pointer"
-                  >
-                    <ShoppingBag className="w-4 h-4" />
-                    <span>Add Directly to Cart</span>
-                  </button>
-
-                  <a
-                    href="#catering-quote-form"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById("catering-quote-form")?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="flex items-center justify-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-heading font-bold text-xs uppercase tracking-wider px-4 py-3 rounded-xl transition-all cursor-pointer"
-                  >
-                    <Send className="w-4 h-4 text-[#DF9749]" />
-                    <span>Fill Event Details Below ↓</span>
-                  </a>
-                </div>
-              </div>
-
-              {/* ── STEP 5: EVENT DETAILS & OFFICIAL QUOTE REQUEST ── */}
+              {/* ── STEP 3: EVENT DETAILS & OFFICIAL QUOTE REQUEST ── */}
               <div id="catering-quote-form" className="scroll-mt-4 pt-4 border-t-2 border-gray-100">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span className="w-6 h-6 rounded-full bg-[#DF9749] text-black font-bold text-xs flex items-center justify-center">
-                      5
+                      3
                     </span>
                     <h4 className="font-heading font-extrabold text-sm sm:text-base text-gray-900">
                       Event Details &amp; Official Quote Request
@@ -1051,7 +427,7 @@ export default function CateringModal() {
                   Provide your event details below to receive a formal itemized quote &amp; date hold.
                 </p>
 
-                <form onSubmit={handleSubmitCustom} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Event Type & Headcount */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -1245,7 +621,10 @@ export default function CateringModal() {
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        <span>Submit Catering Quote Request ({totalDrinksCount > 0 ? `${totalDrinksCount} Items · $${customTotal.toFixed(2)}` : "Custom Order"})</span>
+                        <span>
+                          Submit Catering Quote Request{" "}
+                          {itemCount > 0 ? `(${itemCount} Items · $${estimatedTotal.toFixed(2)})` : "(Custom Order)"}
+                        </span>
                       </>
                     )}
                   </button>

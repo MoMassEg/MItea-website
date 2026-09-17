@@ -41,11 +41,15 @@ export const CateringPackageSelectionSchema = z.object({
 
 export const CustomBuilderModeSchema = z.object({
   mode: z.literal('custom'),
-  drinks: z.array(CateringDrinkSelectionSchema).min(1, 'At least one drink is required'),
+  drinks: z.array(CateringDrinkSelectionSchema).optional().default([]),
   toppings: z.array(CateringToppingSelectionSchema).optional().default([]),
   bakery: z.array(CateringBakerySelectionSchema).optional().default([]),
+  packages: z.array(CateringPackageSelectionSchema).optional().default([]),
   formatType: z.enum(['cups', 'jugs']).default('cups'),
-});
+}).refine(
+  (data) => data.drinks.length + data.bakery.length + data.packages.length > 0,
+  'At least one drink, bakery item, or package is required'
+);
 
 export const PackageModeSchema = z.object({
   mode: z.literal('packages'),

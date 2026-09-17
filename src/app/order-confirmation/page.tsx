@@ -284,7 +284,7 @@ function OrderConfirmationContent() {
                             </p>
                             <p className="text-xs text-warm-500">
                               {[
-                                item.size && `Size: ${item.size}`,
+                                item.size && item.size !== "Standard" && `Size: ${item.size}`,
                                 item.toppings && item.toppings.length > 0 && `Toppings: ${item.toppings.join(", ")}`,
                                 (item.notes) && `Notes: ${item.notes}`,
                               ]

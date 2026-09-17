@@ -158,7 +158,7 @@ function buildItemsTable(items: any[]): string {
   const rows = items
     .map((item) => {
       const customizations = [
-        item.size,
+        item.size && item.size !== 'Standard' ? item.size : undefined,
         item.sugar_level ? `Sugar: ${item.sugar_level}` : undefined,
         item.ice_level ? `Ice: ${item.ice_level}` : undefined,
         item.toppings?.length ? `Toppings: ${item.toppings.join(', ')}` : undefined,
