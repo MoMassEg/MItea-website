@@ -244,7 +244,8 @@ export default function ProductCard({ item }: ProductCardProps) {
 
   return (
     <div
-      className={`product-card bg-white rounded-2xl border border-warm-300 overflow-hidden shadow-sm flex flex-col justify-between transition-card relative ${
+      onClick={handleAction}
+      className={`product-card bg-white rounded-2xl border border-warm-300 overflow-hidden shadow-sm flex flex-col justify-between transition-card relative cursor-pointer ${
         isUnavailable ? "opacity-75" : ""
       }`}
     >
@@ -292,7 +293,7 @@ export default function ProductCard({ item }: ProductCardProps) {
             <h3 className="font-heading font-bold text-base sm:text-lg text-gray-900 leading-snug">
               <button
                 type="button"
-                onClick={handleAction}
+                onClick={(e) => { e.stopPropagation(); handleAction(); }}
                 disabled={isUnavailable}
                 className="text-left hover:text-brand-600 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:hover:text-gray-900"
               >
@@ -325,7 +326,7 @@ export default function ProductCard({ item }: ProductCardProps) {
           {item.customizable ? (
             <button
               type="button"
-              onClick={handleAction}
+              onClick={(e) => { e.stopPropagation(); handleAction(); }}
               disabled={isUnavailable}
               className={`inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full font-heading font-bold text-xs sm:text-sm transition-all btn-press cursor-pointer ${
                 isUnavailable
@@ -339,7 +340,7 @@ export default function ProductCard({ item }: ProductCardProps) {
           ) : (
             <button
               type="button"
-              onClick={handleAction}
+              onClick={(e) => { e.stopPropagation(); handleAction(); }}
               disabled={isUnavailable}
               className={`inline-flex items-center justify-center w-10 h-10 rounded-full font-bold transition-all btn-press cursor-pointer ${
                 isUnavailable
