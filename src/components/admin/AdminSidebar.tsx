@@ -13,9 +13,10 @@ import {
   ShieldCheck,
   LogOut,
   UtensilsCrossed,
+  SlidersHorizontal,
 } from "lucide-react";
 
-export type AdminTab = "overview" | "orders" | "products" | "catering" | "users" | "promos" | "store";
+export type AdminTab = "overview" | "orders" | "products" | "customizations" | "catering" | "users" | "promos" | "store";
 
 interface AdminSidebarProps {
   activeTab: AdminTab;
@@ -41,6 +42,7 @@ export default function AdminSidebar({
       badge: pendingOrdersCount > 0 ? pendingOrdersCount : undefined,
     },
     { id: "products" as AdminTab, label: "Products & Menu", icon: Coffee },
+    { id: "customizations" as AdminTab, label: "Customizations", icon: SlidersHorizontal },
     { id: "catering" as AdminTab, label: "Catering & Events", icon: UtensilsCrossed },
     { id: "users" as AdminTab, label: "Users & Roles", icon: Users },
     { id: "promos" as AdminTab, label: "Promo Codes", icon: TicketPercent },

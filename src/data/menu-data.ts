@@ -32,6 +32,15 @@ export interface ToppingOption {
   price: number;
   calories: number;
   defaultSelected?: boolean;
+  available?: boolean;
+}
+
+export interface AddOnOption {
+  id: string;
+  name: string;
+  price: number;
+  pickLimit: number;
+  available: boolean;
 }
 
 export interface MenuItem {
@@ -89,6 +98,7 @@ export interface CartItem {
   sugar: string;
   ice: string;
   toppings: { id: string; name: string; price: number }[];
+  addOns?: { id: string; name: string; price: number }[];
   basePrice: number;
   unitPrice: number;
   quantity: number;
@@ -101,6 +111,7 @@ export interface CustomizationPresets {
   iceLevels: IceLevel[];
   sizes: SizeOption[];
   toppings: ToppingOption[];
+  addOns: AddOnOption[];
 }
 
 export const MENU_DATA = {
@@ -225,14 +236,20 @@ export const MENU_DATA = {
       { label: "Large (24 oz)", value: "large", priceModifier: 1.00 }
     ],
     toppings: [
-      { id: "boba", name: "Slow-Cooked Tapioca Pearls", price: 0.75, calories: 120, defaultSelected: true },
-      { id: "coconut-jelly", name: "Coconut Nata Jelly", price: 0.75, calories: 60 },
-      { id: "grass-jelly", name: "Silky Grass Jelly", price: 0.75, calories: 40 },
-      { id: "handmade-mochi", name: "Handmade Milk Mochi", price: 1.00, calories: 95 },
-      { id: "cheese-foam", name: "Salted Cheese Cream Foam", price: 1.25, calories: 140 },
-      { id: "popping-boba", name: "Mango Popping Boba", price: 0.85, calories: 50 },
-      { id: "aloe-vera", name: "Juicy Aloe Vera Cubes", price: 0.75, calories: 35 },
-      { id: "egg-pudding", name: "Velvety Custard Egg Pudding", price: 0.75, calories: 85 }
+      { id: "coffee-boba", name: "Coffee Boba", price: 0.95, calories: 120 },
+      { id: "taro-poppin-boba", name: "Taro Poppin Boba", price: 0.95, calories: 90 },
+      { id: "brown-sugar-crystal-boba", name: "Brown Sugar Crystal Boba", price: 0.95, calories: 100 },
+      { id: "kiwi-boba", name: "Kiwi Boba", price: 0.95, calories: 80 },
+      { id: "crystal-jelly-boba", name: "Crystal Jelly Boba", price: 0.95, calories: 60 },
+      { id: "lichee-jelly", name: "Lichee Jelly", price: 0.95, calories: 50 },
+      { id: "coconut-jelly", name: "Coconut Jelly", price: 0.95, calories: 60 },
+      { id: "chizu", name: "Chizu (Contains: Milk)", price: 1.50, calories: 140 },
+      { id: "crushed-oreos", name: "Crushed Oreos", price: 0.95, calories: 100 },
+      { id: "whipped-cream", name: "Whipped Cream", price: 0.80, calories: 80 }
+    ],
+    addOns: [
+      { id: "mochi-donut-addon", name: "Add a Mochi Donut *Contains: Milk, Eggs, Wheat & Soy*", price: 6.85, pickLimit: 1, available: true },
+      { id: "labubu-keychain", name: "Labubu Keychain", price: 0, pickLimit: 1, available: false }
     ]
   } as CustomizationPresets,
 
@@ -418,7 +435,7 @@ export const MENU_DATA = {
         "name": "HOT MATCHA LATTE",
         "category": "latte",
         "price": 4,
-        "description": "A decadent blend of ceremonial Japanese matcha, perfectly balanced with creamy milk, creating a smooth and velvety hot beverage. Default size is 8oz",
+        "description": "A decadent blend of rich chocolate, perfectly balanced with creamy milk, creating a smooth and velvety hot beverage. Default size is 8oz",
         "image": "/images/menu/hot-matcha-latte.jpeg",
         "popular": false,
         "badge": "Hot Beverage",
@@ -502,7 +519,7 @@ export const MENU_DATA = {
         "name": "Coconut Smoothie",
         "category": "smoothies",
         "price": 7.5,
-        "description": "A refreshing blend of fragrant coconut milk and sweet cream, blended icy and smooth for a tropical oasis in every sip.",
+        "description": "A refreshing blend made with our homemade strawberry jam and homemade sweet milk. Creamy, fruity, and perfectly balanced.",
         "image": "/images/menu/coconut-smoothie.jpeg",
         "popular": false,
         "badge": "Creamy",
@@ -1370,7 +1387,7 @@ export const MENU_DATA = {
         "name": "Traditional Cold Ham Banh Mi",
         "category": "banh-mi",
         "price": 8,
-        "description": "A traditional Vietnamese cold ham banh mi in a crispy French baguette with pate, homemade mayo, pickled vegetables, and cilantro. CONTAINS PORK!",
+        "description": "CONTAINS PORK!",
         "image": "/images/menu/vietnamese-banh-mi-traditional-cold-ham.jpeg",
         "popular": false,
         "badge": "Vietnamese",

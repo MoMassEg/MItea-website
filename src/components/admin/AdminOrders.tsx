@@ -397,6 +397,11 @@ export default function AdminOrders() {
                             +{item.toppings.join(", ")}
                           </div>
                         )}
+                        {Array.isArray(item.addOns) && item.addOns.length > 0 && (
+                          <div className="text-purple-700 font-medium">
+                            +{item.addOns.map((a: any) => typeof a === "string" ? a : a.name).join(", ")}
+                          </div>
+                        )}
                         {item.notes && (
                           <div className="text-gray-700 italic font-medium mt-0.5">
                             Notes: {item.notes}

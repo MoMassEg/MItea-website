@@ -221,6 +221,11 @@ export default function ConfirmationModal() {
                         + {item.toppings.map((t) => t.name).join(", ")}
                       </p>
                     )}
+                    {item.addOns && item.addOns.length > 0 && (
+                      <p className="text-[10px] text-purple-700">
+                        + {item.addOns.map((a) => a.name).join(", ")}
+                      </p>
+                    )}
                     {item.notes && (
                       <p className="text-[11px] text-gray-600 italic">
                         “{item.notes}”

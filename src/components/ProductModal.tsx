@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useOrder } from "@/context/OrderContext";
 import { MenuItem, CartItem } from "@/data/menu-data";
 import { apiClient } from "@/lib/api-client";
-import { X, Plus, Minus } from "lucide-react";
+import { useCustomizations } from "@/lib/hooks/useCustomizations";
+import { X, Plus, Minus, Check } from "lucide-react";
 
 export default function ProductModal() {
   const { selectedProduct, closeProductModal, addToCart } = useOrder();
@@ -44,19 +45,106 @@ function ProductModalDialog({
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState<string>("");
 
-  const unitPrice = Number(product.price.toFixed(2));
+  const { presets } = useCustomizations();
+
+  // Toppings & Add-ons state
+  const toppings = presets.toppings || [];
+  const addOns = presets.addOns || [];
+  const [selectedToppings, setSelectedToppings] = useState<Set<string>>(new Set());
+  const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
+
+  // Sugar, Ice, Size state
+  const sugarLevels = presets.sugarLevels || [];
+  const iceLevels = presets.iceLevels || [];
+  const sizes = presets.sizes || [];
+
+  const [selectedSugar, setSelectedSugar] = useState<string>("");
+  const [selectedIce, setSelectedIce] = useState<string>("");
+  const [selectedSize, setSelectedSize] = useState<string>("");
+
+  useEffect(() => {
+    if (sugarLevels.length > 0 && !selectedSugar) {
+      setSelectedSugar(sugarLevels.find(s => s.isDefault)?.value || sugarLevels[0]?.value || "");
+    }
+    if (iceLevels.length > 0 && !selectedIce) {
+      setSelectedIce(iceLevels.find(i => i.isDefault)?.value || iceLevels[0]?.value || "");
+    }
+    if (sizes.length > 0 && !selectedSize) {
+      setSelectedSize(sizes.find(s => s.isDefault)?.value || sizes[0]?.value || "");
+    }
+  }, [sugarLevels, iceLevels, sizes, selectedSugar, selectedIce, selectedSize]);
+
+  const toggleTopping = (id: string) => {
+    setSelectedToppings((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const toggleAddOn = (id: string) => {
+    setSelectedAddOns((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  // Price calculation
+  const toppingsTotal = useMemo(() => {
+    let sum = 0;
+    for (const t of toppings) {
+      if (selectedToppings.has(t.id)) sum += t.price;
+    }
+    return sum;
+  }, [selectedToppings, toppings]);
+
+  const addOnsTotal = useMemo(() => {
+    let sum = 0;
+    for (const a of addOns) {
+      if (selectedAddOns.has(a.id)) sum += a.price;
+    }
+    return sum;
+  }, [selectedAddOns, addOns]);
+
+  const sizePrice = useMemo(() => {
+    return sizes.find((s) => s.value === selectedSize)?.priceModifier || 0;
+  }, [sizes, selectedSize]);
+
+  const unitPrice = Number((product.price + sizePrice + toppingsTotal + addOnsTotal).toFixed(2));
   const totalPrice = Number((unitPrice * quantity).toFixed(2));
 
   const handleAdd = () => {
+    const chosenToppings = toppings
+      .filter((t) => selectedToppings.has(t.id))
+      .map((t) => ({ id: t.id, name: t.name, price: t.price }));
+
+    const chosenAddOns = addOns
+      .filter((a) => selectedAddOns.has(a.id))
+      .map((a) => ({ id: a.id, name: a.name, price: a.price }));
+
+    const sizeOption = sizes.find(s => s.value === selectedSize);
+    const sugarOption = sugarLevels.find(s => s.value === selectedSugar);
+    const iceOption = iceLevels.find(i => i.value === selectedIce);
+
     onAddToCart({
       id: product.id,
       name: product.name,
       image: product.image,
-      size: "Standard",
-      sizePrice: 0,
-      sugar: "",
-      ice: "",
-      toppings: [],
+      size: sizeOption?.label || "Standard",
+      sizePrice: sizeOption?.priceModifier || 0,
+      sugar: sugarOption?.label || "",
+      ice: iceOption?.label || "",
+      toppings: chosenToppings,
+      addOns: chosenAddOns.length > 0 ? chosenAddOns : undefined,
       basePrice: product.price,
       unitPrice: unitPrice,
       quantity: quantity,
@@ -65,6 +153,8 @@ function ProductModalDialog({
 
     onClose();
   };
+
+  const isCustomizable = product.customizable;
 
   return (
     <div
@@ -108,10 +198,176 @@ function ProductModalDialog({
         </div>
 
         {/* Scrollable Customization Options */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-6 flex-grow">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 flex-grow">
           <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
             {product.description}
           </p>
+
+          {/* ── Make it your own: Toppings ── */}
+          {isCustomizable && (
+            <div className="space-y-6">
+              {/* Sizes */}
+              {sizes.length > 0 && (
+                <div>
+                  <h3 className="font-heading font-bold text-sm text-[#1A1A1A] mb-3 flex items-center justify-between">
+                    <span>Size</span>
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {sizes.map((s) => (
+                      <button
+                        key={s.value}
+                        type="button"
+                        onClick={() => setSelectedSize(s.value)}
+                        className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
+                          selectedSize === s.value
+                            ? "bg-brand-50 border-brand-500 text-brand-700 ring-1 ring-brand-400"
+                            : "bg-white border-warm-300 text-gray-700 hover:bg-warm-50"
+                        }`}
+                      >
+                        {s.label} {s.priceModifier > 0 && <span className="text-brand-600 ml-1">(+${s.priceModifier.toFixed(2)})</span>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Sugar Levels */}
+              {sugarLevels.length > 0 && (
+                <div>
+                  <h3 className="font-heading font-bold text-sm text-[#1A1A1A] mb-3">Sugar Level</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {sugarLevels.map((s) => (
+                      <button
+                        key={s.value}
+                        type="button"
+                        onClick={() => setSelectedSugar(s.value)}
+                        className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
+                          selectedSugar === s.value
+                            ? "bg-brand-50 border-brand-500 text-brand-700 ring-1 ring-brand-400"
+                            : "bg-white border-warm-300 text-gray-700 hover:bg-warm-50"
+                        }`}
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Ice Levels */}
+              {iceLevels.length > 0 && (
+                <div>
+                  <h3 className="font-heading font-bold text-sm text-[#1A1A1A] mb-3">Ice Level</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {iceLevels.map((i) => (
+                      <button
+                        key={i.value}
+                        type="button"
+                        onClick={() => setSelectedIce(i.value)}
+                        className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
+                          selectedIce === i.value
+                            ? "bg-brand-50 border-brand-500 text-brand-700 ring-1 ring-brand-400"
+                            : "bg-white border-warm-300 text-gray-700 hover:bg-warm-50"
+                        }`}
+                      >
+                        {i.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Toppings */}
+              {toppings.length > 0 && (
+                <div>
+                  <h3 className="font-heading font-bold text-sm text-[#1A1A1A] mb-3 flex items-center gap-2">
+                    <span>Make it your own</span>
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {toppings.map((t) => {
+                      const isSelected = selectedToppings.has(t.id);
+                      const isUnavailable = t.available === false;
+                      return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      disabled={isUnavailable}
+                      onClick={() => toggleTopping(t.id)}
+                      className={`relative flex items-center gap-2 p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                        isSelected
+                          ? "border-brand-500 bg-brand-50 ring-1 ring-brand-400"
+                          : "border-warm-300 bg-white hover:border-warm-400 hover:bg-warm-50"
+                      }`}
+                    >
+                      <div
+                        className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-colors ${
+                          isSelected
+                            ? "bg-brand-600 border-brand-600 text-white"
+                            : "border-gray-300 bg-white"
+                        }`}
+                      >
+                        {isSelected && <Check className="w-3 h-3" />}
+                      </div>
+                      <div className="flex-grow min-w-0">
+                        <div className="font-semibold text-gray-900 truncate">{t.name}</div>
+                        <div className="text-brand-700 font-bold">+${t.price.toFixed(2)}</div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            )}
+            </div>
+          )}
+
+          {/* ── Add-Ons (Mochi Donut, Labubu, etc.) ── */}
+          {isCustomizable && addOns.length > 0 && (
+            <div className="space-y-2">
+              {addOns.map((addon) => {
+                const isSelected = selectedAddOns.has(addon.id);
+                const isSoldOut = !addon.available;
+                return (
+                  <button
+                    key={addon.id}
+                    type="button"
+                    disabled={isSoldOut}
+                    onClick={() => toggleAddOn(addon.id)}
+                    className={`w-full flex items-center justify-between gap-3 p-3 rounded-xl border text-left text-xs transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                      isSelected
+                        ? "border-brand-500 bg-brand-50 ring-1 ring-brand-400"
+                        : "border-warm-300 bg-warm-50 hover:border-warm-400"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div
+                        className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-colors ${
+                          isSelected
+                            ? "bg-brand-600 border-brand-600 text-white"
+                            : "border-gray-300 bg-white"
+                        }`}
+                      >
+                        {isSelected && <Check className="w-3 h-3" />}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-semibold text-gray-900 truncate">{addon.name}</div>
+                        <span className="text-[10px] text-gray-500">Pick {addon.pickLimit}</span>
+                      </div>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      {isSoldOut ? (
+                        <span className="text-[11px] font-bold text-red-500 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">Sold out</span>
+                      ) : (
+                        <span className="font-heading font-bold text-brand-700">
+                          {addon.price > 0 ? `Add $${addon.price.toFixed(2)}` : "Free"}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Special Instructions (free text) */}
           <div>

@@ -133,6 +133,7 @@ export default function CheckoutModal() {
           sugar: item.sugar,
           ice: item.ice,
           toppings: item.toppings,
+          addOns: item.addOns,
           quantity: item.quantity,
           notes: item.notes,
         })),

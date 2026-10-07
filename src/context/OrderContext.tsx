@@ -467,6 +467,11 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
       showToast("Your cart is empty! Add items to checkout.", "warning");
       return;
     }
+    if (!currentUser) {
+      showToast("Please sign in or create an account to place your order.", "warning");
+      openAuthModal();
+      return;
+    }
     setIsCartDrawerOpen(false);
     setIsCheckoutModalOpen(true);
   };

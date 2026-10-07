@@ -7,6 +7,7 @@ import AdminSidebar, { AdminTab } from "@/components/admin/AdminSidebar";
 import AdminOverview from "@/components/admin/AdminOverview";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminProducts from "@/components/admin/AdminProducts";
+import AdminCustomizations from "@/components/admin/AdminCustomizations";
 import AdminCatering from "@/components/admin/AdminCatering";
 import AdminUsers from "@/components/admin/AdminUsers";
 import AdminPromos from "@/components/admin/AdminPromos";
@@ -231,6 +232,7 @@ export default function AdminPage() {
           {activeTab === "overview" && <AdminOverview onNavigate={setActiveTab} />}
           {activeTab === "orders" && <AdminOrders />}
           {activeTab === "products" && <AdminProducts onProductChanged={updatePendingCount} />}
+          {activeTab === "customizations" && <AdminCustomizations />}
           {activeTab === "catering" && <AdminCatering />}
           {activeTab === "users" && <AdminUsers />}
           {activeTab === "promos" && <AdminPromos />}

@@ -149,7 +149,7 @@ export type Database = {
       customization_presets: {
         Row: {
           id: string;
-          type: 'sugar' | 'ice' | 'size' | 'topping';
+          type: 'sugar' | 'ice' | 'size' | 'topping' | 'addon';
           name: string;
           label: string;
           value: string;
@@ -159,7 +159,7 @@ export type Database = {
         };
         Insert: {
           id?: string;
-          type: 'sugar' | 'ice' | 'size' | 'topping';
+          type: 'sugar' | 'ice' | 'size' | 'topping' | 'addon';
           name: string;
           label: string;
           value: string;
@@ -169,7 +169,7 @@ export type Database = {
         };
         Update: {
           id?: string;
-          type?: 'sugar' | 'ice' | 'size' | 'topping';
+          type?: 'sugar' | 'ice' | 'size' | 'topping' | 'addon';
           name?: string;
           label?: string;
           value?: string;

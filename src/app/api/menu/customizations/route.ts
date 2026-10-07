@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { MENU_DATA, CustomizationPresets } from '@/data/menu-data';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -15,7 +17,7 @@ export async function GET() {
         .select('*')
         .order('display_order', { ascending: true });
 
-      if (!error && dbPresets && dbPresets.length > 0) {
+      if (!error && dbPresets) {
         const customizations: CustomizationPresets = {
           sugarLevels: dbPresets
             .filter((p) => p.type === 'sugar')
@@ -42,13 +44,23 @@ export async function GET() {
               isDefault: p.is_default,
             })),
           toppings: dbPresets
-            .filter((p) => p.type === 'topping')
+            .filter((p) => p.type === 'topping' && !p.value.startsWith('addon-'))
             .map((p) => ({
               id: p.value,
               name: p.name,
               price: Number(p.price_delta),
               calories: 80,
               defaultSelected: p.is_default,
+              available: p.is_default !== false,
+            })),
+          addOns: dbPresets
+            .filter((p) => p.type === 'topping' && p.value.startsWith('addon-'))
+            .map((p) => ({
+              id: p.value,
+              name: p.name,
+              price: Number(p.price_delta),
+              pickLimit: 1,
+              available: p.is_default !== false,
             })),
         };
 
@@ -56,7 +68,7 @@ export async function GET() {
       }
     }
 
-    // Fallback to static presets
+    // Fallback to static presets ONLY if no DB is connected
     return NextResponse.json({
       customizations: MENU_DATA.customizationPresets,
     });

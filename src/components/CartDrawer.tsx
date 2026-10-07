@@ -143,6 +143,11 @@ export default function CartDrawer() {
                             + {item.toppings.map((t) => t.name).join(", ")}
                           </p>
                         )}
+                        {item.addOns && item.addOns.length > 0 && (
+                          <p className="text-purple-700 truncate">
+                            + {item.addOns.map((a) => a.name).join(", ")}
+                          </p>
+                        )}
                         {item.notes && (
                           <p className="text-gray-600 italic truncate">
                             “{item.notes}”

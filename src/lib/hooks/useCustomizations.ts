@@ -17,9 +17,9 @@ export function useCustomizations() {
     setLoading(true);
     apiClient
       .getCustomizations()
-      .then((data) => {
-        if (mounted && data?.sizes?.length) {
-          setPresets(data);
+      .then((data: any) => {
+        if (mounted && data?.customizations) {
+          setPresets(data.customizations);
         }
       })
       .catch(() => {

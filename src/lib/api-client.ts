@@ -199,6 +199,21 @@ export const apiClient = {
       `/api/admin/menu?id=${encodeURIComponent(id)}${permanent ? '&permanent=true' : ''}`
     ),
 
+  adminGetCustomizations: () =>
+    apiClient.get<{ success: boolean; items: any[] }>('/api/admin/customizations'),
+
+  adminCreateCustomization: (data: any) =>
+    apiClient.post<{ success: boolean; item: any }>('/api/admin/customizations', data),
+
+  adminUpdateCustomization: (data: any) =>
+    apiClient.put<{ success: boolean; item: any }>('/api/admin/customizations', data),
+
+  adminPatchCustomization: (id: string, updates: any) =>
+    apiClient.patch<{ success: boolean; item: any }>('/api/admin/customizations', { id, ...updates }),
+
+  adminDeleteCustomization: (id: string) =>
+    apiClient.delete<{ success: boolean; message: string }>(`/api/admin/customizations?id=${encodeURIComponent(id)}`),
+
   adminGetUsers: (params?: { role?: string; q?: string }) =>
     apiClient.get<{ success: boolean; users: any[] }>('/api/admin/users', { params }),
 
